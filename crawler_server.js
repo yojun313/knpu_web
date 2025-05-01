@@ -34,7 +34,7 @@ else if (computername == "BigMacServer") {
 
 const crawl_history_json = path.join(crawler_folder_path, 'crawler_history.json')
 const scrapdata_path     = path.join(crawler_folder_path, 'scrapdata')
-const crawlWorker_path   = path.join(__dirname, 'crawlerWorker.js')
+const crawlWorker_path   = path.join(__dirname, 'crawler_worker.js')
 
 
 app.use(express.static(path.join(__dirname, 'public')));

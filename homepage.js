@@ -70,35 +70,6 @@ function ensureAuthenticated(req, res, next) {
     });
 }
 
-app.get('/crawler_web_dashboard', (req, res) => {
-    res.redirect("http://bigmaclab-crawler.kro.kr");
-});
-
-app.get('/link2', ensureAuthenticated, (req, res) => {
-    res.send('This is Link 2, only for authenticated users.');
-});
-
-app.get('/link3', ensureAuthenticated, (req, res) => {
-    res.send('This is Link 3, only for authenticated users.');
-});
-
-app.post('/login', (req, res) => {
-    const usersPath = path.join(__dirname, 'public', 'users.json');
-    const users = JSON.parse(fs.readFileSync(usersPath, 'utf8'));
-    const user = users.find(u => u.username === req.body.username && u.password === req.body.password);
-    if (user) {
-        const token = jwt.sign({ id: user.id, username: user.username }, SECRET_KEY, { expiresIn: '1h' });
-        res.cookie('authToken', token, {
-            httpOnly: true,
-            sameSite: 'Lax',  // Strict 또는 Lax를 사용할 수 있음
-            path: '/'
-        });
-        res.json({ redirect: "/homepage_dashboard.html" });
-    } else {
-        res.status(401).send('Authentication failed');
-    }
-});
-
 // HTTPS 서버 시작
 https.createServer(options, app).listen(PORT, () => {
 });
