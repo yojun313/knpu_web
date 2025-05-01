@@ -6,8 +6,8 @@ const jwt = require('jsonwebtoken');
 const favicon = require('serve-favicon');
 const app = express();
 const cookieParser = require('cookie-parser');
-const https = require('https');
-const PORT = 443;
+const http = require('http'); // http 모듈 사용
+const PORT = 80; // 일반 http 포트
 
 const SECRET_KEY = "1234";
 
@@ -20,6 +20,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+/*
+// HTTPS 옵션 (주석 처리)
 var options = {
     key: fs.readFileSync(path.join(__dirname, 'public', 'ssl.key'), 'utf8'),
     cert: fs.readFileSync(path.join(__dirname, 'public', 'ssl.crt'), 'utf8'),
@@ -29,6 +31,7 @@ var options = {
     ],
     passphrase: 'bigmaclab2022!'
 };
+*/
 
 // 메인 페이지 라우트
 app.get('/', (req, res) => {
@@ -55,6 +58,7 @@ app.get('/kemkim', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'kemkim_manual.html'));
 });
 
+// 인증 미들웨어
 function ensureAuthenticated(req, res, next) {
     console.log('Cookies:', req.cookies); // 쿠키 로깅
     const token = req.cookies.authToken;
@@ -70,6 +74,7 @@ function ensureAuthenticated(req, res, next) {
     });
 }
 
-// HTTPS 서버 시작
-https.createServer(options, app).listen(PORT, () => {
+// HTTP 서버 시작
+http.createServer(app).listen(PORT, () => {
+    console.log(`HTTP server running on port ${PORT}`);
 });
