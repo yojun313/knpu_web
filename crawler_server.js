@@ -11,31 +11,10 @@ const os = require('os')
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
+let PORT = 3001;
 
-const python_CRAWLER_WEB = 'C:/GitHub/BIGMACLAB/CRAWLER/CRAWLER_WEB.py'
-
-const computername = os.hostname()
-let PORT;
-
-// OMEN
-if (computername == "DESKTOP-502IMU5") {
-    crawler_folder_path = 'C:/BIGMACLAB/CRAWLER'
-    PORT = 80
-}
-// Z8
-else if (computername == "BIGMACLAB-Z8") {
-    crawler_folder_path = 'D:/BIGMACLAB/CRAWLER'
-    PORT = 81
-}
-else if (computername == "BigMacServer") {
-    crawler_folder_path = 'D:/BIGMACLAB/CRAWLER'
-    PORT = 82
-}
-
-const crawl_history_json = path.join(crawler_folder_path, 'crawler_history.json')
-const scrapdata_path     = path.join(crawler_folder_path, 'scrapdata')
-const crawlWorker_path   = path.join(__dirname, 'crawler_worker.js')
-
+const python_CRAWLER_WEB = path.join(__dirname, '..', 'BIGMACLAB/CRAWLER/CRAWLER_WEB.py');
+const crawlWorker_path   = path.join(__dirname, 'crawler_worker.js');
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -51,58 +30,7 @@ app.get('/add_crawler', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'crawl_add.html'));
 });
 
-app.get('/getHistoryData', (req, res) => {
-    fs.readFile(crawl_history_json, (err, data) => {
-        if (err) {
-            console.error('Failed to read file', err);
-            res.status(500).send('Server error');
-            return;
-        }
-        res.json(JSON.parse(data));
-    });
-});
-
-app.delete('/deleteHistory', (req, res) => {
-    const { index } = req.query; // Get index from query string
-    fs.readFile(crawl_history_json, (err, data) => {
-        if (err) {
-            console.error('Failed to read file', err);
-            res.status(500).send('Server error');
-            return;
-        }
-        let history = JSON.parse(data);
-        if (index >= 0 && index < history.length) {
-            history.splice(index, 1); // Remove the item at the specified index
-            fs.writeFile(crawl_history_json, JSON.stringify(history, null, 2), (err) => {
-                if (err) {
-                    console.error('Failed to write file', err);
-                    res.status(500).send('Server error');
-                    return;
-                }
-                res.json({ success: true });
-            });
-        } else {
-            res.status(400).send('Invalid index');
-        }
-    });
-});
-
 let processes = {};
-
-async function processDatabases(databases, DBname, requester) {
-    for (const db of databases) {
-        if (db.includes(DBname)) {
-            try {
-                await mysqlModule.deleteDatabase(db);
-
-                const db_path = path.join(scrapdata_path, `${requester}_scrapdata`, db);
-                await fsextra.remove(db_path);
-            } catch (err) {
-                console.error(`오류가 발생했습니다: ${err}`);
-            }
-        }
-    }
-}
 
 
 io.on('connection', (socket) => {
