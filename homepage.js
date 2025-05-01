@@ -7,7 +7,7 @@ const favicon = require('serve-favicon');
 const app = express();
 const cookieParser = require('cookie-parser');
 const http = require('http'); // http 모듈 사용
-const PORT = 80; // 일반 http 포트
+const PORT = 3000; // 일반 http 포트
 
 const SECRET_KEY = "1234";
 
