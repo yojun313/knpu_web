@@ -13,8 +13,6 @@ const pythonExecutable = os.platform() === 'win32'
 
 const pythonProcess = spawn(pythonExecutable, ['-u', scriptPath, ...args]);
 
-let terminationReason = 'completed';
-
 pythonProcess.stdout.on('data', (data) => {
     parentPort.postMessage(data.toString());
 });
