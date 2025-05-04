@@ -13,7 +13,7 @@ const server = http.createServer(app);
 const io = socketIo(server);
 let PORT = 3001;
 
-const python_CRAWLER_WEB = path.join(__dirname, '..', 'BIGMACLAB/CRAWLER/CRAWLER_WEB.py');
+const python_CRAWLER_WEB = path.join(__dirname, '..', 'BIGMACLAB/crawler/main_web.py');
 const crawlWorker_path   = path.join(__dirname, 'crawler_worker.js');
 
 app.use(express.static(path.join(__dirname, 'public')));
