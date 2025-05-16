@@ -76,7 +76,6 @@ app.get('/download/:filename', (req, res) => {
     const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL;
     const filename = req.params.filename;
     const fileUrl = `${R2_PUBLIC_URL}/${encodeURIComponent(filename)}`;
-    console.log(`Redirecting to file URL: ${fileUrl}`);
     res.redirect(fileUrl);
 });
 
