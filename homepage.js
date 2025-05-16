@@ -57,7 +57,10 @@ app.get('/files', async (req, res) => {
         const files = (response.Contents || []).map(obj => ({
             name: obj.Key,
             size: `${(obj.Size / 1024 / 1024).toFixed(1)} MB`,
-            created: obj.LastModified.toISOString().slice(0, 16).replace('T', ' ')
+            created: new Date(obj.LastModified.getTime() + 9 * 60 * 60 * 1000)
+                .toISOString()
+                .slice(0, 16)
+                .replace('T', ' ')
         }));
 
         files.sort((a, b) => new Date(b.created) - new Date(a.created));
