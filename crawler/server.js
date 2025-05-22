@@ -9,7 +9,7 @@ const server = http.createServer(app);
 const io = socketIo(server);
 let PORT = 3001;
 
-const python_CRAWLER_WEB = path.join(__dirname, '..', 'knpu/crawler/main_web.py');
+const python_CRAWLER_WEB = path.join(__dirname, '..', '..', 'knpu/crawler/main_web.py');
 const crawlWorker_path   = path.join(__dirname, 'crawler_worker.js');
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -31,7 +31,7 @@ io.on('connection', (socket) => {
         socket.emit('redirect', '/');
 
         // 예시 venv 경로 (절대경로로 정확히 입력)
-        const venvPath = path.join(__dirname, '..', 'knpu/venv'); // 가상환경 경로
+        const venvPath = path.join(__dirname, '..', '..', 'knpu/venv'); // 가상환경 경로
 
         const worker = new Worker(crawlWorker_path, {
             workerData: {
