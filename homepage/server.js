@@ -44,7 +44,9 @@ app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'homepage
 app.get('/team', (req, res) => res.sendFile(path.join(__dirname, 'public', 'team.html')));
 app.get('/publications', (req, res) => res.sendFile(path.join(__dirname, 'public', 'publications.html')));
 app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'public', 'homepage_login.html')));
-app.get('/tool', (req, res) => res.sendFile(path.join(__dirname, 'public', 'manager.html')));
+app.get('/manager', (req, res) => res.sendFile(path.join(__dirname, 'public', 'manager.html')));
+
+app.get('/tool', (req, res) => res.sendFile(path.join(__dirname, 'public', 'tool.html')));
 app.get('/kemkim', (req, res) => res.sendFile(path.join(__dirname, 'public', 'kemkim_manual.html')));
 app.get('/download_manager', (req, res) => res.sendFile(path.join(__dirname, 'public', 'manager_download.html')));
 

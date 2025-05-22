@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Service Dashboard</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      background-color: #212529;
+      color: white;
+      padding: 1rem 2rem;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 250px;
+      text-align: center;
+      transition: transform 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card h3 {
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .card button {
+      background-color: #212529;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.2rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .card button:hover {
+      background-color: #3a78c2;
+    }
+
+    .button-link {
+      background-color: #212529;
+      color: white;
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 1rem;
+    }
+
+    .button-link:hover {
+      background-color: #3a78c2;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Lab Tool Dashboard</h1>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h3>MANAGER</h3>
+      <a href="/manager" class="button-link">접속하기</a>
+    </div>
+    <div class="card">
+      <h3>AI 차량 번호판 인식</h3>
+      <a href="https://carnumber.knpu.re.kr" class="button-link">접속하기</a>
+    </div>
+  </div>
+</body>
+
+</html>
