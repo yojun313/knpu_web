@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>사건수사시스템</title>
+    <link rel="stylesheet" href="admin_system_style.css">
+</head>
+<body>
+    <div class = "top_container">
+        <body>
+            <div class="navbar">
+              <a class="active">사건수사시스템</a>
+              <a>접수/배당</a>
+              <a>입건/조사</a>
+              <a>발송/FAX수신</a>
+              <a>승인</a>
+              <a>통신수사</a>
+            </div>
+        </body>
+    </div>
+
+    <div class = "main_container">
+
+        <div class = "side_container">
+            <button class="dropdown-btn">접수/배당</button>
+            <div class="menu">
+                <a>사건목록</a>
+                <a>접수</a>
+                <a>배당</a>
+                <a>민원</a>
+            </div>
+            
+        </div>
+    
+        <div class = "mid_container">
+            <div class="search-section">
+                <div>
+                </br>
+                    <input type="radio" id="all" name="searchType" value="all" checked>
+                    <label for="all">전체보기</label>
+                    <input type="radio" id="specific" name="searchType" value="specific">
+                    <label for="specific">조건검색</label>
+                </div>
+                <div>
+                    <label for="searchQuery">검색어:</label>
+                    <input type="text" id="searchQuery" name="searchQuery">
+                    <label for="category">분류:</label>
+                    <select id="category" name="category">
+                        <option value="all">전체</option>
+                        <option value="document">문서</option>
+                        <option value="report">보고서</option>
+                    </select>
+                    <button type="submit">검색</button>
+                </div>
+            </div>
+            <div class="content">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>접수 번호</th>
+                            <th>죄명</th>
+                            <th>고소인</th>
+                            <th>피고소인</th>
+                            <th>접수일</th>
+                            <th>기타</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% data.forEach(function(row) { %>
+                            <tr>
+                                <td><%= row[0] %></td> <!-- 번호 -->
+                                <td><%= row[1] %></td> <!-- 접수 번호 -->
+                                <td><%= row[2] %></td> <!-- 죄명 -->
+                                <td><%= row[3] %></td> <!-- 고소인 -->
+                                <td><%= row[4] %></td> <!-- 피고소인 -->
+                                <td><%= row[5] %></td> <!-- 접수일 -->
+                                <td>
+                                    <a href="/loading_statement?wordPath=<%= row[7] %>"><button>조서 생성</button></a>
+                                    <button onclick="openPDF('<%= row[6] %>')">고소장 PDF 열람</button>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+            <script>
+                function openPDF(url) {
+                    window.open(url, '_blank', 'height=900,width=800');
+                }
+            </script>
+        </div>
+
+    </div>
+    
+
+</body>
+</html>

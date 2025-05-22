@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Big Mac Lab AI 경찰 수사 시스템</title>
+    <link rel="stylesheet" href="first_page_style.css">
+
+</head>
+
+<script>
+
+    function sue_index() {
+        window.location.href = '/sue_index';
+    }
+
+    function admin_system() {
+        window.location.href = '/loading_admin_system';
+    }
+
+</script>
+
+<body>
+    <div class="title-bar">
+        <img src="title-bar-image.png" class="title-bar-image-right">
+        Big Mac Lab AI 경찰 수사 시스템
+        <img src="경찰청로고.png" class="title-bar-image-left">
+    </div>
+    <div class="button-container">
+        <button onclick="sue_index()" class="big-button">ChatGPT 고소장 생성기</button>
+        <button onclick="admin_system()" class="big-button">경찰 사건수사시스템</button>
+    </div>
+</body>
+</html>
