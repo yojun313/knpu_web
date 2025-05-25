@@ -122,7 +122,7 @@ class doc_process:
             f.write(fh.getbuffer())
     
     def convert_word_to_pdf(self, word_name, word_path): # wrod_name에 문서 이름, word_path에 문서 경로
-        pdf_path = self.pdf_folder_path + word_name.replace(".docx", ".pdf")
+        pdf_path = os.path.join(self.pdf_folder_path, word_name.replace(".docx", ".pdf"))
         convert(word_path, pdf_path)
         return pdf_path
 

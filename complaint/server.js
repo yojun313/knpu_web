@@ -10,7 +10,7 @@ const app = express();
 const port = 3003;
 
 
-const {spawn} = require("child_process");
+const { spawn } = require("child_process");
 const pythonPath = './venv/bin/python';
 
 const python_suegenerator = './sue_generator.py';
@@ -25,7 +25,7 @@ const admin_system_ejs = './views/admin_system.ejs';
 
 // body-parser 미들웨어 사용
 
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // 정적 파일(HTML, CSS)을 서빙하기 위해 express.static 미들웨어 사용
 app.use(express.static(path.join(__dirname, 'public')));
@@ -94,53 +94,53 @@ app.post('/loading_gpt', (req, res) => {
 // 결과창으로 이동
 app.get('/gpt', (req, res) => {
 
-    const second_formData = req.session.second_formData;
-    const first_formData = req.session.first_formData;
+  const second_formData = req.session.second_formData;
+  const first_formData = req.session.first_formData;
 
-    const pythonProcess = spawn(pythonPath, [python_suegenerator, JSON.stringify(first_formData), JSON.stringify(second_formData)]);
-    
-    let outputData = ''
-    let errorData = '';
+  const pythonProcess = spawn(pythonPath, [python_suegenerator, JSON.stringify(first_formData), JSON.stringify(second_formData)]);
 
-    pythonProcess.stdout.on('data', (data) => {
-      outputData += iconv.decode(data, 'euc-kr');
-    });
+  let outputData = ''
+  let errorData = '';
 
-    pythonProcess.stderr.on('data', (data) => {
-      errorData += iconv.decode(data, 'euc-kr');  // 오류 메시지 저장
-    });
-    
-    pythonProcess.on('close', (code) => {
-      if (code !== 0){
-        return res.status(500).send(`Python script failed.\nError: ${errorData.trim()}`);
+  pythonProcess.stdout.on('data', (data) => {
+    outputData += iconv.decode(data, 'euc-kr');
+  });
+
+  pythonProcess.stderr.on('data', (data) => {
+    errorData += iconv.decode(data, 'euc-kr');  // 오류 메시지 저장
+  });
+
+  pythonProcess.on('close', (code) => {
+    if (code !== 0) {
+      return res.status(500).send(`Python script failed.\nError: ${errorData.trim()}`);
+    }
+    const outputLines = outputData.trim().split('\n');
+    // 예를 들어 첫 번째와 두 번째 라인을 가져옴
+    const doc_edit_url = outputLines[0];
+    const pdf_id = outputLines[1];
+    const word_name = outputLines[2]
+
+    req.session.doc_edit_url = doc_edit_url.trim();
+    req.session.pdf_id = pdf_id;
+    req.session.word_name = word_name;
+
+    const pdf_url = 'https://drive.google.com/file/d/' + req.session.pdf_id + '/preview'
+
+    fs.readFile(result_page_html, 'utf8', (err, html) => {
+      if (err) {
+        console.error(err);
+        return;
       }
-      const outputLines = outputData.trim().split('\n');
-        // 예를 들어 첫 번째와 두 번째 라인을 가져옴
-      const doc_edit_url = outputLines[0];
-      const pdf_id = outputLines[1];
-      const word_name = outputLines[2]
+      // HTML 수정
+      const modifiedHtml = html.replace('pdf_url', pdf_url);
 
-      req.session.doc_edit_url = doc_edit_url.trim();
-      req.session.pdf_id = pdf_id;
-      req.session.word_name = word_name;
-      
-      const pdf_url = 'https://drive.google.com/file/d/'+req.session.pdf_id+'/preview'
-
-      fs.readFile(result_page_html, 'utf8', (err, html) => {
-          if (err) {
-            console.error(err);
-            return;
-        }
-        // HTML 수정
-        const modifiedHtml = html.replace('pdf_url', pdf_url);
-        
       res.send(modifiedHtml);
-      });
     });
+  });
 });
 
 // 수정 버튼 눌렀을 때 구글 닥스 페이지로 이동
-app.post('/docx', (req, res) => { 
+app.post('/docx', (req, res) => {
   if (req.session.doc_edit_url) {
     res.json({ url: req.session.doc_edit_url }); // JSON으로 URL 응답
   } else {
@@ -155,28 +155,28 @@ app.get('/loading_save', (req, res) => {
 
 // 수정사항 반영 및 pdf 새로고침
 app.get('/save', (req, res) => {
-  
+
   const pythonProcess = spawn(pythonPath, [python_save_doc, req.session.doc_edit_url]);
-  
+
   let save_response = '';
   pythonProcess.stdout.on('data', (data) => {
     save_response = iconv.decode(data, 'euc-kr');
   });
-  
+
   pythonProcess.on('close', (code) => {
-    if (code !== 0){
+    if (code !== 0) {
       return res.status(500).send(`Python script failed.\nError: ${errorData.trim()}`);
     }
-    const pdf_url = 'https://drive.google.com/file/d/'+save_response+'/preview'
+    const pdf_url = 'https://drive.google.com/file/d/' + save_response + '/preview'
 
     fs.readFile(result_page_html, 'utf8', (err, html) => {
-        if (err) {
-          console.error(err);
-          return;
+      if (err) {
+        console.error(err);
+        return;
       }
-    // HTML 수정
-    const modifiedHtml = html.replace('pdf_url', pdf_url);
-    res.send(modifiedHtml);
+      // HTML 수정
+      const modifiedHtml = html.replace('pdf_url', pdf_url);
+      res.send(modifiedHtml);
     });
   });
 });
@@ -186,28 +186,71 @@ app.get('/save', (req, res) => {
 app.get('/download_word', (req, res) => {
   const filename = req.session.word_name;
   const filePath = path.join(__dirname, 'docx_storage', filename);
-  
-  // 파일명 인코딩
-  const encodedFilename = encodeURIComponent(filename).replace(/\+/g, '%20');
 
-  // Content-Disposition 설정
-  res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodedFilename}`);
+  // 한글 파일명 처리
+  const encodedFilename = encodeURIComponent(filename);
 
-  res.sendFile(filePath);
+  // 브라우저 호환을 고려한 Content-Disposition 설정
+  const userAgent = req.headers['user-agent'] || '';
+  let contentDisposition;
+
+  if (userAgent.includes('MSIE') || userAgent.includes('Trident')) {
+    // IE
+    contentDisposition = `attachment; filename=${encodedFilename}`;
+  } else if (userAgent.includes('Chrome')) {
+    // Chrome
+    contentDisposition = `attachment; filename*=UTF-8''${encodedFilename}`;
+  } else if (userAgent.includes('Firefox')) {
+    // Firefox
+    contentDisposition = `attachment; filename*=UTF-8''${encodedFilename}`;
+  } else {
+    // 기타 브라우저
+    contentDisposition = `attachment; filename="${Buffer.from(filename).toString('binary')}"`;
+  }
+
+  res.setHeader('Content-Disposition', contentDisposition);
+  res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      console.error('파일 전송 오류:', err);
+      res.status(500).send('파일을 찾을 수 없습니다.');
+    }
+  });
 });
 
 // 결과창에서 pdf 다운로드
 app.get('/download_pdf', (req, res) => {
-  const filename = req.session.word_name.replace('.docx', '.pdf');
-  const filePath = path.join(__dirname, 'pdf_storage', filename);
-  
-  // 파일명 인코딩
-  const encodedFilename = encodeURIComponent(filename).replace(/\+/g, '%20');
+  const originalFilename = req.session.word_name.replace('.docx', '.pdf');
+  const filePath = path.join(__dirname, 'pdf_storage', originalFilename);
 
-  // Content-Disposition 설정
-  res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodedFilename}`);
+  const encodedFilename = encodeURIComponent(originalFilename);
+  const userAgent = req.headers['user-agent'] || '';
+  let contentDisposition;
 
-  res.sendFile(filePath);
+  if (userAgent.includes('MSIE') || userAgent.includes('Trident')) {
+    // Internet Explorer
+    contentDisposition = `attachment; filename=${encodedFilename}`;
+  } else if (userAgent.includes('Chrome')) {
+    // Chrome
+    contentDisposition = `attachment; filename*=UTF-8''${encodedFilename}`;
+  } else if (userAgent.includes('Firefox')) {
+    // Firefox
+    contentDisposition = `attachment; filename*=UTF-8''${encodedFilename}`;
+  } else {
+    // 기타 브라우저 (Safari 등)
+    contentDisposition = `attachment; filename="${Buffer.from(originalFilename).toString('binary')}"`;
+  }
+
+  res.setHeader('Content-Disposition', contentDisposition);
+  res.setHeader('Content-Type', 'application/pdf');
+
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      console.error('파일 전송 오류:', err);
+      res.status(500).send('파일을 찾을 수 없습니다.');
+    }
+  });
 });
 
 
@@ -229,8 +272,8 @@ app.get('/admin_system', (req, res) => {
   pythonProcess.stdout.on('data', (data) => {
     const outputData = iconv.decode(data, 'euc-kr');
     const sue_info = JSON.parse(outputData);
-  
-    res.render(admin_system_ejs, {data: sue_info});
+
+    res.render(admin_system_ejs, { data: sue_info });
   });
 });
 
@@ -244,46 +287,46 @@ app.get('/loading_statement', (req, res) => {
 // 진술조서 생성 이동
 app.get('/statement', (req, res) => {
   const pythonProcess = spawn(pythonPath, [python_statement_generator, globalWordname]);
-  
+
   let outputData = ''
 
-    pythonProcess.stdout.on('data', (data) => {
-      outputData += iconv.decode(data, 'euc-kr');
-    });
-    
-    pythonProcess.on('close', (code) => {
-      if (code !== 0) {
-        return res.status(500).send(`Python script failed.\nError: ${errorData.trim()}`);
+  pythonProcess.stdout.on('data', (data) => {
+    outputData += iconv.decode(data, 'euc-kr');
+  });
+
+  pythonProcess.on('close', (code) => {
+    if (code !== 0) {
+      return res.status(500).send(`Python script failed.\nError: ${errorData.trim()}`);
+    }
+    const outputLines = outputData.trim().split('\n');
+
+    const statement_doc_edit_url = outputLines[0];
+    const statement_pdf_id = outputLines[1];
+    const statement_word_name = outputLines[2]
+
+
+
+    req.session.statement_doc_edit_url = statement_doc_edit_url.trim();
+    req.session.statement_pdf_id = statement_pdf_id;
+    req.session.statement_word_name = statement_word_name;
+
+    const pdf_url = 'https://drive.google.com/file/d/' + req.session.statement_pdf_id + '/preview'
+
+    fs.readFile(statement_result_page_html, 'utf8', (err, html) => {
+      if (err) {
+        console.error(err);
+        return;
       }
-      const outputLines = outputData.trim().split('\n');
+      // HTML 수정
+      const modifiedHtml = html.replace('pdf_url', pdf_url);
 
-      const statement_doc_edit_url = outputLines[0];
-      const statement_pdf_id = outputLines[1];
-      const statement_word_name = outputLines[2]
-
-      
-
-      req.session.statement_doc_edit_url = statement_doc_edit_url.trim();
-      req.session.statement_pdf_id = statement_pdf_id;
-      req.session.statement_word_name = statement_word_name;
-      
-      const pdf_url = 'https://drive.google.com/file/d/'+req.session.statement_pdf_id+'/preview'
-
-      fs.readFile(statement_result_page_html, 'utf8', (err, html) => {
-          if (err) {
-            console.error(err);
-            return;
-        }
-        // HTML 수정
-        const modifiedHtml = html.replace('pdf_url', pdf_url);
-        
       res.send(modifiedHtml);
-      });
     });
+  });
 });
 
 // 수정 버튼 눌렀을 때 진술서 구글 닥스 페이지로 이동
-app.post('/statement_docx', (req, res) => { 
+app.post('/statement_docx', (req, res) => {
   if (req.session.statement_doc_edit_url) {
     res.json({ url: req.session.statement_doc_edit_url }); // JSON으로 URL 응답
   } else {
@@ -298,28 +341,28 @@ app.get('/loading_statement_save', (req, res) => {
 
 // 진술조서 수정 반영
 app.get('/statement_save', (req, res) => {
-  
+
   const pythonProcess = spawn(pythonPath, [python_save_statement_doc, req.session.statement_doc_edit_url]);
-  
+
   let save_response = '';
   pythonProcess.stdout.on('data', (data) => {
     save_response = iconv.decode(data, 'euc-kr');
   });
-  
+
   pythonProcess.on('close', (code) => {
-    if (code !== 0){
+    if (code !== 0) {
       return res.status(500).send(`Python script failed.\nError: ${errorData.trim()}`);
     }
-    const pdf_url = 'https://drive.google.com/file/d/'+save_response+'/preview'
+    const pdf_url = 'https://drive.google.com/file/d/' + save_response + '/preview'
 
     fs.readFile(statement_result_page_html, 'utf8', (err, html) => {
-        if (err) {
-          console.error(err);
-          return;
+      if (err) {
+        console.error(err);
+        return;
       }
-    // HTML 수정
-    const modifiedHtml = html.replace('pdf_url', pdf_url);
-    res.send(modifiedHtml);
+      // HTML 수정
+      const modifiedHtml = html.replace('pdf_url', pdf_url);
+      res.send(modifiedHtml);
     });
   });
 });
@@ -328,7 +371,7 @@ app.get('/statement_save', (req, res) => {
 app.get('/download_statement_word', (req, res) => {
   const filename = req.session.statement_word_name;
   const filePath = path.join(__dirname, 'docx_statement_storage', filename);
-  
+
   // 파일명 인코딩
   const encodedFilename = encodeURIComponent(filename).replace(/\+/g, '%20');
 
@@ -342,7 +385,7 @@ app.get('/download_statement_word', (req, res) => {
 app.get('/download_statement_pdf', (req, res) => {
   const filename = req.session.statement_word_name.replace('.docx', '.pdf');
   const filePath = path.join(__dirname, 'pdf_statement_storage', filename);
-  
+
   // 파일명 인코딩
   const encodedFilename = encodeURIComponent(filename).replace(/\+/g, '%20');
 
@@ -356,7 +399,7 @@ app.get('/download_statement_pdf', (req, res) => {
 // 두 번째 페이지로 이동
 app.get('/:redirect_page_name', (req, res) => {
   const pageName = req.session.redirect_page_name;
-  
+
   if (pageName) {
     res.sendFile(path.join(__dirname, 'public', pageName + '.html'));
   } else {
