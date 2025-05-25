@@ -156,3 +156,4 @@ dist
 
 docx_storage/
 pdf_storage/
+venv/
