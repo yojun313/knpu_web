@@ -11,7 +11,8 @@ const port = 3003;
 
 
 const { spawn } = require("child_process");
-const pythonPath = './venv/bin/python';
+const isWindows = process.platform === "win32";
+const pythonPath = isWindows ? './venv/Scripts/python.exe' : './venv/bin/python';
 
 const python_suegenerator = './sue_generator.py';
 const python_save_doc = './save_doc.py';
