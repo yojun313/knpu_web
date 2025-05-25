@@ -3,12 +3,6 @@ import json
 from openai import OpenAI
 from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
-from googleapiclient.discovery import build
-from googleapiclient.http import MediaFileUpload
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.auth.transport.requests import Request
-from googleapiclient.http import MediaIoBaseDownload
-from google.oauth2.credentials import Credentials
 import os
 from doc_process import doc_process
 from docx.shared import RGBColor
