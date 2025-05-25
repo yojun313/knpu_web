@@ -157,4 +157,5 @@ dist
 docx_storage/
 pdf_storage/
 venv/
-input_dic.txt
+
+public/input_dict.txt
