@@ -9,11 +9,38 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { FileText, Send, Bot, User } from "lucide-react"
+import { FileText, Send, Bot, User, MessageSquare } from 'lucide-react'
 import { useRouter } from "next/navigation"
 
+const SUGGESTED_QUESTIONS = [
+  {
+    title: "💰 사기 피해",
+    question: "온라인 쇼핑몰에서 상품을 주문하고 돈을 보냈는데 상품을 받지 못했습니다. 판매자와 연락도 안 되고 있어요.",
+  },
+  {
+    title: "👊 폭행 사건",
+    question: "직장 동료가 회식 자리에서 저를 때렸습니다. 병원에서 진단서도 받았고 목격자도 있어요.",
+  },
+  {
+    title: "💬 명예훼손",
+    question: "온라인 커뮤니티에서 누군가 제 실명을 거론하며 거짓 사실을 퍼뜨려서 명예가 훼손되었습니다.",
+  },
+  {
+    title: "💼 임금체불",
+    question: "회사에서 3개월째 급여를 주지 않고 있습니다. 퇴직금도 받지 못했어요.",
+  },
+  {
+    title: "🏠 임대차 분쟁",
+    question: "집주인이 보증금을 돌려주지 않고 있습니다. 계약서도 있고 입금 증명서도 있어요.",
+  },
+  {
+    title: "📱 개인정보 유출",
+    question: "개인정보가 무단으로 유출되어 피해를 당했습니다. 스팸 문자와 전화가 계속 와요.",
+  },
+]
+
 export default function ComplaintGenerator() {
-  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat()
+  const { messages, input, handleInputChange, handleSubmit, isLoading, append } = useChat()
   const [isGenerating, setIsGenerating] = useState(false)
   const router = useRouter()
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -68,6 +95,10 @@ export default function ComplaintGenerator() {
     }
   }
 
+  const handleSuggestedQuestion = (question: string) => {
+    append({ content: question, role: "user" })
+  }
+
   const canGenerateComplaint =
     messages.length > 4 && messages.some((m) => m.content.includes("정보 수집이 완료되었습니다"))
 
@@ -80,7 +111,7 @@ export default function ComplaintGenerator() {
             <div className="p-2 bg-blue-600 rounded-lg">
               <FileText className="h-6 w-6 text-white" />
             </div>
-            자동 고소장 생성기
+            AI 고소장 생성기
           </h1>
           <p className="text-gray-600 mt-2">AI와 대화하며 정식 고소장을 자동으로 생성해보세요</p>
         </div>
@@ -96,9 +127,33 @@ export default function ComplaintGenerator() {
                   <div className="p-4 bg-blue-50 rounded-full mb-4">
                     <Bot className="h-12 w-12 text-blue-600" />
                   </div>
-                  <h2 className="text-xl font-semibold text-gray-900 mb-2">고소장 작성을 시작해보세요</h2>
-                  <p className="text-gray-600 mb-6">AI가 필요한 정보를 차근차근 물어볼게요</p>
-                  <div className="text-sm text-gray-500 bg-gray-50 p-4 rounded-lg max-w-md">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-2">AI 고소장 생성을 시작해보세요</h2>
+                  <p className="text-gray-600 mb-8">AI가 필요한 정보를 차근차근 물어볼게요</p>
+
+                  {/* 추천 질문 리스트 */}
+                  <div className="w-full max-w-2xl">
+                    <div className="flex items-center gap-2 mb-4">
+                      <MessageSquare className="h-5 w-5 text-blue-600" />
+                      <h3 className="text-lg font-semibold text-gray-800">추천 질문</h3>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {SUGGESTED_QUESTIONS.map((item, index) => (
+                        <Button
+                          key={index}
+                          variant="outline"
+                          className="h-auto p-4 text-left justify-start hover:bg-blue-50 hover:border-blue-300 transition-colors"
+                          onClick={() => handleSuggestedQuestion(item.question)}
+                        >
+                          <div className="flex flex-col items-start gap-1">
+                            <div className="font-medium text-sm text-blue-700">{item.title}</div>
+                            <div className="text-xs text-gray-600 line-clamp-2">{item.question}</div>
+                          </div>
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="text-sm text-gray-500 bg-gray-50 p-4 rounded-lg max-w-md mt-8">
                     💡 <strong>수집할 정보:</strong> 고소인 정보, 피고소인 정보, 사건 개요, 피해 내용, 증거 자료 등
                   </div>
                 </div>

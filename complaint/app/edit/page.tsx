@@ -15,6 +15,9 @@ export default function EditComplaint() {
   const router = useRouter()
 
   useEffect(() => {
+    // 페이지 제목 설정
+    document.title = "AI 고소장 생성기 - 편집"
+
     const savedComplaint = localStorage.getItem("generatedComplaint")
     if (savedComplaint) {
       setComplaint(savedComplaint)
@@ -146,7 +149,7 @@ export default function EditComplaint() {
             </Button>
             <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
               <FileText className="h-6 w-6 text-blue-600" />
-              고소장 편집
+              AI 고소장 생성기 - 편집
             </h1>
           </div>
 
