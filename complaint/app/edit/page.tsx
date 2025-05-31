@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { ArrowLeft, Download, Save, FileText, Eye, Edit3 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Document, Packer, Paragraph, TextRun, AlignmentType } from "docx"
+import jsPDF from "jspdf"
 
 export default function EditComplaint() {
   const [complaint, setComplaint] = useState("")
@@ -41,20 +42,11 @@ export default function EditComplaint() {
           properties: {},
           children: lines.map((line, index) => {
             // 제목 처리
-            if (line.includes("고    소    장")) {
+            if (line.includes("고 소 장")) {
               return new Paragraph({
                 children: [new TextRun({ text: line, bold: true, size: 32 })],
                 alignment: AlignmentType.CENTER,
                 spacing: { after: 400 },
-              })
-            }
-
-            // 수신 처리
-            if (line.startsWith("수신:")) {
-              return new Paragraph({
-                children: [new TextRun({ text: line, bold: true, size: 24 })],
-                alignment: AlignmentType.RIGHT,
-                spacing: { after: 300 },
               })
             }
 
@@ -85,6 +77,49 @@ export default function EditComplaint() {
     URL.revokeObjectURL(url)
   }
 
+  const downloadAsPdf = () => {
+    const pdf = new jsPDF("p", "mm", "a4")
+
+    // 한글 폰트 설정을 위한 기본 설정
+    pdf.setFont("helvetica")
+
+    const lines = complaint.split("\n")
+    let yPosition = 20
+    const lineHeight = 7
+    const pageHeight = 280
+
+    lines.forEach((line) => {
+      if (yPosition > pageHeight) {
+        pdf.addPage()
+        yPosition = 20
+      }
+
+      if (line.includes("고 소 장")) {
+        pdf.setFontSize(20)
+        pdf.setFont("helvetica", "bold")
+        pdf.text(line, 105, yPosition, { align: "center" })
+        yPosition += lineHeight * 2
+      } else if (/^\d+\.\s/.test(line)) {
+        pdf.setFontSize(14)
+        pdf.setFont("helvetica", "bold")
+        pdf.text(line, 20, yPosition)
+        yPosition += lineHeight * 1.5
+      } else if (line.trim() !== "") {
+        pdf.setFontSize(11)
+        pdf.setFont("helvetica", "normal")
+
+        // 긴 텍스트를 여러 줄로 분할
+        const splitText = pdf.splitTextToSize(line, 170)
+        pdf.text(splitText, 20, yPosition)
+        yPosition += lineHeight * splitText.length
+      } else {
+        yPosition += lineHeight / 2
+      }
+    })
+
+    pdf.save("고소장.pdf")
+  }
+
   const downloadAsTxt = () => {
     const element = document.createElement("a")
     const file = new Blob([complaint], { type: "text/plain;charset=utf-8" })
@@ -97,23 +132,16 @@ export default function EditComplaint() {
 
   const formatComplaintForDisplay = (text: string) => {
     return text.split("\n").map((line, index) => {
-      if (line.includes("고    소    장")) {
+      if (line.includes("고 소 장")) {
         return (
           <div key={index} className="text-2xl font-bold text-center mb-8">
             {line}
           </div>
         )
       }
-      if (line.startsWith("수신:")) {
-        return (
-          <div key={index} className="text-right font-semibold mb-6">
-            {line}
-          </div>
-        )
-      }
       if (/^\d+\.\s/.test(line)) {
         return (
-          <div key={index} className="font-bold text-lg mt-6 mb-3 text-blue-800">
+          <div key={index} className="font-bold text-lg mt-6 mb-3 text-primary">
             {line}
           </div>
         )
@@ -131,24 +159,24 @@ export default function EditComplaint() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-4 py-4">
+      <div className="bg-card border-b border-border px-4 py-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Button variant="outline" onClick={() => router.push("/")} className="flex items-center gap-2">
               <ArrowLeft className="h-4 w-4" />
               돌아가기
             </Button>
-            <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-              <FileText className="h-6 w-6 text-blue-600" />
+            <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
+              <FileText className="h-6 w-6 text-primary" />
               AI 고소장 생성기 - 편집
             </h1>
           </div>
@@ -179,7 +207,7 @@ export default function EditComplaint() {
       {/* Main Content */}
       <div className="max-w-6xl mx-auto p-6">
         <Card className="shadow-lg">
-          <CardHeader className="bg-blue-600 text-white">
+          <CardHeader className="bg-primary text-primary-foreground">
             <CardTitle className="flex items-center justify-between">
               <span className="flex items-center gap-2">
                 <FileText className="h-5 w-5" />
@@ -190,7 +218,7 @@ export default function EditComplaint() {
                   variant="secondary"
                   size="sm"
                   onClick={saveComplaint}
-                  className="bg-white text-blue-600 hover:bg-gray-100"
+                  className="bg-background text-foreground hover:bg-muted"
                 >
                   <Save className="h-4 w-4 mr-1" />
                   저장
@@ -199,7 +227,7 @@ export default function EditComplaint() {
                   variant="secondary"
                   size="sm"
                   onClick={downloadAsTxt}
-                  className="bg-white text-blue-600 hover:bg-gray-100"
+                  className="bg-background text-foreground hover:bg-muted"
                 >
                   <Download className="h-4 w-4 mr-1" />
                   TXT
@@ -208,10 +236,19 @@ export default function EditComplaint() {
                   variant="secondary"
                   size="sm"
                   onClick={downloadAsDocx}
-                  className="bg-white text-blue-600 hover:bg-gray-100"
+                  className="bg-background text-foreground hover:bg-muted"
                 >
                   <Download className="h-4 w-4 mr-1" />
                   DOCX
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={downloadAsPdf}
+                  className="bg-background text-foreground hover:bg-muted"
+                >
+                  <Download className="h-4 w-4 mr-1" />
+                  PDF
                 </Button>
               </div>
             </CardTitle>
@@ -219,8 +256,8 @@ export default function EditComplaint() {
 
           <CardContent className="p-0">
             {isPreview ? (
-              <div className="p-8 bg-white min-h-[700px]" style={{ fontFamily: "맑은고딕, Arial, sans-serif" }}>
-                <div className="max-w-4xl mx-auto bg-white shadow-sm border p-8">
+              <div className="p-8 bg-background min-h-[700px]" style={{ fontFamily: "맑은고딕, Arial, sans-serif" }}>
+                <div className="max-w-4xl mx-auto bg-card shadow-sm border p-8">
                   {formatComplaintForDisplay(complaint)}
                 </div>
               </div>
@@ -238,8 +275,8 @@ export default function EditComplaint() {
         </Card>
 
         <div className="mt-6 text-center">
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-2xl mx-auto">
-            <p className="text-blue-800 text-sm">
+          <div className="bg-primary/10 border border-primary/20 rounded-lg p-4 max-w-2xl mx-auto">
+            <p className="text-foreground text-sm">
               💡 <strong>안내:</strong> 생성된 고소장은 참고용이며, 실제 제출 전에 법무 전문가의 검토를 받으시기
               바랍니다.
             </p>

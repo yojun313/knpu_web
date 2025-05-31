@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { FileText, Send, Bot, User, MessageSquare } from 'lucide-react'
+import { FileText, Send, Bot, User, MessageSquare } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 const SUGGESTED_QUESTIONS = [
@@ -103,57 +103,59 @@ export default function ComplaintGenerator() {
     messages.length > 4 && messages.some((m) => m.content.includes("정보 수집이 완료되었습니다"))
 
   return (
-    <div className="h-screen bg-gray-50 flex flex-col">
+    <div className="h-screen bg-background flex flex-col">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-4 py-6 flex-shrink-0">
+      <div className="bg-card border-b border-border px-4 py-6 flex-shrink-0">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-            <div className="p-2 bg-blue-600 rounded-lg">
-              <FileText className="h-6 w-6 text-white" />
+          <h1 className="text-3xl font-bold text-foreground flex items-center gap-3">
+            <div className="p-2 bg-primary rounded-lg">
+              <FileText className="h-6 w-6 text-primary-foreground" />
             </div>
             AI 고소장 생성기
           </h1>
-          <p className="text-gray-600 mt-2">AI와 대화하며 정식 고소장을 자동으로 생성해보세요</p>
+          <p className="text-muted-foreground mt-2">AI와 대화하며 정식 고소장을 자동으로 생성해보세요</p>
         </div>
       </div>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4">
-        <Card className="h-full flex flex-col shadow-sm border-0 bg-white">
+        <Card className="h-full flex flex-col shadow-sm border-0 bg-card">
           <CardContent className="flex-1 flex flex-col p-0" ref={scrollAreaRef}>
             <ScrollArea className="flex-1">
               {messages.length === 0 && (
                 <div className="flex flex-col items-center justify-center h-full text-center p-8">
-                  <div className="p-4 bg-blue-50 rounded-full mb-4">
-                    <Bot className="h-12 w-12 text-blue-600" />
+                  <div className="p-4 bg-primary/10 rounded-full mb-4">
+                    <Bot className="h-12 w-12 text-primary" />
                   </div>
-                  <h2 className="text-xl font-semibold text-gray-900 mb-2">AI 고소장 생성을 시작해보세요</h2>
-                  <p className="text-gray-600 mb-8">AI가 필요한 정보를 차근차근 물어볼게요</p>
+                  <h2 className="text-xl font-semibold text-foreground mb-2">AI 고소장 생성을 시작해보세요</h2>
+                  <p className="text-muted-foreground mb-8">AI가 필요한 정보를 차근차근 물어볼게요</p>
 
                   {/* 추천 질문 리스트 */}
                   <div className="w-full max-w-2xl">
                     <div className="flex items-center gap-2 mb-4">
-                      <MessageSquare className="h-5 w-5 text-blue-600" />
-                      <h3 className="text-lg font-semibold text-gray-800">추천 질문</h3>
+                      <MessageSquare className="h-5 w-5 text-primary" />
+                      <h3 className="text-lg font-semibold text-foreground">추천 질문</h3>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {SUGGESTED_QUESTIONS.map((item, index) => (
                         <Button
                           key={index}
                           variant="outline"
-                          className="h-auto p-4 text-left justify-start hover:bg-blue-50 hover:border-blue-300 transition-colors"
+                          className="h-auto p-4 text-left justify-start hover:bg-primary/5 hover:border-primary/30 transition-colors"
                           onClick={() => handleSuggestedQuestion(item.question)}
                         >
-                          <div className="flex flex-col items-start gap-1">
-                            <div className="font-medium text-sm text-blue-700">{item.title}</div>
-                            <div className="text-xs text-gray-600 line-clamp-2">{item.question}</div>
+                          <div className="flex flex-col items-start gap-1 w-full">
+                            <div className="font-medium text-sm text-primary">{item.title}</div>
+                            <div className="text-xs text-muted-foreground line-clamp-2 break-words overflow-hidden">
+                              {item.question}
+                            </div>
                           </div>
                         </Button>
                       ))}
                     </div>
                   </div>
 
-                  <div className="text-sm text-gray-500 bg-gray-50 p-4 rounded-lg max-w-md mt-8">
+                  <div className="text-sm text-muted-foreground bg-muted p-4 rounded-lg max-w-md mt-8">
                     💡 <strong>수집할 정보:</strong> 고소인 정보, 피고소인 정보, 사건 개요, 피해 내용, 증거 자료 등
                   </div>
                 </div>
@@ -167,7 +169,11 @@ export default function ComplaintGenerator() {
                   >
                     <Avatar className="w-8 h-8 flex-shrink-0">
                       <AvatarFallback
-                        className={message.role === "user" ? "bg-blue-600 text-white" : "bg-gray-600 text-white"}
+                        className={
+                          message.role === "user"
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted text-muted-foreground"
+                        }
                       >
                         {message.role === "user" ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
                       </AvatarFallback>
@@ -176,14 +182,14 @@ export default function ComplaintGenerator() {
                     <div
                       className={`flex flex-col ${message.role === "user" ? "items-end" : "items-start"} max-w-[80%]`}
                     >
-                      <div className="text-xs text-gray-500 mb-1">
+                      <div className="text-xs text-muted-foreground mb-1">
                         {message.role === "user" ? "사용자" : "AI 어시스턴트"}
                       </div>
                       <div
                         className={`p-4 rounded-2xl ${
                           message.role === "user"
-                            ? "bg-blue-600 text-white rounded-br-md"
-                            : "bg-gray-100 text-gray-900 rounded-bl-md"
+                            ? "bg-primary text-primary-foreground rounded-br-md"
+                            : "bg-muted text-foreground rounded-bl-md"
                         }`}
                       >
                         <div className="whitespace-pre-wrap text-sm leading-relaxed">{message.content}</div>
@@ -195,26 +201,26 @@ export default function ComplaintGenerator() {
                 {isLoading && (
                   <div className="flex gap-3">
                     <Avatar className="w-8 h-8 flex-shrink-0">
-                      <AvatarFallback className="bg-gray-600 text-white">
+                      <AvatarFallback className="bg-muted text-muted-foreground">
                         <Bot className="h-4 w-4" />
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col items-start">
-                      <div className="text-xs text-gray-500 mb-1">AI 어시스턴트</div>
-                      <div className="bg-gray-100 text-gray-900 p-4 rounded-2xl rounded-bl-md">
+                      <div className="text-xs text-muted-foreground mb-1">AI 어시스턴트</div>
+                      <div className="bg-muted text-foreground p-4 rounded-2xl rounded-bl-md">
                         <div className="flex items-center gap-2">
                           <div className="flex space-x-1">
-                            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                            <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"></div>
                             <div
-                              className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                              className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"
                               style={{ animationDelay: "0.1s" }}
                             ></div>
                             <div
-                              className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                              className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"
                               style={{ animationDelay: "0.2s" }}
                             ></div>
                           </div>
-                          <span className="text-sm text-gray-600">답변을 작성하고 있습니다</span>
+                          <span className="text-sm text-muted-foreground">답변을 작성하고 있습니다</span>
                         </div>
                       </div>
                     </div>
@@ -226,7 +232,7 @@ export default function ComplaintGenerator() {
             </ScrollArea>
           </CardContent>
 
-          <CardFooter className="border-t bg-gray-50 p-4">
+          <CardFooter className="border-t bg-muted/30 p-4">
             <form onSubmit={handleFormSubmit} className="flex w-full gap-3">
               <div className="flex-1 relative">
                 <Input
@@ -235,13 +241,13 @@ export default function ComplaintGenerator() {
                   onChange={handleInputChange}
                   placeholder="메시지를 입력하세요..."
                   disabled={isLoading}
-                  className="pr-12 py-3 rounded-full border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                  className="pr-12 py-3 rounded-full border-input focus:border-primary focus:ring-primary"
                 />
                 <Button
                   type="submit"
                   disabled={isLoading || !input.trim()}
                   size="sm"
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 rounded-full w-8 h-8 p-0 bg-blue-600 hover:bg-blue-700"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 rounded-full w-8 h-8 p-0 bg-primary hover:bg-primary/90"
                 >
                   <Send className="h-4 w-4" />
                 </Button>
@@ -252,9 +258,9 @@ export default function ComplaintGenerator() {
 
         {canGenerateComplaint && (
           <div className="mt-6 text-center px-4">
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
-              <p className="text-green-800 font-medium">✅ 정보 수집이 완료되었습니다!</p>
-              <p className="text-green-600 text-sm mt-1">이제 고소장을 생성할 수 있습니다.</p>
+            <div className="bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg p-4 mb-4">
+              <p className="text-green-800 dark:text-green-200 font-medium">✅ 정보 수집이 완료되었습니다!</p>
+              <p className="text-green-600 dark:text-green-400 text-sm mt-1">이제 고소장을 생성할 수 있습니다.</p>
             </div>
             <Button
               onClick={generateComplaint}
