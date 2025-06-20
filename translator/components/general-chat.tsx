@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Card } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Send, Bot, User, Loader2, Paperclip, X, FileText, ImageIcon } from "lucide-react"
+import { Send, Bot, User, Loader2, Paperclip, X, FileText, ImageIcon, Upload } from 'lucide-react'
 import FileUpload from "@/components/file-upload"
 import ModelSelector from "@/components/model-selector"
 
@@ -41,6 +41,7 @@ export default function GeneralChat({ userId }: GeneralChatProps) {
   >([])
   const [showFileUpload, setShowFileUpload] = useState(false)
   const scrollAreaRef = useRef<HTMLDivElement>(null)
+  const [isDragOver, setIsDragOver] = useState(false)
 
   useEffect(() => {
     loadChatHistory()
@@ -107,6 +108,55 @@ export default function GeneralChat({ userId }: GeneralChatProps) {
 
   const removeFile = (index: number) => {
     setUploadedFiles((prev) => prev.filter((_, i) => i !== index))
+  }
+
+  const handleDirectFileUpload = async (files: File[]) => {
+    const validFiles = files.filter((file) => {
+      const isValidType =
+        file.type.startsWith("image/") ||
+        file.type === "text/plain" ||
+        file.type === "application/pdf" ||
+        file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      const isValidSize = file.size <= 25 * 1024 * 1024 // 25MB
+      return isValidType && isValidSize
+    })
+
+    if (validFiles.length > 0) {
+      const processedFiles = await Promise.all(
+        validFiles.map(async (file) => {
+          let content = ""
+
+          if (file.type.startsWith("image/")) {
+            const base64 = await fileToBase64(file)
+            content = `[이미지 파일: ${file.name}]\n이미지를 분석해주세요.\n데이터: ${base64}`
+          } else if (file.type === "text/plain") {
+            content = await file.text()
+          } else if (file.type === "application/pdf") {
+            const base64 = await fileToBase64(file)
+            content = `[PDF 파일: ${file.name}]\n파일 크기: ${(file.size / 1024 / 1024).toFixed(2)}MB\nPDF 내용을 분석해주세요.\n데이터: ${base64}`
+          } else {
+            content = `[파일: ${file.name}]\n파일 타입: ${file.type}\n파일 크기: ${file.size} bytes`
+          }
+
+          return {
+            name: file.name,
+            type: file.type,
+            content,
+          }
+        })
+      )
+
+      setUploadedFiles((prev) => [...prev, ...processedFiles])
+    }
+  }
+
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = () => resolve(reader.result as string)
+      reader.onerror = (error) => reject(error)
+    })
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -213,8 +263,31 @@ export default function GeneralChat({ userId }: GeneralChatProps) {
         <p className="text-sm text-gray-600">ChatGPT와 자유롭게 대화하세요</p>
       </div>
 
-      <ScrollArea ref={scrollAreaRef} className="flex-1 p-4">
-        <div className="space-y-4">
+      <ScrollArea
+        ref={scrollAreaRef}
+        className="flex-1 p-4 relative"
+        onDragOver={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          setIsDragOver(true)
+        }}
+        onDragLeave={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          setIsDragOver(false)
+        }}
+        onDrop={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          setIsDragOver(false)
+
+          const files = Array.from(e.dataTransfer.files)
+          if (files.length > 0) {
+            handleDirectFileUpload(files)
+          }
+        }}
+      >
+        <div className={`space-y-4 ${isDragOver ? 'opacity-50' : ''}`}>
           {messages.length === 0 && (
             <div className="text-center text-gray-500 py-8">
               <Bot className="w-12 h-12 mx-auto mb-4 text-gray-400" />
@@ -224,7 +297,7 @@ export default function GeneralChat({ userId }: GeneralChatProps) {
 
           {messages.map((message) => (
             <div
-              key={message.id}
+              key={message.id} // ✅ 이미 있지만 확실히 설정
               className={`flex items-start space-x-3 ${message.role === "user" ? "justify-end" : "justify-start"}`}
             >
               {message.role === "assistant" && (
@@ -275,6 +348,15 @@ export default function GeneralChat({ userId }: GeneralChatProps) {
             </div>
           )}
         </div>
+        {isDragOver && (
+          <div className="absolute inset-0 bg-blue-50 bg-opacity-90 flex items-center justify-center z-10 border-2 border-dashed border-blue-400 rounded-lg">
+            <div className="text-center">
+              <Upload className="w-16 h-16 mx-auto mb-4 text-blue-500" />
+              <p className="text-xl font-semibold text-blue-700">파일을 여기에 놓으세요</p>
+              <p className="text-sm text-blue-600 mt-2">이미지, PDF, 텍스트 파일 지원</p>
+            </div>
+          </div>
+        )}
       </ScrollArea>
 
       <div className="p-4 border-t">
