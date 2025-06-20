@@ -80,7 +80,11 @@ export default function GeneralChat({ userId }: GeneralChatProps) {
 
       if (response.ok) {
         const history = await response.json()
-        setMessages(history)
+        const parsedHistory = history.map((msg: any) => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp),
+        }))
+        setMessages(parsedHistory)
       }
     } catch (error) {
       console.error("Failed to load chat history:", error)

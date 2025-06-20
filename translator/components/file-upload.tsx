@@ -2,11 +2,12 @@
 
 import type React from "react"
 
-import { useState, useRef } from "react"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Upload, X, FileText, ImageIcon, File } from "lucide-react"
+import { X, FileText, ImageIcon, File, Loader2 } from 'lucide-react'
+import DragDropZone from "@/components/drag-drop-zone"
 
 interface FileUploadProps {
   onUpload: (files: Array<{ name: string; type: string; content: string }>) => void
@@ -17,27 +18,10 @@ export default function FileUpload({ onUpload, onClose }: FileUploadProps) {
   const [files, setFiles] = useState<File[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
-  const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFiles = Array.from(e.target.files || [])
-    const validFiles = selectedFiles.filter((file) => {
-      const isValidType =
-        file.type.startsWith("image/") ||
-        file.type === "text/plain" ||
-        file.type === "application/pdf" ||
-        file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-      const isValidSize = file.size <= 10 * 1024 * 1024 // 10MB
-      return isValidType && isValidSize
-    })
-
-    if (validFiles.length !== selectedFiles.length) {
-      setError("일부 파일이 지원되지 않거나 크기가 너무 큽니다. (최대 10MB, 이미지/텍스트/PDF/DOCX만 지원)")
-    } else {
-      setError("")
-    }
-
-    setFiles((prev) => [...prev, ...validFiles])
+  const handleFilesSelected = (selectedFiles: File[]) => {
+    setFiles((prev) => [...prev, ...selectedFiles])
+    setError("")
   }
 
   const removeFile = (index: number) => {
@@ -54,16 +38,16 @@ export default function FileUpload({ onUpload, onClose }: FileUploadProps) {
           let content = ""
 
           if (file.type.startsWith("image/")) {
-            // For images, we'll just store the base64 data
+            // For images, we'll store the base64 data for Vision API
             const base64 = await fileToBase64(file)
-            content = `[이미지 파일: ${file.name}]\n데이터: ${base64}`
+            content = `[이미지 파일: ${file.name}]\n이미지를 분석해주세요.\n데이터: ${base64}`
           } else if (file.type === "text/plain") {
             content = await file.text()
           } else if (file.type === "application/pdf") {
-            // Simplified PDF processing - in production, use proper PDF parser
-            content = `[PDF 파일: ${file.name}]\n파일 크기: ${file.size} bytes\n내용을 분석하려면 PDF 번역 기능을 사용해주세요.`
+            // Enhanced PDF processing
+            content = await processPDFFile(file)
           } else {
-            content = `[파일: ${file.name}]\n파일 타입: ${file.type}\n파일 크기: ${file.size} bytes`
+            content = `[파일: ${file.name}]\n파일 타입: ${file.type}\n파일 크기: ${file.size} bytes\n\n파일 내용을 분석해주세요.`
           }
 
           return {
@@ -92,8 +76,19 @@ export default function FileUpload({ onUpload, onClose }: FileUploadProps) {
     })
   }
 
+  const processPDFFile = async (file: File): Promise<string> => {
+    try {
+      // Convert to base64 for better processing
+      const base64 = await fileToBase64(file)
+      return `[PDF 파일: ${file.name}]\n파일 크기: ${(file.size / 1024 / 1024).toFixed(2)}MB\n\nPDF 내용을 분석하고 텍스트를 추출해주세요. 그래프, 이미지, 수식이 포함되어 있다면 해당 내용도 설명해주세요.\n\n데이터: ${base64}`
+    } catch (error) {
+      return `[PDF 파일: ${file.name}]\n파일 처리 중 오류가 발생했습니다. 다시 시도해주세요.`
+    }
+  }
+
   const getFileIcon = (type: string) => {
     if (type.startsWith("image/")) return <ImageIcon className="w-4 h-4" />
+    if (type === "application/pdf") return <FileText className="w-4 h-4 text-red-500" />
     if (type === "text/plain") return <FileText className="w-4 h-4" />
     return <File className="w-4 h-4" />
   }
@@ -114,26 +109,12 @@ export default function FileUpload({ onUpload, onClose }: FileUploadProps) {
       )}
 
       <div className="space-y-3">
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
-          <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-          <p className="text-sm text-gray-600 mb-2">이미지, 텍스트, PDF, DOCX 파일을 업로드하세요 (최대 10MB)</p>
-          <input
-            ref={fileInputRef}
-            type="file"
-            multiple
-            accept="image/*,.txt,.pdf,.docx"
-            onChange={handleFileSelect}
-            className="hidden"
-          />
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => fileInputRef.current?.click()}
-            className="bg-white text-gray-700 hover:bg-gray-50"
-          >
-            파일 선택
-          </Button>
-        </div>
+        <DragDropZone
+          onFilesSelected={handleFilesSelected}
+          acceptedTypes={["image/*", ".txt", ".pdf", ".docx"]}
+          maxFileSize={25}
+          multiple={true}
+        />
 
         {files.length > 0 && (
           <div className="space-y-2">
@@ -163,7 +144,14 @@ export default function FileUpload({ onUpload, onClose }: FileUploadProps) {
 
         <div className="flex space-x-2">
           <Button onClick={processFiles} disabled={files.length === 0 || loading} className="flex-1">
-            {loading ? "처리 중..." : "업로드"}
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                처리 중...
+              </>
+            ) : (
+              "업로드"
+            )}
           </Button>
           <Button variant="outline" onClick={onClose} className="bg-white text-gray-700 hover:bg-gray-50">
             취소
