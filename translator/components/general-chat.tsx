@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Card } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Send, Bot, User, Loader2, Paperclip, X, FileText, ImageIcon, Upload } from "lucide-react"
-import FileUpload from "@/components/file-upload"
+import { Send, Bot, User, Loader2, X, FileText, ImageIcon, Upload, Eye, Brain } from "lucide-react"
+import EnhancedFileUpload from "@/components/enhanced-file-upload"
 import ModelSelector from "@/components/model-selector"
 
 interface Message {
@@ -21,6 +21,7 @@ interface Message {
     name: string
     type: string
     content: string
+    analysis?: string
   }>
 }
 
@@ -40,6 +41,7 @@ export default function GeneralChat({ userId, chatId, onChatCreated }: GeneralCh
       name: string
       type: string
       content: string
+      analysis?: string
     }>
   >([])
   const [showFileUpload, setShowFileUpload] = useState(false)
@@ -109,7 +111,7 @@ export default function GeneralChat({ userId, chatId, onChatCreated }: GeneralCh
     }
   }
 
-  const handleFileUpload = (files: Array<{ name: string; type: string; content: string }>) => {
+  const handleFileUpload = (files: Array<{ name: string; type: string; content: string; analysis?: string }>) => {
     setUploadedFiles((prev) => [...prev, ...files])
     setShowFileUpload(false)
   }
@@ -119,52 +121,8 @@ export default function GeneralChat({ userId, chatId, onChatCreated }: GeneralCh
   }
 
   const handleDirectFileUpload = async (files: File[]) => {
-    const validFiles = files.filter((file) => {
-      const isValidType =
-        file.type.startsWith("image/") ||
-        file.type === "text/plain" ||
-        file.type === "application/pdf" ||
-        file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-      const isValidSize = file.size <= 25 * 1024 * 1024 // 25MB
-      return isValidType && isValidSize
-    })
-
-    if (validFiles.length > 0) {
-      const processedFiles = await Promise.all(
-        validFiles.map(async (file) => {
-          let content = ""
-
-          if (file.type.startsWith("image/")) {
-            const base64 = await fileToBase64(file)
-            content = `[이미지 파일: ${file.name}]\n이미지를 분석해주세요.\n데이터: ${base64}`
-          } else if (file.type === "text/plain") {
-            content = await file.text()
-          } else if (file.type === "application/pdf") {
-            const base64 = await fileToBase64(file)
-            content = `[PDF 파일: ${file.name}]\n파일 크기: ${(file.size / 1024 / 1024).toFixed(2)}MB\nPDF 내용을 분석해주세요.\n데이터: ${base64}`
-          } else {
-            content = `[파일: ${file.name}]\n파일 타입: ${file.type}\n파일 크기: ${file.size} bytes`
-          }
-
-          return {
-            name: file.name,
-            type: file.type,
-            content,
-          }
-        }),
-      )
-
-      setUploadedFiles((prev) => [...prev, ...processedFiles])
-    }
-  }
-
-  const fileToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = () => resolve(reader.result as string)
-      reader.onerror = (error) => reject(error)
-    })
+    // 향상된 파일 업로드 컴포넌트 사용
+    setShowFileUpload(true)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -269,10 +227,10 @@ export default function GeneralChat({ userId, chatId, onChatCreated }: GeneralCh
     <Card className="h-[600px] flex flex-col">
       <div className="p-4 border-b">
         <div className="flex items-center justify-between mb-2">
-          <h2 className="text-lg font-semibold">일반 채팅</h2>
+          <h2 className="text-lg font-semibold">🤖 AI 어시스턴트</h2>
           <ModelSelector selectedModel={selectedModel} onModelChange={setSelectedModel} />
         </div>
-        <p className="text-sm text-gray-600">ChatGPT와 자유롭게 대화하세요</p>
+        <p className="text-sm text-gray-600">Vision AI와 고급 파일 분석으로 더 정확한 답변을 제공합니다</p>
       </div>
 
       <ScrollArea
@@ -303,7 +261,17 @@ export default function GeneralChat({ userId, chatId, onChatCreated }: GeneralCh
           {messages.length === 0 && (
             <div className="text-center text-gray-500 py-8">
               <Bot className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-              <p>안녕하세요! 무엇을 도와드릴까요?</p>
+              <p className="text-lg font-medium">안녕하세요! 무엇을 도와드릴까요?</p>
+              <div className="mt-4 flex justify-center space-x-4 text-sm">
+                <div className="flex items-center space-x-1 text-blue-600">
+                  <Eye className="w-4 h-4" />
+                  <span>Vision AI</span>
+                </div>
+                <div className="flex items-center space-x-1 text-green-600">
+                  <Brain className="w-4 h-4" />
+                  <span>고급 분석</span>
+                </div>
+              </div>
             </div>
           )}
 
@@ -328,11 +296,18 @@ export default function GeneralChat({ userId, chatId, onChatCreated }: GeneralCh
                     {message.files.map((file, index) => (
                       <div key={`file-${index}`} className="flex items-center space-x-2 text-xs opacity-80">
                         {file.type.startsWith("image/") ? (
-                          <ImageIcon className="w-3 h-3" />
+                          <div className="flex items-center space-x-1">
+                            <Eye className="w-3 h-3" />
+                            <ImageIcon className="w-3 h-3" />
+                          </div>
                         ) : (
-                          <FileText className="w-3 h-3" />
+                          <div className="flex items-center space-x-1">
+                            <Brain className="w-3 h-3" />
+                            <FileText className="w-3 h-3" />
+                          </div>
                         )}
                         <span>{file.name}</span>
+                        {file.analysis && <span className="text-green-400">✓ 분석됨</span>}
                       </div>
                     ))}
                   </div>
@@ -364,8 +339,8 @@ export default function GeneralChat({ userId, chatId, onChatCreated }: GeneralCh
           <div className="absolute inset-0 bg-blue-50 bg-opacity-90 flex items-center justify-center z-10 border-2 border-dashed border-blue-400 rounded-lg">
             <div className="text-center">
               <Upload className="w-16 h-16 mx-auto mb-4 text-blue-500" />
-              <p className="text-xl font-semibold text-blue-700">파일을 여기에 놓으세요</p>
-              <p className="text-sm text-blue-600 mt-2">이미지, PDF, 텍스트 파일 지원</p>
+              <p className="text-xl font-semibold text-blue-700">고급 AI 분석을 위해 파일을 놓으세요</p>
+              <p className="text-sm text-blue-600 mt-2">Vision AI • 텍스트 추출 • 고급 처리</p>
             </div>
           </div>
         )}
@@ -380,8 +355,19 @@ export default function GeneralChat({ userId, chatId, onChatCreated }: GeneralCh
                 key={`upload-${index}`}
                 className="flex items-center space-x-2 bg-gray-100 rounded-lg px-3 py-1 text-sm"
               >
-                {file.type.startsWith("image/") ? <ImageIcon className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
+                {file.type.startsWith("image/") ? (
+                  <div className="flex items-center space-x-1">
+                    <Eye className="w-3 h-3 text-blue-500" />
+                    <ImageIcon className="w-4 h-4" />
+                  </div>
+                ) : (
+                  <div className="flex items-center space-x-1">
+                    <Brain className="w-3 h-3 text-green-500" />
+                    <FileText className="w-4 h-4" />
+                  </div>
+                )}
                 <span className="truncate max-w-32">{file.name}</span>
+                {file.analysis && <span className="text-green-500 text-xs">✓</span>}
                 <button onClick={() => removeFile(index)} className="text-gray-500 hover:text-red-500">
                   <X className="w-3 h-3" />
                 </button>
@@ -412,7 +398,7 @@ export default function GeneralChat({ userId, chatId, onChatCreated }: GeneralCh
                 onClick={() => setShowFileUpload(true)}
                 className="bg-white text-gray-700 hover:bg-gray-50"
               >
-                <Paperclip className="w-4 h-4" />
+                <Brain className="w-4 h-4" />
               </Button>
               <Button type="submit" disabled={loading || (!input.trim() && uploadedFiles.length === 0)}>
                 <Send className="w-4 h-4" />
@@ -421,7 +407,7 @@ export default function GeneralChat({ userId, chatId, onChatCreated }: GeneralCh
           </div>
         </form>
 
-        {showFileUpload && <FileUpload onUpload={handleFileUpload} onClose={() => setShowFileUpload(false)} />}
+        {showFileUpload && <EnhancedFileUpload onUpload={handleFileUpload} onClose={() => setShowFileUpload(false)} />}
       </div>
     </Card>
   )
