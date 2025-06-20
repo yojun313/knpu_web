@@ -7,11 +7,12 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Card } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Send, Bot, User, Loader2, Paperclip, X, FileText, ImageIcon, Upload } from 'lucide-react'
+import { Send, Bot, User, Loader2, Paperclip, X, FileText, ImageIcon, Upload } from "lucide-react"
 import FileUpload from "@/components/file-upload"
 import ModelSelector from "@/components/model-selector"
 
 interface Message {
+  _id?: string
   id: string
   role: "user" | "assistant"
   content: string
@@ -25,9 +26,11 @@ interface Message {
 
 interface GeneralChatProps {
   userId: string
+  chatId: string | null
+  onChatCreated: (chatId: string) => void
 }
 
-export default function GeneralChat({ userId }: GeneralChatProps) {
+export default function GeneralChat({ userId, chatId, onChatCreated }: GeneralChatProps) {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
@@ -44,9 +47,13 @@ export default function GeneralChat({ userId }: GeneralChatProps) {
   const [isDragOver, setIsDragOver] = useState(false)
 
   useEffect(() => {
-    loadChatHistory()
+    if (chatId) {
+      loadChatHistory(chatId)
+    } else {
+      setMessages([])
+    }
     loadUserPreferences()
-  }, [userId])
+  }, [chatId, userId])
 
   useEffect(() => {
     scrollToBottom()
@@ -70,10 +77,10 @@ export default function GeneralChat({ userId }: GeneralChatProps) {
     }
   }
 
-  const loadChatHistory = async () => {
+  const loadChatHistory = async (chatId: string) => {
     try {
       const token = localStorage.getItem("token")
-      const response = await fetch(`/api/general-chat/history?userId=${userId}`, {
+      const response = await fetch(`/api/general-chat/history/${chatId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -81,8 +88,9 @@ export default function GeneralChat({ userId }: GeneralChatProps) {
 
       if (response.ok) {
         const history = await response.json()
-        const parsedHistory = history.map((msg: any) => ({
+        const parsedHistory = history.map((msg: any, index: number) => ({
           ...msg,
+          id: msg._id || msg.id || `msg-${index}-${Date.now()}`,
           timestamp: new Date(msg.timestamp),
         }))
         setMessages(parsedHistory)
@@ -143,7 +151,7 @@ export default function GeneralChat({ userId }: GeneralChatProps) {
             type: file.type,
             content,
           }
-        })
+        }),
       )
 
       setUploadedFiles((prev) => [...prev, ...processedFiles])
@@ -164,7 +172,7 @@ export default function GeneralChat({ userId }: GeneralChatProps) {
     if ((!input.trim() && uploadedFiles.length === 0) || loading) return
 
     const userMessage: Message = {
-      id: crypto.randomUUID(), // ✅ 고유한 UUID로 변경
+      id: `user-${Date.now()}-${Math.random()}`,
       role: "user",
       content: input,
       timestamp: new Date(),
@@ -188,6 +196,7 @@ export default function GeneralChat({ userId }: GeneralChatProps) {
         body: JSON.stringify({
           message: input,
           userId,
+          chatId,
           chatHistory: messages,
           model: selectedModel,
           files: currentFiles,
@@ -200,7 +209,7 @@ export default function GeneralChat({ userId }: GeneralChatProps) {
         let assistantMessage = ""
 
         const assistantMessageObj: Message = {
-          id: crypto.randomUUID(), // ✅ 이것도 UUID로
+          id: `assistant-${Date.now()}-${Math.random()}`,
           role: "assistant",
           content: "",
           timestamp: new Date(),
@@ -230,6 +239,9 @@ export default function GeneralChat({ userId }: GeneralChatProps) {
                     ),
                   )
                 }
+                if (parsed.chatId && !chatId) {
+                  onChatCreated(parsed.chatId)
+                }
               } catch (e) {
                 // Ignore parsing errors
               }
@@ -242,7 +254,7 @@ export default function GeneralChat({ userId }: GeneralChatProps) {
       setMessages((prev) => [
         ...prev,
         {
-          id: (Date.now() + 1).toString(),
+          id: `error-${Date.now()}-${Math.random()}`,
           role: "assistant",
           content: "죄송합니다. 오류가 발생했습니다. 다시 시도해주세요.",
           timestamp: new Date(),
@@ -287,7 +299,7 @@ export default function GeneralChat({ userId }: GeneralChatProps) {
           }
         }}
       >
-        <div className={`space-y-4 ${isDragOver ? 'opacity-50' : ''}`}>
+        <div className={`space-y-4 ${isDragOver ? "opacity-50" : ""}`}>
           {messages.length === 0 && (
             <div className="text-center text-gray-500 py-8">
               <Bot className="w-12 h-12 mx-auto mb-4 text-gray-400" />
@@ -297,7 +309,7 @@ export default function GeneralChat({ userId }: GeneralChatProps) {
 
           {messages.map((message) => (
             <div
-              key={message.id} // ✅ 이미 있지만 확실히 설정
+              key={message.id}
               className={`flex items-start space-x-3 ${message.role === "user" ? "justify-end" : "justify-start"}`}
             >
               {message.role === "assistant" && (
@@ -314,7 +326,7 @@ export default function GeneralChat({ userId }: GeneralChatProps) {
                 {message.files && message.files.length > 0 && (
                   <div className="mb-2 space-y-1">
                     {message.files.map((file, index) => (
-                      <div key={index} className="flex items-center space-x-2 text-xs opacity-80">
+                      <div key={`file-${index}`} className="flex items-center space-x-2 text-xs opacity-80">
                         {file.type.startsWith("image/") ? (
                           <ImageIcon className="w-3 h-3" />
                         ) : (
@@ -364,7 +376,10 @@ export default function GeneralChat({ userId }: GeneralChatProps) {
         {uploadedFiles.length > 0 && (
           <div className="mb-3 flex flex-wrap gap-2">
             {uploadedFiles.map((file, index) => (
-              <div key={index} className="flex items-center space-x-2 bg-gray-100 rounded-lg px-3 py-1 text-sm">
+              <div
+                key={`upload-${index}`}
+                className="flex items-center space-x-2 bg-gray-100 rounded-lg px-3 py-1 text-sm"
+              >
                 {file.type.startsWith("image/") ? <ImageIcon className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
                 <span className="truncate max-w-32">{file.name}</span>
                 <button onClick={() => removeFile(index)} className="text-gray-500 hover:text-red-500">

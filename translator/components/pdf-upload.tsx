@@ -1,13 +1,11 @@
 "use client"
 
-import type React from "react"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Download, Loader2, FileText, X } from 'lucide-react'
+import { Download, Loader2, FileText, X } from "lucide-react"
 import DragDropZone from "@/components/drag-drop-zone"
 
 interface PdfUploadProps {
@@ -159,9 +157,7 @@ export default function PdfUpload({ userId }: PdfUploadProps) {
                     <FileText className="w-5 h-5 text-red-500" />
                     <div>
                       <p className="text-sm font-medium text-blue-800">{file.name}</p>
-                      <p className="text-xs text-blue-600">
-                        {(file.size / 1024 / 1024).toFixed(2)} MB • PDF 문서
-                      </p>
+                      <p className="text-xs text-blue-600">{(file.size / 1024 / 1024).toFixed(2)} MB • PDF 문서</p>
                     </div>
                   </div>
                   <Button
@@ -190,8 +186,7 @@ export default function PdfUpload({ userId }: PdfUploadProps) {
       {files.length > 0 && !translating && !translatedText && (
         <div className="text-center">
           <Button onClick={handleUploadAndTranslate} disabled={uploading} size="lg" className="px-8">
-            {uploading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-            🚀 고급 번역 시작
+            {uploading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}🚀 고급 번역 시작
           </Button>
           <p className="text-sm text-gray-500 mt-2">AI가 텍스트, 이미지, 그래프를 모두 분석합니다</p>
         </div>
@@ -202,9 +197,7 @@ export default function PdfUpload({ userId }: PdfUploadProps) {
         <Card className="p-6">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">
-                {uploading ? "📄 PDF 분석 중..." : "🔄 AI 번역 진행 중..."}
-              </span>
+              <span className="text-sm font-medium">{uploading ? "📄 PDF 분석 중..." : "🔄 AI 번역 진행 중..."}</span>
               <span className="text-sm text-gray-500">{progress}%</span>
             </div>
             <Progress value={progress} className="w-full" />
@@ -234,9 +227,7 @@ export default function PdfUpload({ userId }: PdfUploadProps) {
               <div className="flex items-center space-x-2 mb-3">
                 <FileText className="w-4 h-4 text-green-600" />
                 <span className="text-sm font-medium text-green-800">번역된 논문</span>
-                <span className="text-xs text-gray-500">
-                  ({translatedText.length.toLocaleString()} 글자)
-                </span>
+                <span className="text-xs text-gray-500">({translatedText.length.toLocaleString()} 글자)</span>
               </div>
             </div>
 

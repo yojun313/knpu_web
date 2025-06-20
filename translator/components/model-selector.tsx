@@ -5,7 +5,19 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { Zap, Clock, DollarSign, Sparkles, Brain, Rocket, Cpu, Target, Crown, CloudLightningIcon as Lightning, Atom } from 'lucide-react'
+import {
+  Zap,
+  Clock,
+  DollarSign,
+  Sparkles,
+  Brain,
+  Rocket,
+  Cpu,
+  Target,
+  Crown,
+  CloudLightningIcon as Lightning,
+  Atom,
+} from "lucide-react"
 
 interface ModelSelectorProps {
   selectedModel: string
@@ -201,7 +213,7 @@ export default function ModelSelector({ selectedModel, onModelChange, className 
           <Card className="absolute top-full left-0 mt-2 p-3 bg-white border shadow-lg z-20 min-w-96 max-h-96 overflow-y-auto">
             <div className="space-y-4">
               <h3 className="text-sm font-semibold text-gray-700 px-2 py-1">AI 모델 선택</h3>
-              
+
               {modelCategories.map((category, categoryIndex) => (
                 <div key={category.category}>
                   <h4 className="text-xs font-medium text-gray-500 px-2 py-1 uppercase tracking-wide">

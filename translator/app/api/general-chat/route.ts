@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET || "your-secret-key") as any
-    const { message, userId, chatHistory, model, files } = await request.json()
+    const { message, userId, chatId, chatHistory, model, files } = await request.json()
 
     await connectDB()
 
@@ -77,14 +77,31 @@ export async function POST(request: NextRequest) {
       model: openai(model || "gpt-4o"),
       messages,
       temperature: 0.7,
-      // 토큰 제한 제거 - 무제한 생성
     })
 
-    // Save chat to database
-    await GeneralChat.create({
-      userId: decoded.userId,
-      messages: [...chatHistory, { role: "user", content: message, timestamp: new Date(), files }],
-    })
+    // Generate title for new chat
+    let chatTitle = "새 일반 채팅"
+    if (!chatId && message.length > 0) {
+      chatTitle = message.slice(0, 30) + (message.length > 30 ? "..." : "")
+    }
+
+    // Create or update chat
+    let currentChatId = chatId
+    if (!chatId) {
+      const newChat = await GeneralChat.create({
+        userId: decoded.userId,
+        title: chatTitle,
+        messages: [{ role: "user", content: message, timestamp: new Date(), files }],
+      })
+      currentChatId = newChat._id.toString()
+    } else {
+      await GeneralChat.findByIdAndUpdate(chatId, {
+        $push: {
+          messages: { role: "user", content: message, timestamp: new Date(), files },
+        },
+        updatedAt: new Date(),
+      })
+    }
 
     // Create streaming response
     const encoder = new TextEncoder()
@@ -95,31 +112,27 @@ export async function POST(request: NextRequest) {
 
           for await (const delta of result.textStream) {
             fullResponse += delta
-            const chunk = encoder.encode(`data: ${JSON.stringify({ content: delta })}\n\n`)
+            const chunk = encoder.encode(`data: ${JSON.stringify({ content: delta, chatId: currentChatId })}\n\n`)
             controller.enqueue(chunk)
           }
 
           // Save assistant response
-          await GeneralChat.findOneAndUpdate(
-            { userId: decoded.userId },
-            {
-              $push: {
-                messages: {
-                  role: "assistant",
-                  content: fullResponse,
-                  timestamp: new Date(),
-                },
+          await GeneralChat.findByIdAndUpdate(currentChatId, {
+            $push: {
+              messages: {
+                role: "assistant",
+                content: fullResponse,
+                timestamp: new Date(),
               },
             },
-            { sort: { createdAt: -1 } },
-          )
+            updatedAt: new Date(),
+          })
 
           const doneChunk = encoder.encode(`data: [DONE]\n\n`)
           controller.enqueue(doneChunk)
           controller.close()
         } catch (error) {
           console.error("Streaming error:", error)
-          // 에러가 발생해도 스트림을 계속 유지
           const errorChunk = encoder.encode(
             `data: ${JSON.stringify({ content: "\n\n죄송합니다. 응답 중 오류가 발생했지만 계속 진행하겠습니다." })}\n\n`,
           )

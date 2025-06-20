@@ -1,12 +1,10 @@
 "use client"
 
-import type React from "react"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { X, FileText, ImageIcon, File, Loader2 } from 'lucide-react'
+import { X, FileText, ImageIcon, File, Loader2 } from "lucide-react"
 import DragDropZone from "@/components/drag-drop-zone"
 
 interface FileUploadProps {

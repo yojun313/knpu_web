@@ -14,6 +14,13 @@ const MessageSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  files: [
+    {
+      name: String,
+      type: String,
+      content: String,
+    },
+  ],
 })
 
 const GeneralChatSchema = new mongoose.Schema(
@@ -22,6 +29,10 @@ const GeneralChatSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+    },
+    title: {
+      type: String,
+      default: "새 일반 채팅",
     },
     messages: [MessageSchema],
   },

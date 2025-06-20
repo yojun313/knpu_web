@@ -5,8 +5,7 @@ import type React from "react"
 import { useState, useRef, useCallback } from "react"
 import { Card } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Upload, FileText, ImageIcon, File, X } from 'lucide-react'
-import { Button } from "@/components/ui/button"
+import { Upload, FileText, ImageIcon, File } from "lucide-react"
 
 interface DragDropZoneProps {
   onFilesSelected: (files: File[]) => void
@@ -135,9 +134,7 @@ export default function DragDropZone({
     <div className={className}>
       <Card
         className={`border-2 border-dashed transition-all duration-200 cursor-pointer ${
-          isDragOver
-            ? "border-blue-400 bg-blue-50 scale-105"
-            : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+          isDragOver ? "border-blue-400 bg-blue-50 scale-105" : "border-gray-300 hover:border-gray-400 hover:bg-gray-50"
         }`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -147,9 +144,7 @@ export default function DragDropZone({
         <div className="p-8 text-center">
           <div className="mb-4">
             <Upload
-              className={`w-12 h-12 mx-auto transition-colors ${
-                isDragOver ? "text-blue-500" : "text-gray-400"
-              }`}
+              className={`w-12 h-12 mx-auto transition-colors ${isDragOver ? "text-blue-500" : "text-gray-400"}`}
             />
           </div>
 
