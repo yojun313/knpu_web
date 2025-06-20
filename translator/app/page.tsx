@@ -66,7 +66,7 @@ export default function HomePage() {
       <header className="bg-white border-b border-gray-200 px-4 py-3">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <h1 className="text-xl font-bold text-gray-900">논문 번역기</h1>
+            <h1 className="text-xl font-bold text-gray-900">CALLAB AI</h1>
             <span className="text-sm text-gray-500">안녕하세요, {user?.name}님!</span>
           </div>
           <Button variant="outline" onClick={handleLogout} className="bg-white text-gray-700 hover:bg-gray-50">
