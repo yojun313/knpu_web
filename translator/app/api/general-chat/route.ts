@@ -36,12 +36,17 @@ export async function POST(request: NextRequest) {
     if (files && files.length > 0) {
       const fileContents = files
         .map((file: any) => {
-          if (file.type.startsWith("image/")) {
-            return `\n\n📷 이미지 파일: ${file.name}\n이미지를 분석해주세요:\n${file.content}`
-          } else if (file.type === "application/pdf") {
-            return `\n\n📄 PDF 파일: ${file.name}\nPDF 내용을 분석하고 요약해주세요. 텍스트, 이미지, 그래프가 모두 포함되어 있을 수 있습니다:\n${file.content}`
-          } else {
-            return `\n\n📎 파일: ${file.name}\n${file.content}`
+          try {
+            if (file.type.startsWith("image/")) {
+              return `\n\n📷 이미지 파일: ${file.name}\n이미지를 자세히 분석해주세요. 텍스트가 있다면 추출하고, 그래프나 차트가 있다면 설명해주세요:\n${file.content}`
+            } else if (file.type === "application/pdf") {
+              return `\n\n📄 PDF 파일: ${file.name}\nPDF 내용을 분석하고 요약해주세요:\n${file.content.slice(0, 10000)}` // 너무 긴 내용은 자르기
+            } else {
+              return `\n\n📎 파일: ${file.name}\n${file.content}`
+            }
+          } catch (error) {
+            console.error(`파일 처리 오류 (${file.name}):`, error)
+            return `\n\n❌ 파일 처리 오류: ${file.name}`
           }
         })
         .join("")

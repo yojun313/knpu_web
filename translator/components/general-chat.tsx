@@ -7,9 +7,10 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Card } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Send, Bot, User, Loader2, X, FileText, ImageIcon, Upload, Eye, Brain } from "lucide-react"
+import { Send, Bot, User, Loader2, X, FileText, ImageIcon, Upload, Eye, Brain } from 'lucide-react'
 import EnhancedFileUpload from "@/components/enhanced-file-upload"
 import ModelSelector from "@/components/model-selector"
+import SimpleFileUpload from "@/components/simple-file-upload"
 
 interface Message {
   _id?: string
@@ -120,9 +121,53 @@ export default function GeneralChat({ userId, chatId, onChatCreated }: GeneralCh
     setUploadedFiles((prev) => prev.filter((_, i) => i !== index))
   }
 
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = () => resolve(reader.result as string)
+      reader.onerror = (error) => reject(error)
+    })
+  }
+
   const handleDirectFileUpload = async (files: File[]) => {
-    // 향상된 파일 업로드 컴포넌트 사용
-    setShowFileUpload(true)
+    const validFiles = files.filter((file) => {
+      const isValidType =
+        file.type.startsWith("image/") ||
+        file.type === "text/plain" ||
+        file.type === "application/pdf" ||
+        file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      const isValidSize = file.size <= 25 * 1024 * 1024 // 25MB
+      return isValidType && isValidSize
+    })
+
+    if (validFiles.length > 0) {
+      const processedFiles = await Promise.all(
+        validFiles.map(async (file) => {
+          let content = ""
+
+          if (file.type.startsWith("image/")) {
+            const base64 = await fileToBase64(file)
+            content = `[이미지 파일: ${file.name}]\n이미지를 분석해주세요.\n데이터: ${base64}`
+          } else if (file.type === "text/plain") {
+            content = await file.text()
+          } else if (file.type === "application/pdf") {
+            const base64 = await fileToBase64(file)
+            content = `[PDF 파일: ${file.name}]\n파일 크기: ${(file.size / 1024 / 1024).toFixed(2)}MB\nPDF 내용을 분석해주세요.\n데이터: ${base64}`
+          } else {
+            content = `[파일: ${file.name}]\n파일 타입: ${file.type}\n파일 크기: ${file.size} bytes`
+          }
+
+          return {
+            name: file.name,
+            type: file.type,
+            content,
+          }
+        }),
+      )
+
+      setUploadedFiles((prev) => [...prev, ...processedFiles])
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -398,7 +443,7 @@ export default function GeneralChat({ userId, chatId, onChatCreated }: GeneralCh
                 onClick={() => setShowFileUpload(true)}
                 className="bg-white text-gray-700 hover:bg-gray-50"
               >
-                <Brain className="w-4 h-4" />
+                <Upload className="w-4 h-4" />
               </Button>
               <Button type="submit" disabled={loading || (!input.trim() && uploadedFiles.length === 0)}>
                 <Send className="w-4 h-4" />
@@ -407,7 +452,7 @@ export default function GeneralChat({ userId, chatId, onChatCreated }: GeneralCh
           </div>
         </form>
 
-        {showFileUpload && <EnhancedFileUpload onUpload={handleFileUpload} onClose={() => setShowFileUpload(false)} />}
+        {showFileUpload && <SimpleFileUpload onUpload={handleFileUpload} onClose={() => setShowFileUpload(false)} />}
       </div>
     </Card>
   )
