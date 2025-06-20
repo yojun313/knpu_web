@@ -2,9 +2,9 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.dev',
+  title: 'CALLAB AI',
+  description: 'KNPU CALLAB AI ASSISTANT',
+  generator: 'YOJUN',
 }
 
 export default function RootLayout({
