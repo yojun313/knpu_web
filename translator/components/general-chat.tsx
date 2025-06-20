@@ -114,7 +114,7 @@ export default function GeneralChat({ userId }: GeneralChatProps) {
     if ((!input.trim() && uploadedFiles.length === 0) || loading) return
 
     const userMessage: Message = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(), // ✅ 고유한 UUID로 변경
       role: "user",
       content: input,
       timestamp: new Date(),
@@ -150,7 +150,7 @@ export default function GeneralChat({ userId }: GeneralChatProps) {
         let assistantMessage = ""
 
         const assistantMessageObj: Message = {
-          id: (Date.now() + 1).toString(),
+          id: crypto.randomUUID(), // ✅ 이것도 UUID로
           role: "assistant",
           content: "",
           timestamp: new Date(),
