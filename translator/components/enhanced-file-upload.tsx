@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Progress } from "@/components/ui/progress"
-import { X, FileText, ImageIcon, File, Loader2, Eye, Brain, Zap } from 'lucide-react'
+import { X, FileText, ImageIcon, File, Loader2, Eye, Brain, Zap } from "lucide-react"
 import DragDropZone from "@/components/drag-drop-zone"
 
 interface EnhancedFileUploadProps {

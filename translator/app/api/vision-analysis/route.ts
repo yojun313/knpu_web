@@ -38,7 +38,9 @@ export async function POST(request: NextRequest) {
           content: [
             {
               type: "text",
-              text: prompt || "이 이미지를 자세히 분석해주세요. 텍스트가 있다면 추출하고, 그래프나 차트가 있다면 설명해주세요.",
+              text:
+                prompt ||
+                "이 이미지를 자세히 분석해주세요. 텍스트가 있다면 추출하고, 그래프나 차트가 있다면 설명해주세요.",
             },
             {
               type: "image_url",
