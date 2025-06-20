@@ -141,9 +141,20 @@ export default function RegisterPage() {
                 <SelectTrigger>
                   <SelectValue placeholder="모델을 선택하세요" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="gpt-4o">GPT-4o (최신, 가장 강력)</SelectItem>
-                  <SelectItem value="gpt-4o-mini">GPT-4o Mini (빠르고 경제적)</SelectItem>
+                <SelectContent className="max-h-60">
+                  <SelectItem value="gpt-4.1">GPT-4.1 (최고성능)</SelectItem>
+                  <SelectItem value="gpt-4.1-mini">GPT-4.1 Mini (균형)</SelectItem>
+                  <SelectItem value="gpt-4.1-nano">GPT-4.1 Nano (초경량)</SelectItem>
+                  <SelectItem value="gpt-4o">GPT-4o (멀티모달)</SelectItem>
+                  <SelectItem value="gpt-4o-mini">GPT-4o Mini (빠름)</SelectItem>
+                  <SelectItem value="gpt-4.5-preview">GPT-4.5 Preview (미리보기)</SelectItem>
+                  <SelectItem value="o3">o3 (추론)</SelectItem>
+                  <SelectItem value="o3-pro">o3 Pro (프로)</SelectItem>
+                  <SelectItem value="o3-mini">o3 Mini (경량)</SelectItem>
+                  <SelectItem value="o4-mini">o4 Mini (고속)</SelectItem>
+                  <SelectItem value="o1">o1 (안정)</SelectItem>
+                  <SelectItem value="o1-pro">o1 Pro (프로)</SelectItem>
+                  <SelectItem value="o1-mini">o1 Mini (경제적)</SelectItem>
                   <SelectItem value="gpt-4-turbo">GPT-4 Turbo (고성능)</SelectItem>
                   <SelectItem value="gpt-3.5-turbo">GPT-3.5 Turbo (경제적)</SelectItem>
                 </SelectContent>
