@@ -30,6 +30,9 @@ NEWS_LIST_URL = f"{API_BASE}/news"
 NEWS_EDIT_URL = f"{API_BASE}/edit/news"
 PAPER_LIST_URL = f"{API_BASE}/papers"
 PAPER_EDIT_URL = f"{API_BASE}/edit/paper"
+MEMBER_DELETE_URL = f"{API_BASE}/member"
+NEWS_DELETE_URL = f"{API_BASE}/news"
+PAPER_DELETE_URL = f"{API_BASE}/paper"
 
 LOCAL_TEMP_DIR = "./uploads"   # 업로드 전 임시 복사 폴더
 os.makedirs(LOCAL_TEMP_DIR, exist_ok=True)
@@ -101,6 +104,31 @@ def choose_local_file(title="이미지 선택") -> Optional[str]:
         return None
 
 # ---------- 멤버/뉴스 CRUD ----------
+def upsert_to_server(url: str, payload: dict):
+    headers = {
+        "Authorization": f"Bearer {os.getenv('ADMIN_TOKEN')}"
+    }
+    res = requests.post(url, headers=headers, json=payload)
+    if res.status_code == 200:
+        console.print(Panel("✅ 성공적으로 반영되었습니다!", style="bold green"))
+        show_object(res.json(), title="서버 응답")
+    else:
+        console.print(
+            Panel(f"❌ 실패 ({res.status_code})\n{res.text}", style="bold red"))
+        sys.exit(1)
+
+
+def delete_from_server(url: str, params: dict):
+    headers = {
+        "Authorization": f"Bearer {os.getenv('ADMIN_TOKEN')}"
+    }
+    res = requests.delete(url, headers=headers, params=params)
+    if res.status_code == 200:
+        console.print(Panel("✅ 성공적으로 삭제되었습니다!", style="bold green"))
+        show_object(res.json() if res.text else {}, title="서버 응답")
+    else:
+        console.print(
+            Panel(f"❌ 실패 ({res.status_code})\n{res.text}", style="bold red"))
 
 
 def fetch_members() -> List[dict]:
@@ -117,20 +145,6 @@ def fetch_news() -> List[dict]:
     except Exception as e:
         console.print(f"[red]뉴스 목록 불러오기 실패:[/] {e}")
         return []
-
-
-def upsert_to_server(url: str, payload: dict):
-    headers = {
-        "Authorization": f"Bearer {os.getenv('ADMIN_TOKEN')}"
-    }
-    res = requests.post(url, headers=headers, json=payload)
-    if res.status_code == 200:
-        console.print(Panel("✅ 성공적으로 반영되었습니다!", style="bold green"))
-        show_object(res.json(), title="서버 응답")
-    else:
-        console.print(
-            Panel(f"❌ 실패 ({res.status_code})\n{res.text}", style="bold red"))
-        sys.exit(1)
 
 
 def select_member() -> Optional[dict]:
@@ -198,6 +212,14 @@ def add_or_edit_member(edit: bool = False):
         upsert_to_server(MEMBER_EDIT_URL, data)
 
 
+def delete_member_ui():
+    data = select_member()
+    if not data:
+        return
+    if Confirm.ask(f"{data['name']} 멤버를 삭제할까요?", default=False):
+        delete_from_server(MEMBER_DELETE_URL, {"name": data["name"]})
+
+
 def select_news() -> Optional[dict]:
     """수정할 뉴스를 선택하고 해당 딕셔너리를 반환"""
     news_list = fetch_news()
@@ -248,6 +270,14 @@ def add_or_edit_news(edit: bool = False):
     show_object(data, title="보낼 뉴스 데이터")
     if Confirm.ask("서버에 저장할까요?", default=True):
         upsert_to_server(NEWS_EDIT_URL, data)
+
+
+def delete_news_ui():
+    data = select_news()
+    if not data:
+        return
+    if Confirm.ask(f"{data['title']} 뉴스를 삭제할까요?", default=False):
+        delete_from_server(NEWS_DELETE_URL, {"date": data["date"]})
 
 
 def fetch_papers() -> List[dict]:
@@ -328,33 +358,114 @@ def add_or_edit_paper(edit: bool = False):
         }
         upsert_to_server(PAPER_EDIT_URL, payload)
 
+
+def delete_paper_ui():
+    papers_list = fetch_papers()
+    papers_by_year = {str(doc["year"]): doc.get("papers", []) for doc in papers_list}
+    years = list(papers_by_year.keys())
+    if not years:
+        console.print("[yellow]삭제할 논문이 없습니다.[/]")
+        return
+    year = Prompt.ask("연도를 선택하세요", choices=years)
+    papers = papers_by_year[year]
+
+    list_table = Table(
+        title=f"{year}년도 논문 목록",
+        box=box.MINIMAL_DOUBLE_HEAD,
+        show_lines=True
+    )
+    list_table.add_column("No", justify="right")
+    list_table.add_column("제목")
+    for idx, p in enumerate(papers, 1):
+        list_table.add_row(str(idx), p.get("title", ""))
+    console.print(list_table)
+
+    idx = int(Prompt.ask(
+        "삭제할 논문 번호",
+        choices=[str(i) for i in range(1, len(papers) + 1)]
+    ))
+    title = papers[idx - 1]["title"]
+
+    if Confirm.ask(f"{year}년도의 '{title}' 논문을 삭제할까요?", default=False):
+        delete_from_server(PAPER_DELETE_URL, {"year": year, "title": title})
+
+
 # ---------- 메인 메뉴 ----------
 
 
-def main():
+def member_menu():
     while True:
-        console.rule("[bold magenta]LAB CONTENT MANAGER[/]")
+        console.rule("[bold blue]멤버 관리[/]")
         console.print("1) 멤버 추가")
         console.print("2) 멤버 수정")
-        console.print("3) 뉴스 추가")
-        console.print("4) 뉴스 수정")
-        console.print("5) 논문 추가")
-        console.print("6) 논문 수정")
-        console.print("0) 종료")
-        choice = Prompt.ask("선택", choices=["1", "2", "3", "4", "5", "6", "0"])
+        console.print("3) 멤버 삭제")
+        console.print("0) 뒤로가기")
+        choice = Prompt.ask("선택", choices=["1", "2", "3", "0"])
+
         if choice == "1":
             add_or_edit_member(edit=False)
         elif choice == "2":
             add_or_edit_member(edit=True)
         elif choice == "3":
+            delete_member_ui()
+        elif choice == "0":
+            break
+
+
+def news_menu():
+    while True:
+        console.rule("[bold blue]뉴스 관리[/]")
+        console.print("1) 뉴스 추가")
+        console.print("2) 뉴스 수정")
+        console.print("3) 뉴스 삭제")
+        console.print("0) 뒤로가기")
+        choice = Prompt.ask("선택", choices=["1", "2", "3", "0"])
+
+        if choice == "1":
             add_or_edit_news(edit=False)
-        elif choice == "4":
+        elif choice == "2":
             add_or_edit_news(edit=True)
-        elif choice == "5":
+        elif choice == "3":
+            delete_news_ui()
+        elif choice == "0":
+            break
+
+
+def paper_menu():
+    while True:
+        console.rule("[bold blue]논문 관리[/]")
+        console.print("1) 논문 추가")
+        console.print("2) 논문 수정")
+        console.print("3) 논문 삭제")
+        console.print("0) 뒤로가기")
+        choice = Prompt.ask("선택", choices=["1", "2", "3", "0"])
+
+        if choice == "1":
             add_or_edit_paper(edit=False)
-        elif choice == "6":
+        elif choice == "2":
             add_or_edit_paper(edit=True)
-        else:
+        elif choice == "3":
+            delete_paper_ui()
+        elif choice == "0":
+            break
+
+
+def main():
+    while True:
+        console.rule("[bold magenta]LAB CONTENT MANAGER[/]")
+        console.print("1) 멤버 관리")
+        console.print("2) 뉴스 관리")
+        console.print("3) 논문 관리")
+        console.print("0) 종료")
+        choice = Prompt.ask("선택", choices=["1", "2", "3", "0"])
+
+        if choice == "1":
+            member_menu()
+        elif choice == "2":
+            news_menu()
+        elif choice == "3":
+            paper_menu()
+        elif choice == "0":
             console.print("안녕히 가세요! 👋")
             break
 
@@ -364,3 +475,4 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         console.print("\n[bold yellow]사용자 종료[/]")
+
