@@ -15,11 +15,6 @@ import boto3
 
 # ---------- 환경 변수 & Cloudflare R2 설정 ----------
 load_dotenv()                                     # .env 로부터 ↓ 값들 읽기
-ACCESS_KEY_ID = os.getenv("ACCESS_KEY_ID")
-SECRET_ACCESS_KEY = os.getenv("SECRET_ACCESS_KEY")
-ACCOUNT_ID = os.getenv("ACCOUNT_ID")
-BUCKET_NAME = os.getenv("HOMEPAGE_BUCKET_NAME")
-R2_ENDPOINT = f"https://{ACCOUNT_ID}.r2.cloudflarestorage.com"
 
 # 서버 API 엔드포인트 (원하면 수정)
 API_BASE = "https://home.knpu.re.kr/api"
@@ -37,33 +32,30 @@ LOCAL_TEMP_DIR = "./uploads"   # 업로드 전 임시 복사 폴더
 os.makedirs(LOCAL_TEMP_DIR, exist_ok=True)
 console = Console()
 
-# ---------- boto3 : R2 클라이언트 ----------
-
-s3 = boto3.client(
-    "s3",
-    endpoint_url=R2_ENDPOINT,
-    aws_access_key_id=ACCESS_KEY_ID,
-    aws_secret_access_key=SECRET_ACCESS_KEY,
-    region_name="auto",
-)
-
-
 def upload_image(src_path: str, object_name: Optional[str] = None) -> str:
     """
-    src_path 의 파일을 R2 버킷에 업로드 후 public URL 반환
+    src_path 의 파일을 FastAPI 서버의 업로드 엔드포인트를 이용해 업로드 후 public URL 반환
     """
-    if not object_name:
-        object_name = os.path.basename(src_path)
-
-    # boto3 는 로컬 파일이 있어야 하므로, 없는 경우 예외
     if not os.path.exists(src_path):
         raise FileNotFoundError(src_path)
 
-    s3.upload_file(src_path, BUCKET_NAME, object_name)
-    return f"https://pub-60ca29aab33f424fab345807bd058d56.r2.dev/{object_name}"
+    # 서버 업로드 엔드포인트
+    UPLOAD_URL = f"{API_BASE}/image"
+
+    # 파일 준비
+    with open(src_path, "rb") as f:
+        files = {"file": (os.path.basename(src_path), f, "image/jpeg")}
+        data = {"folder": "members"}  # 혹은 news/papers 등 호출하는 쪽에서 지정
+        headers = {"Authorization": f"Bearer {os.getenv('ADMIN_TOKEN')}"}
+        response = requests.post(UPLOAD_URL, files=files, data=data, headers=headers)
+
+    if response.status_code == 200:
+        result = response.json()
+        return result["url"]  # FastAPI 엔드포인트가 반환한 public URL
+    else:
+        raise RuntimeError(f"업로드 실패: {response.status_code}, {response.text}")
 
 # ---------- 헬퍼 ----------
-
 
 def prompt_list(label: str, default: Optional[List[str]] = None) -> List[str]:
     """
