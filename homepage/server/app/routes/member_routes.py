@@ -15,10 +15,6 @@ def list_members():
     order = ["교수", "수석연구위원", "연구위원", "대학원 과정", "연구원", "선임연구원"]
     order_map = {section: idx for idx, section in enumerate(order)}
 
-    # 디버깅 출력 (선택)
-    for d in docs:
-        print(f"{d['name']} section: {d.get('section')} order: {order_map.get(d.get('section'), len(order_map))}")
-
     # 정렬
     docs.sort(key=lambda d: order_map.get(d.get('section'), len(order_map)))
     return docs
