@@ -19,7 +19,7 @@ load_dotenv()                                     # .env 로부터 ↓ 값들 �
 ACCESS_KEY_ID = os.getenv("ACCESS_KEY_ID")
 SECRET_ACCESS_KEY = os.getenv("SECRET_ACCESS_KEY")
 ACCOUNT_ID = os.getenv("ACCOUNT_ID")
-BUCKET_NAME = os.getenv("BUCKET_NAME")
+BUCKET_NAME = os.getenv("HOMEPAGE_BUCKET_NAME")
 R2_ENDPOINT = f"https://{ACCOUNT_ID}.r2.cloudflarestorage.com"
 
 # 서버 API 엔드포인트 (원하면 수정)
