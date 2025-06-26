@@ -38,7 +38,8 @@ def _allowed(ext: str) -> bool:
 )
 async def upload_image(
     file: UploadFile = File(...),
-    folder: Literal["members", "news", "papers", "misc"] = Form("misc"),
+    object_name: str = Form("default"),
+    folder: Literal["members", "news", "papers", "misc"] = Form("misc")
 ) -> JSONResponse:
     """
     * `file` : multipart/form-data 로 전송되는 이미지 파일\n
@@ -55,10 +56,13 @@ async def upload_image(
         raise HTTPException(
             status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
             detail="image/* 만 허용",
-        )
+        )  
+    
+    print("object_name:", object_name)
 
     # 2) object key 생성 (폴더/uuid.ext)
-    object_name = f"{folder}/{uuid.uuid4().hex}{ext.lower()}"
+    if object_name == 'default':
+        object_name = f"{folder}/{uuid.uuid4().hex}{ext.lower()}"
 
     # 3) S3 업로드 (stream)
     try:
