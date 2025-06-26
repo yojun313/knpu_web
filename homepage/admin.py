@@ -59,15 +59,18 @@ def upload_image(src_path: str, object_name: Optional[str] = None) -> str:
 # ---------- Tkinter 파일 선택 ----------
 def choose_local_file(title="이미지 선택") -> Optional[str]:
     try:
-        window = tk.Tk()
-        window.file = filedialog.askopenfilename(
+        # 루트 창 생성
+        root = tk.Tk()
+        path = filedialog.askopenfilename(
             title=title,
-            filetypes=[("이미지 파일", "*.png;*.jpg;*.jpeg;*.gif;*.bmp"), ("모든 파일", "*.*")],
+            filetypes=[("Image Files", "*.png;*.jpg;*.jpeg;*.webp")]
         )
-        window.mainloop()
+        return path or None
     except Exception as e:
         console.print(f"[red]파일 다이얼로그 오류:[/] {e}")
         return None
+
+
 
 # ---------- Rich 콘솔 ----------
 console = Console()
