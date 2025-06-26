@@ -60,7 +60,7 @@ def choose_local_file(title="이미지 선택") -> Optional[str]:
     try:
         # 루트 창 생성
         root = tk.Tk()
-        root.withdraw()  # Tk 창 숨기기
+        #root.withdraw()  # Tk 창 숨기기
         path = filedialog.askopenfilename(
             title=title,
             filetypes=[("Image Files", "*.png;*.jpg;*.jpeg;*.webp")]
