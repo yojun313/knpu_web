@@ -26,6 +26,7 @@ R2_ENDPOINT        = f"https://{ACCOUNT_ID}.r2.cloudflarestorage.com"
 API_BASE           = "http://localhost:8002/api"
 MEMBER_EDIT_URL    = f"{API_BASE}/edit/member"
 MEMBER_LIST_URL    = f"{API_BASE}/members"
+NEWS_LIST_URL      = f"{API_BASE}/news"
 NEWS_EDIT_URL      = f"{API_BASE}/edit/news"
 
 LOCAL_TEMP_DIR     = "./uploads"   # 업로드 전 임시 복사 폴더
@@ -244,6 +245,7 @@ def main():
         console.print("1) 멤버 추가")
         console.print("2) 멤버 수정")
         console.print("3) 뉴스 추가")
+        console.print("4) 뉴스 수정")
         console.print("0) 종료")
         choice = Prompt.ask("선택", choices=["1", "2", "3", "0"])
         if choice == "1":
@@ -251,7 +253,9 @@ def main():
         elif choice == "2":
             add_or_edit_member(edit=True)
         elif choice == "3":
-            add_news()
+            add_or_edit_news(edit=False)
+        elif choice == "4":
+            add_or_edit_news(edit=True)
         else:
             console.print("안녕히 가세요! 👋")
             break
