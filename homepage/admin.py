@@ -52,7 +52,7 @@ def upload_image(src_path: str, object_name: Optional[str] = None) -> str:
         raise FileNotFoundError(src_path)
 
     s3.upload_file(src_path, BUCKET_NAME, object_name)
-    return f"{R2_ENDPOINT}/{BUCKET_NAME}/{object_name}"
+    return f"https://pub-60ca29aab33f424fab345807bd058d56.r2.dev/{object_name}"
 
 
 # ---------- Tkinter 파일 선택 ----------
