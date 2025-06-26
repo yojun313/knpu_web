@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from app.db import news_db
 from datetime import datetime
+from app.models import News 
 
 router = APIRouter()
 
