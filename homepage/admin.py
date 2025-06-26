@@ -247,7 +247,7 @@ def main():
         console.print("3) 뉴스 추가")
         console.print("4) 뉴스 수정")
         console.print("0) 종료")
-        choice = Prompt.ask("선택", choices=["1", "2", "3", "0"])
+        choice = Prompt.ask("선택", choices=["1", "2", "3", "4", "0"])
         if choice == "1":
             add_or_edit_member(edit=False)
         elif choice == "2":
