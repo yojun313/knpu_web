@@ -23,7 +23,7 @@ BUCKET_NAME = os.getenv("HOMEPAGE_BUCKET_NAME")
 R2_ENDPOINT = f"https://{ACCOUNT_ID}.r2.cloudflarestorage.com"
 
 # 서버 API 엔드포인트 (원하면 수정)
-API_BASE = "http://localhost:8002/api"
+API_BASE = "https://home.knpu.re.kr/api"
 MEMBER_EDIT_URL = f"{API_BASE}/edit/member"
 MEMBER_LIST_URL = f"{API_BASE}/members"
 NEWS_LIST_URL = f"{API_BASE}/news"
