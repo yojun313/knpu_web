@@ -12,6 +12,7 @@ from rich.table import Table
 from rich.panel import Panel
 from rich.prompt import Prompt, Confirm
 from rich import box
+import boto3
 
 # ---------- 환경 변수 & Cloudflare R2 설정 ----------
 load_dotenv()                                     # .env 로부터 ↓ 값들 읽기
@@ -31,7 +32,7 @@ LOCAL_TEMP_DIR     = "./uploads"   # 업로드 전 임시 복사 폴더
 os.makedirs(LOCAL_TEMP_DIR, exist_ok=True)
 
 # ---------- boto3 : R2 클라이언트 ----------
-import boto3
+
 s3 = boto3.client(
     "s3",
     endpoint_url=R2_ENDPOINT,
@@ -103,6 +104,14 @@ def fetch_members() -> List[dict]:
         return requests.get(MEMBER_LIST_URL).json()
     except Exception as e:
         console.print(f"[red]멤버 목록 불러오기 실패:[/] {e}")
+        return []
+    
+
+def fetch_news() -> List[dict]:
+    try:
+        return requests.get(NEWS_LIST_URL).json()
+    except Exception as e:
+        console.print(f"[red]뉴스 목록 불러오기 실패:[/] {e}")
         return []
 
 
@@ -180,29 +189,53 @@ def add_or_edit_member(edit: bool = False):
         upsert_to_server(MEMBER_EDIT_URL, data)
 
 
-def add_news():
-    console.rule("[bold cyan]뉴스 등록[/]")
+def select_news() -> Optional[dict]:
+    """수정할 뉴스를 선택하고 해당 딕셔너리를 반환"""
+    news_list = fetch_news()
+    if not news_list:
+        console.print("[yellow]편집할 뉴스가 없습니다.[/]")
+        return None
 
-    # 이미지 선택
-    image_url = ""
-    if Confirm.ask("썸네일 이미지를 업로드할까요?", default=False):
+    # 목록 표시
+    list_table = Table(title="뉴스 목록", box=box.MINIMAL_DOUBLE_HEAD, show_lines=True)
+    list_table.add_column("No", justify="right")
+    list_table.add_column("제목")
+    list_table.add_column("날짜")
+    for idx, n in enumerate(news_list, 1):
+        list_table.add_row(str(idx), n["title"], n.get("date", ""))
+    console.print(list_table)
+
+    idx = int(Prompt.ask("수정할 뉴스 번호", choices=[str(i) for i in range(1, len(news_list) + 1)]))
+    return news_list[idx - 1]
+
+
+def add_or_edit_news(edit: bool = False):
+    if edit:
+        data = select_news()
+        if not data:
+            return
+        console.rule(f"[bold cyan]{data['title']} 수정[/]")
+    else:
+        data = {}
+
+    def ask(key, default=""):
+        return Prompt.ask(f"{key}", default=default).strip()
+
+    if Confirm.ask("썸네일 이미지를 새로 선택하시겠습니까?", default=not edit):
         src = choose_local_file()
         if src:
             object_name = f"news/{os.path.basename(src)}"
             image_url = upload_image(src, object_name)
+            data["image"] = image_url
 
-    news = {
-        "image": image_url,
-        "title": Prompt.ask("제목"),
-        "content": Prompt.ask("내용"),
-        "date": Prompt.ask("날짜 (YYYY.MM 또는 YYYY.MM.DD)"),
-        "url": Prompt.ask("원본 기사 URL"),
-    }
+    data["title"] = ask("제목", default=data.get("title", ""))
+    data["content"] = ask("내용", default=data.get("content", ""))
+    data["date"] = ask("날짜 (YYYY.MM 또는 YYYY.MM.DD)", default=data.get("date", ""))
+    data["url"] = ask("원본 기사 URL", default=data.get("url", ""))
 
-    show_object(news, title="보낼 뉴스 데이터")
+    show_object(data, title="보낼 뉴스 데이터")
     if Confirm.ask("서버에 저장할까요?", default=True):
-        upsert_to_server(NEWS_EDIT_URL, news)
-
+        upsert_to_server(NEWS_EDIT_URL, data)
 # ---------- 메인 메뉴 ----------
 
 def main():
