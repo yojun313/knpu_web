@@ -33,7 +33,7 @@ def _allowed(ext: str) -> bool:
 
 
 @router.post(
-    "/image",
+    "/",
     summary="R2 이미지 업로드",
     response_description="업로드된 이미지 URL",
 )
