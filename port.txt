@@ -5,3 +5,4 @@
 3004: ai-translator
 8000: manager
 8001: manager_web
+8002: homepage_api
