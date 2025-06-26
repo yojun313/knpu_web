@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from app.models import Member, News, Paper
+from app.models import Member, News, Paper, PaperRequest
 from app.db import members_db, news_db, papers_db
 
 router = APIRouter()
@@ -43,37 +43,31 @@ def upsert_news(news: News):
     return new_news
 
 @router.post("/paper", response_model=Paper)
-def upsert_paper(paper: Paper, year: int):
-    paper_data = paper.dict(by_alias=True)
-    year_str = str(year)
+def upsert_paper(request: PaperRequest):
+    year_str = str(request.year)
+    paper_data = request.paper.dict(by_alias=True)
 
-    # 연도로 문서 찾기
     existing_doc = papers_db.find_one({"year": year_str})
 
     if not existing_doc:
-        # 연도 문서가 없으면 새 문서 생성
         papers_db.insert_one({"year": year_str, "papers": [paper_data]})
         return paper_data
 
-    # 연도의 논문 리스트
     papers_for_year = existing_doc.get("papers", [])
     updated = False
-
-    # 같은 title 있으면 교체
     for i, p in enumerate(papers_for_year):
         if p.get("title") == paper_data["title"]:
             papers_for_year[i] = paper_data
             updated = True
             break
 
-    # 없으면 새로 추가
     if not updated:
         papers_for_year.append(paper_data)
 
-    # MongoDB 문서 업데이트
     papers_db.update_one(
         {"year": year_str},
         {"$set": {"papers": papers_for_year}},
     )
 
     return paper_data
+

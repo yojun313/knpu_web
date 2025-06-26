@@ -24,3 +24,8 @@ class Paper(BaseModel):
     authors: List[str]
     conference: str
     link: str
+
+
+class PaperRequest(BaseModel):
+    year: int
+    paper: Paper
