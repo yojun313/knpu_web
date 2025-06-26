@@ -11,10 +11,14 @@ def list_members():
     for d in docs:
         d["_id"] = str(d["_id"])
 
-    # 정렬 우선순위를 미리 정의
+    # 정렬 기준 정의
     order = ["교수", "수석연구위원", "연구위원", "대학원 과정", "연구원", "선임연구원"]
     order_map = {section: idx for idx, section in enumerate(order)}
 
-    # section 기준 정렬
-    docs.sort(key=lambda d: order_map.get(d.get("section"), len(order_map)))
+    # 디버깅 출력 (선택)
+    for d in docs:
+        print(f"{d['name']} section: {d.get('section')} order: {order_map.get(d.get('section'), len(order_map))}")
+
+    # 정렬
+    docs.sort(key=lambda d: order_map.get(d.get('section'), len(order_map)))
     return docs
