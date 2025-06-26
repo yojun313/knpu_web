@@ -107,7 +107,10 @@ def fetch_members() -> List[dict]:
 
 
 def upsert_to_server(url: str, payload: dict):
-    res = requests.post(url, json=payload)
+    headers = {
+        "Authorization": f"Bearer {os.getenv('ADMIN_TOKEN')}"
+    }
+    res = requests.post(url, headers=headers, json=payload)
     if res.status_code == 200:
         console.print(Panel("✅ 성공적으로 반영되었습니다!", style="bold green"))
         show_object(res.json(), title="서버 응답")
