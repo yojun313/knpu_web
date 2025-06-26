@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 from dotenv import load_dotenv
 import os
+import json
 
 load_dotenv()
 
@@ -10,3 +11,4 @@ client = MongoClient(uri)
 homepage_db = client["homepage"]
 members_db = homepage_db["members"]
 news_db = homepage_db["news"]
+papers_db = homepage_db["papers"]

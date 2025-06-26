@@ -18,3 +18,9 @@ class News(BaseModel):
     content: str
     date: str
     url: str
+
+class Paper(BaseModel):
+    title: str
+    authors: List[str]
+    conference: str
+    link: str
