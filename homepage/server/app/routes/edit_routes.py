@@ -47,6 +47,7 @@ def upsert_news(news):
 
 @router.post("/paper")
 def upsert_paper(request):
+    print("Received request:", request)
     year_str = str(request.year)
     paper_data = request.paper.dict(by_alias=True)
     if "uid" not in paper_data or not paper_data["uid"]:
