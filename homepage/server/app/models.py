@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import List
 
 class Member(BaseModel):
+    uid: str
     image: str
     name: str
     position: str
@@ -13,6 +14,7 @@ class Member(BaseModel):
     연구: List[str]
 
 class News(BaseModel):
+    uid: str
     image: str
     title: str
     content: str
@@ -20,6 +22,7 @@ class News(BaseModel):
     url: str
 
 class Paper(BaseModel):
+    uid: str
     title: str
     authors: List[str]
     conference: str
