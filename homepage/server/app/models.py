@@ -22,6 +22,7 @@ class News(BaseModel):
     url: str
 
 class Paper(BaseModel):
+    uid: Optional[str]
     title: str
     authors: List[str]
     conference: str
