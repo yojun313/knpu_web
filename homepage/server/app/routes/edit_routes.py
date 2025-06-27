@@ -53,8 +53,7 @@ def upsert_paper(request: PaperRequest):
         paper_data["uid"] = str(uuid.uuid4())
         paper_data["datetime"] = datetime.now(timezone.utc).isoformat()
     else:
-        # 이미 있는 논문이면 datetime 갱신
-        paper_data["datetime"] = datetime.now(timezone.utc).isoformat()
+        pass
 
     existing_doc = papers_db.find_one({"year": year_str})
 
