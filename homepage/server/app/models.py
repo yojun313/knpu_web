@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 
 class Member(BaseModel):
+    uid: Optional[str] = None
     image: str
     name: str
     position: str
@@ -13,6 +14,7 @@ class Member(BaseModel):
     연구: List[str]
 
 class News(BaseModel):
+    uid: Optional[str] = None
     image: str
     title: str
     content: str
@@ -20,11 +22,11 @@ class News(BaseModel):
     url: str
 
 class Paper(BaseModel):
+    uid: Optional[str] = None
     title: str
     authors: List[str]
     conference: str
     link: str
-
 
 class PaperRequest(BaseModel):
     year: int
