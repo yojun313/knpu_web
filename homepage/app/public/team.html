@@ -106,6 +106,7 @@
                 const container = document.getElementById('team-list-container');
 
                 for (const section of order) {
+                    const safeId = `${section.replace(/\s+/g, '-')}-${idx}`;
                     if (!grouped[section] || grouped[section].length === 0) continue;
 
                     container.insertAdjacentHTML('beforeend', `
@@ -123,21 +124,22 @@
                         const researchHtml = (m.연구 && m.연구.length) ? `
                     <h5>연구</h5>
                     <p>${m.연구.join('<br>')}</p>` : '';
+                        
 
                         // 하나라도 추가 정보가 있으면 collapse 생성
                         const additionalInfo = (eduHtml || careerHtml || researchHtml) ? `
-                    <div class="collapse additional-info" id="moreInfo-${section}-${idx}">
-                        ${eduHtml}${careerHtml}${researchHtml}
-                    </div>` : '';
+                            <div class="collapse additional-info" id="moreInfo-${safeId}">
+                                ${eduHtml}${careerHtml}${researchHtml}
+                            </div>` : '';
 
                         const toggleButton = additionalInfo ? `
-                    <button class="btn btn-dark btn-social mx-2" type="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#moreInfo-${section}-${idx}"
-                            aria-expanded="false"
-                            aria-controls="moreInfo-${section}-${idx}">
-                        <i class="fas fa-angle-down"></i>
-                    </button>` : '';
+                            <button class="btn btn-dark btn-social mx-2" type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#moreInfo-${safeId}"
+                                    aria-expanded="false"
+                                    aria-controls="moreInfo-${safeId}">
+                                <i class="fas fa-angle-down"></i>
+                            </button>` : '';
 
                         container.insertAdjacentHTML('beforeend', `
                     <div class="team-member row align-items-center my-4">
