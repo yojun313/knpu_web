@@ -106,7 +106,7 @@
                 const container = document.getElementById('team-list-container');
 
                 for (const section of order) {
-                    const safeId = `${section.replace(/\s+/g, '-')}-${idx}`;
+                    
                     if (!grouped[section] || grouped[section].length === 0) continue;
 
                     container.insertAdjacentHTML('beforeend', `
@@ -114,6 +114,7 @@
                 `);
 
                     grouped[section].forEach((m, idx) => {
+                        const safeId = `${section.replace(/\s+/g, '-')}-${idx}`;
                         const emailHtml = m.email ? `<p>Email: ${m.email}</p>` : '';
                         const eduHtml = (m.학력 && m.학력.length) ? `
                     <h5>학력</h5>
