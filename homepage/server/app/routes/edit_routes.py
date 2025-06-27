@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 
 router = APIRouter()
 
-@router.post("/member", response_model=Member)
+@router.post("/member")
 def upsert_member(member: Member):
     member_data = member.dict(by_alias=True)
     if "uid" not in member_data or not member_data["uid"]:
@@ -26,7 +26,7 @@ def upsert_member(member: Member):
     new_member["_id"] = str(new_member["_id"])
     return new_member
 
-@router.post("/news", response_model=News)
+@router.post("/news")
 def upsert_news(news: News):
     news_data = news.dict(by_alias=True)
     if "uid" not in news_data or not news_data["uid"]:
@@ -45,7 +45,7 @@ def upsert_news(news: News):
     new_news["_id"] = str(new_news["_id"])
     return new_news
 
-@router.post("/paper", response_model=Paper)
+@router.post("/paper")
 def upsert_paper(request: PaperRequest):
     year_str = str(request.year)
     paper_data = request.paper.dict(by_alias=True)

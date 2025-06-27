@@ -5,7 +5,7 @@ from app.db import members_db
 
 router = APIRouter()
 
-@router.get("/", response_model=List[Member])
+@router.get("/")
 def list_members():
     docs = list(members_db.find())
     for d in docs:

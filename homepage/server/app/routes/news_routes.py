@@ -5,7 +5,7 @@ from app.models import News
 
 router = APIRouter()
 
-@router.get("/", response_model=list[News])
+@router.get("/")
 def list_news():
     docs = list(news_db.find())
     for d in docs:
