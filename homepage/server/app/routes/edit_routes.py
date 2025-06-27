@@ -2,6 +2,8 @@ from fastapi import APIRouter, HTTPException, Query
 from app.models import Member, News, Paper, PaperRequest
 from app.db import members_db, news_db, papers_db
 import uuid
+from datetime import datetime, timezone
+
 
 router = APIRouter()
 
@@ -49,6 +51,10 @@ def upsert_paper(request: PaperRequest):
     paper_data = request.paper.dict(by_alias=True)
     if "uid" not in paper_data or not paper_data["uid"]:
         paper_data["uid"] = str(uuid.uuid4())
+        paper_data["datetime"] = datetime.now(timezone.utc).isoformat()
+    else:
+        # 이미 있는 논문이면 datetime 갱신
+        paper_data["datetime"] = datetime.now(timezone.utc).isoformat()
 
     existing_doc = papers_db.find_one({"year": year_str})
 
