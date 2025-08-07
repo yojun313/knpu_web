@@ -15,6 +15,8 @@ import os
 import pickle
 import io
 from docx2pdf import convert
+import platform
+import subprocess
 
 
 
@@ -121,9 +123,22 @@ class doc_process:
         with open(pdf_file_path, 'wb') as f:
             f.write(fh.getbuffer())
     
-    def convert_word_to_pdf(self, word_name, word_path): # wrod_name에 문서 이름, word_path에 문서 경로
+    def convert_word_to_pdf(self, word_name, word_path):
         pdf_path = os.path.join(self.pdf_folder_path, word_name.replace(".docx", ".pdf"))
-        convert(word_path, pdf_path)
+        
+        if platform.system() == "Windows":
+            # Windows: docx2pdf 사용
+            convert(word_path, pdf_path)
+        else:
+            # Linux (또는 기타): LibreOffice 사용
+            subprocess.run([
+                "libreoffice",
+                "--headless",
+                "--convert-to", "pdf",
+                "--outdir", self.pdf_folder_path,
+                word_path
+            ], check=True)
+
         return pdf_path
 
     def word_statement_download(self, word_url):
