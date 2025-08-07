@@ -104,11 +104,11 @@ app.get('/gpt', (req, res) => {
   let errorData = '';
 
   pythonProcess.stdout.on('data', (data) => {
-    outputData += iconv.decode(data, 'euc-kr');
+    outputData += data.toString('utf8');  // ✅ UTF-8로 정확하게 디코딩
   });
 
   pythonProcess.stderr.on('data', (data) => {
-    errorData += iconv.decode(data, 'euc-kr');  // 오류 메시지 저장
+    errorData += data.toString('utf8');  // 여기도 함께 수정
   });
 
   pythonProcess.on('close', (code) => {
