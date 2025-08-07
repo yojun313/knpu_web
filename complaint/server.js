@@ -121,6 +121,10 @@ app.get('/gpt', (req, res) => {
     const pdf_id = outputLines[1];
     const word_name = outputLines[2]
 
+    console.log(doc_edit_url);
+    console.log(pdf_id); 
+    console.log(word_name);
+
     req.session.doc_edit_url = doc_edit_url.trim();
     req.session.pdf_id = pdf_id;
     req.session.word_name = word_name;
