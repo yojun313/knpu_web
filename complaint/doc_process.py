@@ -137,7 +137,7 @@ class doc_process:
                 "--convert-to", "pdf",
                 "--outdir", self.pdf_folder_path,
                 word_path
-            ], check=True)
+            ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 
         return pdf_path
 
