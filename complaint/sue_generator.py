@@ -176,6 +176,9 @@ class sue_gpt:
             file.write(word_name+"\n")
             file.write(str(self.form_data)+"\n")
 
+        if not word_name.endswith('.docx'):
+            word_name += ".docx"
+    
         print(edit_link)
         print(pdf_id)
         print(word_name)
