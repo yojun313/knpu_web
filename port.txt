@@ -3,6 +3,7 @@
 3002: carnumber_detector
 3003: complaint
 3004: ai-translator
+4000: openwebui
 8000: manager
 8001: manager_web
 8002: homepage_api
