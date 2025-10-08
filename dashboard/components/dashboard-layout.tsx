@@ -35,7 +35,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         <div className="flex h-full flex-col">
           {/* Header */}
           <div className="border-b p-6">
-            <h1 className="text-xl font-bold">MANAGER Dashboard</h1>
+            <h1 className="text-xl font-bold">PAILAB Dashboard</h1>
             <p className="text-sm text-muted-foreground">System Analytics</p>
           </div>
 

@@ -7,7 +7,7 @@ import "./globals.css"
 import { Suspense } from "react"
 
 export const metadata: Metadata = {
-  title: "MANAGER",
+  title: "PAILAB Dashboard",
   description: "KNPU PAILAB",
   generator: "KNPU",
 }
