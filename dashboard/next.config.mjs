@@ -9,6 +9,9 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  experimental: {
+    allowedDevOrigins: ['https://dashboard.knpu.re.kr'],
+  },
 }
 
 export default nextConfig
