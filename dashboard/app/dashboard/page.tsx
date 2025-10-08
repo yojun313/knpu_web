@@ -86,7 +86,7 @@ export default async function DashboardPage() {
                   {todayLogsData.total} {todayLogsData.total === 1 ? "entry" : "entries"} today ({todayLogsData.date})
                 </CardDescription>
               </div>
-              <Link href="/dashboard/logs">
+              <Link href="/dashboard/log">
                 <Button variant="outline" size="sm">
                   View All
                 </Button>
