@@ -71,8 +71,8 @@ export default async function DashboardPage() {
       <div className="space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard Overview</h1>
-          <p className="text-muted-foreground">Monitor your system statistics and activity</p>
+          <h1 className="text-3xl font-bold tracking-tight">PAILAB Dashboard</h1>
+          <p className="text-muted-foreground">System statistics & activity</p>
         </div>
 
         {/* Stats Grid */}

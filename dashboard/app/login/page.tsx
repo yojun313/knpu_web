@@ -50,7 +50,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold">Dashboard Login</CardTitle>
-          <CardDescription>Enter your credentials to access the monitoring dashboard</CardDescription>
+          <CardDescription>Enter your credentials to access the PAILAB dashboard</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">

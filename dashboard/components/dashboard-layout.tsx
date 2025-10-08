@@ -58,7 +58,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           <div className="border-b p-6">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-xl font-bold">Monitoring Dashboard</h1>
+                <h1 className="text-xl font-bold">PAILAB Dashboard</h1>
                 <p className="text-sm text-muted-foreground">System Analytics</p>
               </div>
               <Button
