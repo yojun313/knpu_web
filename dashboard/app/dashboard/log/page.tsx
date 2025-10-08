@@ -62,7 +62,7 @@ export default function LogsPage() {
       if (selectedUid) params.append("uid", selectedUid)
       if (selectedDate) params.append("date", selectedDate)
 
-      const response = await fetch(`/api/logs?${params}`)
+      const response = await fetch(`/api/log?${params}`)
       const data = await response.json()
       setLogs(data.logs || [])
       setTotalPages(data.pagination?.totalPages || 1)
