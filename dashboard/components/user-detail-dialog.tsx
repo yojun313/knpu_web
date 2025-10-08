@@ -5,8 +5,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Mail, Smartphone, FileText, Bug, Calendar } from "lucide-react"
+import { Mail, Smartphone, Calendar } from "lucide-react"
 
 interface UserDetailDialogProps {
   uid: string | null
@@ -98,39 +97,6 @@ export function UserDetailDialog({ uid, open, onOpenChange }: UserDetailDialogPr
                     </div>
                   )}
                 </div>
-              </div>
-
-              <Separator />
-
-              {/* Activity Stats */}
-              <div className="grid gap-4 md:grid-cols-2">
-                <Card>
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-sm font-medium flex items-center gap-2">
-                      <FileText className="h-4 w-4" />
-                      Log Entries
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">{stats.logCount}</div>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Active on {stats.recentLogDates.length} days (last 30 days)
-                    </p>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-sm font-medium flex items-center gap-2">
-                      <Bug className="h-4 w-4" />
-                      Bug Reports
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">{stats.bugCount}</div>
-                    <p className="text-xs text-muted-foreground mt-1">Total bugs reported</p>
-                  </CardContent>
-                </Card>
               </div>
 
               {/* Devices */}
