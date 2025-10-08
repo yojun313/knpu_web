@@ -641,17 +641,39 @@
                 const teamList = document.getElementById('team-list');
                 teamList.innerHTML = '';  // 초기화
 
-                members.forEach(member => {
+                const positionOrder = [
+                    '교수',
+                    '수석연구위원',
+                    '연구위원',
+                    '박사과정',
+                    '석사과정',
+                    '선임연구원',
+                    '연구원'
+                ];
+
+                // 정렬 후 렌더링
+                members
+                .sort((a, b) => {
+                    const indexA = positionOrder.indexOf(a.position);
+                    const indexB = positionOrder.indexOf(b.position);
+
+                    // 둘 다 목록에 없으면 이름 기준으로 정렬 (옵션)
+                    if (indexA === -1 && indexB === -1) return a.name.localeCompare(b.name);
+                    if (indexA === -1) return 1;  // 목록에 없는 건 뒤로
+                    if (indexB === -1) return -1; // 목록에 없는 건 뒤로
+                    return indexA - indexB;
+                })
+                .forEach(member => {
                     teamList.insertAdjacentHTML('beforeend', `
                     <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="team-member">
+                        <div class="team-member">
                         <img class="mx-auto rounded-circle" src="${member.image || 'assets/img/team/default.png'}" alt="${member.name}" />
                         <h4>${member.name}</h4>
                         <p class="text-muted">${member.position || ''}</p>
+                        </div>
                     </div>
-                    </div>
-                `);
-                });
+                    `);
+                    });
             } catch (e) {
                 console.error('뉴스를 불러오는 중 오류 발생:', e);
             }
