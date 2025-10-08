@@ -46,7 +46,6 @@ export async function GET(request: NextRequest) {
           crawlType = "YouTube"
           break
       }
-
       const processedDoc = {
         _id: crawlDb._id.toString(),
         uid: crawlDb.uid || "",
@@ -65,11 +64,6 @@ export async function GET(request: NextRequest) {
         datainfo: crawlDb.datainfo || {},
         status: "Done",
         formattedSize: "",
-      }
-
-      // Filter by admin/user permissions
-      if (username !== "admin" && processedDoc.requester === "admin") {
-        continue
       }
 
       // Filter by "mine" option
@@ -113,7 +107,7 @@ export async function GET(request: NextRequest) {
           continue
         }
       }
-
+      
       filteredList.push(processedDoc)
     }
 
