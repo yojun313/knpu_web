@@ -28,7 +28,7 @@ async function getStats() {
 
 async function getTodayLogs() {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/logs/today`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/log/today`, {
       cache: "no-store",
     })
     if (!response.ok) throw new Error("Failed to fetch today's logs")
