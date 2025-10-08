@@ -139,16 +139,6 @@ export default function UsersPage() {
                           <Mail className="h-3 w-3" />
                           {user.email}
                         </div>
-                        <div className="flex items-center gap-4 text-sm">
-                          <div className="flex items-center gap-1">
-                            <FileText className="h-3 w-3 text-muted-foreground" />
-                            <span>{user.logCount} logs</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Bug className="h-3 w-3 text-muted-foreground" />
-                            <span>{user.bugCount} bugs</span>
-                          </div>
-                        </div>
                         <code className="text-xs bg-muted px-2 py-1 rounded">{user.uid}</code>
                       </div>
                       <Button variant="outline" size="sm" onClick={() => handleViewUser(user.uid)}>
