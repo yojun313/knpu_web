@@ -29,7 +29,7 @@ export default function LogsPage() {
   const [users, setUsers] = useState<UserOption[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedUid, setSelectedUid] = useState<string>("")
-  const [selectedDate, setSelectedDate] = useState<string>("")
+  const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split("T")[0])
   const [searchQuery, setSearchQuery] = useState<string>("")
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
@@ -59,7 +59,7 @@ export default function LogsPage() {
         page: page.toString(),
         limit: "50",
       })
-      if (selectedUid) params.append("uid", selectedUid)
+      if (selectedUid && selectedUid !== "all") params.append("uid", selectedUid)
       if (selectedDate) params.append("date", selectedDate)
 
       const response = await fetch(`/api/log?${params}`)
@@ -77,7 +77,7 @@ export default function LogsPage() {
 
   const handleReset = () => {
     setSelectedUid("")
-    setSelectedDate("")
+    setSelectedDate(new Date().toISOString().split("T")[0])
     setSearchQuery("")
     setPage(1)
   }
