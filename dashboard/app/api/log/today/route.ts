@@ -22,7 +22,7 @@ export async function GET() {
         const userName = user?.name || "Unknown User"
 
         log[today].forEach((entry: any) => {
-          if (entry.time && entry.message) {
+          if (entry.time && entry.message && userName !== "admin") {
             todayLogs.push({
               uid: log.uid,
               userName,

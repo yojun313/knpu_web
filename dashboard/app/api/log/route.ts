@@ -45,7 +45,7 @@ export async function GET(request: Request) {
           const dateEntries = log[key]
           if (Array.isArray(dateEntries)) {
             dateEntries.forEach((entry: any) => {
-              if (entry.time && entry.message) {
+              if (entry.time && entry.message && log.userName !== "admin") {
                 entries.push({
                   uid: log.uid,
                   userName: log.userName,
