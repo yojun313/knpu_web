@@ -73,8 +73,8 @@ export async function GET(request: NextRequest) {
 
       // Determine status
       const endt = crawlDb.endTime
-      if (!endt) {
-        processedDoc.endTime = "크롤링 중"
+      if (endt.includes("%")) {
+        processedDoc.endTime = endt
         processedDoc.status = "Working"
         activeCrawl++
       } else if (endt === "X") {
