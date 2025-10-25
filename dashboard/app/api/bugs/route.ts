@@ -29,6 +29,7 @@ export async function GET(request: Request) {
         if (/^\d{4}-\d{2}-\d{2}$/.test(key) && Array.isArray(bug[key])) {
           // Each date has an array of log entries
           bug[key].forEach((entry: any, index: number) => {
+            if (bug.uid === "8e69108d-420b-4fda-a495-432f1d37a6d0") return
             entries.push({
               _id: `${bug._id.toString()}-${key}-${index}`,
               uid: bug.uid,
