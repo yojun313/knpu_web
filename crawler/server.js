@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'crawl_dashboard.html'));
 });
 
-app.get('/add_crawler', (req, res) => {
+app.get('/add', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'crawl_add.html'));
 });
 
