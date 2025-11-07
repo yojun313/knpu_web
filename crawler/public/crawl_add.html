@@ -143,6 +143,30 @@
             <div class="mb-3">
                 <label for="keywordInput" class="form-label">Keyword</label>
                 <input type="text" class="form-control" id="keywordInput" placeholder="키워드를 입력하세요">
+                <div class="mt-2">
+                    <details>
+                        <summary style="cursor: pointer; font-weight: 600;">
+                            Naver 키워드 입력 시 주의사항
+                        </summary>
+                        <div class="mt-2" style="font-size: 0.9rem;">
+                            <p style="margin-bottom: 6px;">
+                                <strong>※ 검색 옵션 조합 주의사항</strong><br>
+                                키워드 입력 시 &quot;(따옴표), +, -, | 등의 
+                                <strong>검색 옵션</strong>을 사용할 수 있습니다.<br>
+                                단, 
+                                <a href="https://help.naver.com/service/5626/contents/959?lang=ko&osType=COMMONOS" 
+                                target="_blank">
+                                네이버 검색 도움말
+                                </a> 
+                                에 명시된 <strong>검색 옵션들의 조합</strong>만 지원됩니다.<br>
+                                이외의 검색 옵션 조합은 올바르게 작동하지 않을 수 있습니다.
+                            </p>
+                            <p style="margin-bottom: 0;">
+                                예시: <code>파리 "여행"</code>, <code>"파리 여행"</code>, <code>파리 +여행 -호텔</code>, <code>파리|런던</code>, <code>파리 "여행" +루브르 -에펠탑</code>
+                            </p>
+                        </div>
+                    </details>
+                </div>
             </div>
 
             <div class="mb-4">
