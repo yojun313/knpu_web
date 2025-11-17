@@ -57,7 +57,7 @@ export default function CrawlerPage() {
 
       if (data.success) {
         setCrawlerData(data.data)
-        setFullStorage(data.fullStorage)
+        setFullStorage(data.totalStorage)
         setActiveCrawl(data.activeCrawl)
       }
     } catch (error) {
@@ -170,7 +170,7 @@ export default function CrawlerPage() {
               <HardDrive className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold tracking-tight">{fullStorage.toFixed(2)} GB</div>
+              <div className="text-3xl font-bold tracking-tight">{fullStorage}</div>
               <p className="text-xs text-muted-foreground mt-1">Data collected</p>
             </CardContent>
           </Card>
