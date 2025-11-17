@@ -81,18 +81,24 @@ export async function GET(request: NextRequest) {
         processedDoc.endTime = "오류 중단"
         processedDoc.status = "Error"
       }
+      
+      const formatSize = (bytes_size: number): string => {
+        if (bytes_size < 1024) return `${bytes_size} B`
+        const kb = bytes_size / 1024
+        if (kb < 1024) return `${Math.round(kb)} KB`
+        const mb = kb / 1024
+        if (mb < 1024) return `${Math.round(mb)} MB`
+        const gb = mb / 1024
+        return `${gb.toFixed(1)} GB`
+      }
 
       // Format dbSize
       const size = Number(crawlDb.dbSize) || 0
       if (size === 0) {
-        processedDoc.formattedSize = "0 MB"
+        processedDoc.formattedSize = "0 B"
       } else {
         fullStorage += size
-        if (size < 1) {
-          processedDoc.formattedSize = `${Math.round(size * 1024)} MB`
-        } else {
-          processedDoc.formattedSize = `${size.toFixed(2)} GB`
-        }
+        processedDoc.formattedSize = formatSize(size)
       }
 
       // Search filter
