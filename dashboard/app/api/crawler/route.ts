@@ -24,6 +24,17 @@ export async function GET(request: NextRequest) {
     let activeCrawl = 0
     const filteredList = []
 
+
+    const formatSize = (bytes_size: number): string => {
+      if (bytes_size < 1024) return `${bytes_size} B`
+      const kb = bytes_size / 1024
+      if (kb < 1024) return `${Math.round(kb)} KB`
+      const mb = kb / 1024
+      if (mb < 1024) return `${Math.round(mb)} MB`
+      const gb = mb / 1024
+      return `${gb.toFixed(1)} GB`
+    }
+
     // Process each document
     for (const crawlDb of crawlDbList) {
       const name = crawlDb.name || ""
@@ -81,16 +92,6 @@ export async function GET(request: NextRequest) {
         processedDoc.endTime = "오류 중단"
         processedDoc.status = "Error"
       }
-      
-      const formatSize = (bytes_size: number): string => {
-        if (bytes_size < 1024) return `${bytes_size} B`
-        const kb = bytes_size / 1024
-        if (kb < 1024) return `${Math.round(kb)} KB`
-        const mb = kb / 1024
-        if (mb < 1024) return `${Math.round(mb)} MB`
-        const gb = mb / 1024
-        return `${gb.toFixed(1)} GB`
-      }
 
       // Format dbSize
       const size = Number(crawlDb.dbSize) || 0
@@ -140,12 +141,7 @@ export async function GET(request: NextRequest) {
 
     const limitedList = limit ? filteredList.slice(0, limit) : filteredList
 
-    const formattedStorage =
-      fullStorage === 0
-        ? "0 GB"
-        : fullStorage < 1
-          ? `${Math.round(fullStorage * 1024)} MB`
-          : `${fullStorage.toFixed(2)} GB`
+    const formattedStorage = formatSize(fullStorage);
 
     return NextResponse.json({
       crawls: limitedList,

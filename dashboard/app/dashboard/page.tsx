@@ -178,7 +178,7 @@ export default async function DashboardPage() {
                         </div>
                         <div className="flex items-center gap-1 text-xs text-muted-foreground">
                           <HardDrive className="h-3 w-3" />
-                          {crawl.dbSize}
+                          {crawl.formattedSize}
                         </div>
                       </div>
                       <p className="font-medium text-sm line-clamp-1">{crawl.keyword}</p>
