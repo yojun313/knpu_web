@@ -159,3 +159,4 @@ pdf_storage/
 venv/
 
 public/input_dict.txt
+.DS_Store
