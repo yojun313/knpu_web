@@ -302,8 +302,19 @@
         });
 
         socket.on('redirect', function(newUrl) {
-            window.location.href = newUrl;
+            const root = document.documentElement;
+        
+            if (root.classList.contains("force-dark")) {
+                window.location.href = newUrl + "?theme=dark";
+            }
+            else if (root.classList.contains("force-light")) {
+                window.location.href = newUrl + "?theme=light";
+            }
+            else {
+                window.location.href = newUrl;
+            }
         });
+        
 
         function initializeDarkMode() {
             const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
