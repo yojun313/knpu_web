@@ -266,7 +266,7 @@
     </div>
 
     <div class="fixed-buttons">
-        <button onclick="window.location.href='/add';" class="btn btn-primary">크롤링 시작</button>
+        <button onclick="goToAddPage()" class="btn btn-primary">크롤링 시작</button>
         <!--<button id="toggleDarkMode" onclick="toggleDarkMode()" class="btn btn-secondary dark-mode-toggle">Dark Mode</button>-->
     </div>
 
@@ -287,6 +287,21 @@
                 document.documentElement.classList.remove("force-dark");
             }
         })();
+
+        function goToAddPage() {
+            const root = document.documentElement;
+
+            if (root.classList.contains("force-dark")) {
+                window.location.href = "/add?theme=dark";
+            }
+            else if (root.classList.contains("force-light")) {
+                window.location.href = "/add?theme=light";
+            }
+            else {
+                window.location.href = "/add";
+            }
+        }
+
 
         const socket = io();
 

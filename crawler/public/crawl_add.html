@@ -213,7 +213,21 @@
                 document.documentElement.classList.remove("force-dark");
             }
         })();
-
+        
+        function goToDashboardPage() {
+            const root = document.documentElement;
+        
+            if (root.classList.contains("force-dark")) {
+                window.location.href = "/?theme=dark";
+            }
+            else if (root.classList.contains("force-light")) {
+                window.location.href = "/?theme=light";
+            }
+            else {
+                window.location.href = "/";
+            }
+        }
+        
         document.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 const activeElement = document.activeElement;
@@ -284,7 +298,7 @@
         });
 
         document.getElementById('dashboardBtn').addEventListener('click', () => {
-            window.location.href = '/';
+            goToDashboardPage();
         });
 
         socket.on('redirect', function(newUrl) {
