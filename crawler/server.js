@@ -15,12 +15,25 @@ const crawlWorker_path   = path.join(__dirname, 'crawler_worker.js');
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'crawl_dashboard.html'));
+    const theme = req.query.theme || "";
+    res.sendFile(path.join(__dirname, 'public', 'crawl_dashboard.html'), {
+        headers: {
+            'X-Theme': theme   // 기본 테마 설정
+        }
+    });
 });
 
 app.get('/add', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'crawl_add.html'));
+    const theme = req.query.theme || ""; // dark 또는 light
+
+    res.sendFile(path.join(__dirname, 'public', 'crawl_add.html'), {
+        headers: {
+            'X-Theme': theme   // HTML에서 읽을 수 있게 전달
+        }
+    });
 });
+
+
 
 let processes = {};
 
