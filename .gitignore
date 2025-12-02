@@ -162,3 +162,5 @@ public/input_dict.txt
 .DS_Store
 input_dic.txt
 next-env.d.ts
+
+token.pickle
