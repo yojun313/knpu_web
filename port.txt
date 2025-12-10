@@ -1,11 +1,8 @@
 3000: homepage
 3001: crawler
-3002: carnumber_detector
 3003: complaint
 3004: dashboard
-3005: bedbet-admin
 4000: openwebui
 8000: manager
 8001: manager_web
 8002: homepage_api
-8003: bedbet
