@@ -48,6 +48,7 @@ app.get('/manager', (req, res) => res.sendFile(path.join(__dirname, 'public', 'm
 
 app.get('/tool', (req, res) => res.sendFile(path.join(__dirname, 'public', 'tool.html')));
 app.get('/kemkim', (req, res) => res.sendFile(path.join(__dirname, 'public', 'kemkim_manual.html')));
+app.get('/hate_analysis', (req, res) => res.sendFile(path.join(__dirname, 'public', 'hateanalysis_manual.html')));
 app.get('/download_manager', (req, res) => res.sendFile(path.join(__dirname, 'public', 'manager_download.html')));
 
 // 파일 목록 API (R2)
