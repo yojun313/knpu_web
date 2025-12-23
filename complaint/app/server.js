@@ -77,9 +77,9 @@ app.post('/submit', (req, res) => {
 
 
 // 결과창으로 이동(로딩창)
-app.post('/loading_llm', (req, res) => {
+app.post('/loading', (req, res) => {
   req.session.second_formData = req.body;
-  res.sendFile(path.join(__dirname, 'public', 'loading_llm.html'));
+  res.sendFile(path.join(__dirname, 'public', 'loading.html'));
 });
 
 // 결과창으로 이동
