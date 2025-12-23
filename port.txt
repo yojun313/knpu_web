@@ -6,3 +6,4 @@
 8000: manager
 8001: manager_web
 8002: homepage_api
+8003: complaint-server
