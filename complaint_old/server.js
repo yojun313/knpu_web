@@ -87,9 +87,9 @@ app.post('/submit', (req, res) => {
 
 
 // 결과창으로 이동(로딩창)
-app.post('/loading_gpt', (req, res) => {
+app.post('/loading_llm', (req, res) => {
   req.session.second_formData = req.body;
-  res.sendFile(path.join(__dirname, 'public', 'loading_gpt.html'));
+  res.sendFile(path.join(__dirname, 'public', 'loading_llm.html'));
 });
 
 // 결과창으로 이동
@@ -98,7 +98,8 @@ app.get('/gpt', (req, res) => {
   const second_formData = req.session.second_formData;
   const first_formData = req.session.first_formData;
 
-  const pythonProcess = spawn(pythonPath, [python_suegenerator, JSON.stringify(first_formData), JSON.stringify(second_formData)]);
+  const combined = JSON.stringify({ first_formData, second_formData });
+  const pythonProcess = spawn(pythonPath, [python_suegenerator, combined]);
 
   let outputData = ''
   let errorData = '';

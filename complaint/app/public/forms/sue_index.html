@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PAILAB AI 고소장 생성 서비스</title>
+  <link rel="stylesheet" href="/forms/sue_index_style.css" type = "text/css">
+</head>
+
+<script language='javascript'>
+
+  var is_submit = true;
+  var _NEXT_FOCUS = ""; // 커서가 갈 곳..
+
+  function check_form(){
+
+      f = document.form;
+
+     if(is_submit == true){
+        return true;
+     }else{
+        f[_NEXT_FOCUS].focus();
+        is_submit = true;
+        return false;
+    }
+  }
+
+  function next_input(next_focus){
+    if(event.keyCode == 13){
+         is_submit = false;
+        _NEXT_FOCUS = next_focus;
+     }
+  }
+
+</script>
+
+<body>
+
+  <h1>PAILAB AI 고소장 생성 서비스</h1>
+  <p>금융감독원</p>
+
+  <form action = "/submit" accept-charset = "utf-8" name = "sue_info" method = "post">
+
+    <div class="container">
+
+      <div class="addinfo_container">
+        <fieldset>
+          <legend>고소 죄명</legend>
+  
+          고소 죄명: <select id="option" name="고소 죄명" required></br></br>
+            <option value="" disabled selected hidden>선택</option>
+            <option value="계약금사기">계약금사기</option>
+            <option value="보험사기">보험사기</option>
+            <option value="분양사기">분양사기</option>
+            <option value="소송사기">소송사기</option>
+            <option value="아이템사기">아이템사기</option>
+            <option value="인터넷물품사기">인터넷물품사기</option>
+            <option value="차용사기">차용사기</option>
+            <option value="취업사기">취업사기</option>
+          </select></br>
+  
+        </fieldset>
+      </div>
+
+      <div class="requester_container">
+        <fieldset>
+          <legend>고소인 정보 입력</legend>
+    
+            고소인 성명: <input type="text" id="고소인" name="고소인" onKeyDown="next_input('고소인 주소');" required> </br></br>
+    
+            고소인 주민등록번호: <input type="text" id="고소인 주민등록번호" name="고소인 주민등록번호" onKeyDown="next_input('고소인 주소');" required> </br></br>
+    
+            고소인 주소: <input type="text" id="고소인 주소" name="고소인 주소" onKeyDown="next_input('고소인 직업');" required> </br></br>
+    
+            고소인 직업: <input type="text" id="고소인 직업" name="고소인 직업" onKeyDown="next_input('고소인 전화');" required> </br></br>
+    
+            고소인 전화: <input type="text" id="고소인 전화" name="고소인 전화" onKeyDown="next_input('고소인 이메일');" required> </br></br>
+    
+            고소인 이메일: <input type="text" id="고소인 이메일" name="고소인 이메일" onKeyDown="next_input('피고소인 성명');" required> </br>
+        </fieldset>
+      </div>
+    
+
+      <div class="receiver_container">
+        <fieldset>
+          <legend>피고소인 정보 입력</legend>
+            피고소인 성명: <input type="text" id="피고소인" name="피고소인" onKeyDown="next_input('피고소인 주민등록번호');"> </br></br>
+    
+            피고소인 주민등록번호: <input type="text" id="피고소인 주민등록번호" name="피고소인 주민등록번호" onKeyDown="next_input('피고소인 주소');"> </br></br>
+    
+            피고소인 주소: <input type="text" id="피고소인 주소" name="피고소인 주소" onKeyDown="next_input('피고소인 직업');"> </br></br>
+    
+            피고소인 직업: <input type="text" id="피고소인 직업" name="피고소인 직업" onKeyDown="next_input('피고소인 전화');"> </br></br>
+    
+            피고소인 전화: <input type="text" id="피고소인 전화" name="피고소인 전화" onKeyDown="next_input('피고소인 이메일');"> </br></br>
+    
+            피고소인 이메일: <input type="text" id="피고소인 이메일" name="피고소인 이메일" onKeyDown="next_input('피고소인과의 관계');"> </br>
+
+        </fieldset> 
+      </div>
+    
+
+    <div class="addinfo_container">
+      <fieldset>
+        <legend>추가 정보</legend>
+        피고소인과의 관계: <input type="text" id="피고소인과의 관계" name="피고소인과의 관계" onKeyDown="next_input('기타 피고소인을 특정할 수 있는 내용');"> </br></br>
+      
+        기타 피고소인을 특정할 수 있는 내용: <input type="text" id="기타 피고소인을 특정할 수 있는 내용" name="기타 피고소인을 특정할 수 있는 내용" required> </br>
+
+      </fieldset>
+    </div>
+  </div>
+
+    <input type='submit' value='다음' onClick='return check_form();'>
+  </form>
+  
+
+</body>
+</html> 

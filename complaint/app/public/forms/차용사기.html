@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>아이템사기</title>
-  <link rel="stylesheet" href="sue_index_style.css" type = "text/css">
+  <title>차용사기</title>
+  <link rel="stylesheet" href="/forms/sue_index_style.css" type = "text/css">
 </head>
 
 <script language='javascript'>
@@ -39,31 +39,25 @@
   <h1>PAILAB AI 고소장 생성 서비스</h1>
   <p>금융감독원</p>
 
-  <form action = "/loading_gpt" accept-charset = "utf-8" name = "아이템사기" method = "post">
+  <form action = "/loading_llm" accept-charset = "utf-8" name = "차용사기" method = "post">
 
     <fieldset style = "width:10">
         <legend>피해 일시 및 장소</legend>
   
           피해 일시: <input type="datetime-local" id="피해 일시" name="피해 일시" onKeyDown="next_input('피해 장소');" required> </br></br>  
 
-          피해 장소: <input type="text" id="피해 장소" name="피해 장소" onKeyDown="next_input('피의자의 기망행위(피의자에게 속게 된 결정적인 이유 및 근거)');" required> </br>
+          피해 장소: <input type="text" id="피해장소" name="피해장소" onKeyDown="next_input('피의자의 기망행위(피의자에게 속게 된 결정적인 이유 및 근거)');" required> </br>
   
       </fieldset> </br>
 
 
     <fieldset style = "width:10">
-      <legend>아이템사기 고소내용 입력</legend>
-      
-        <label for="myTextarea">피의자의 기망행위(피의자에게 속게 된 결정적인 이유 및 근거): </label> </br>
-        <textarea id="피의자의 기망행위(피의자에게 속게 된 결정적인 이유 및 근거)" name="피의자의 기망행위(피의자에게 속게 된 결정적인 이유 및 근거)" rows="2" cols="200"></textarea> </br>
+      <legend>차용사기 고소내용 입력</legend>
 
-        거래 사이트: <input type="text" id="거래 사이트" name="거래 사이트" onKeyDown="next_input('피고소인과 연락 수단');" required> </br></br>
+      <label for="myTextarea">피의자의 기망행위(피의자에게 속게 된 결정적인 이유 및 근거): </label> </br>
+      <textarea id="피의자의 기망행위(피의자에게 속게 된 결정적인 이유 및 근거)" name="피의자의 기망행위(피의자에게 속게 된 결정적인 이유 및 근거)" rows="2" cols="200"></textarea> </br>
 
-        피고소인과 연락 수단: <input type="text" id="피고소인과 연락 수단" name="피고소인과 연락 수단" onKeyDown="next_input('거래수단(계좌번호 등)');" required> </br></br>
-
-        거래수단(계좌번호 등): <input type="text" id="거래수단(계좌번호 등)" name="거래수단(계좌번호 등)" onKeyDown="next_input('피해 금액 또는 물품(가액)');" required> </br></br>
-        
-        피해 금액 또는 물품(가액): <input type="text" id="피해 금액 또는 물품(가액)" name="피해 금액 또는 물품(가액)" onKeyDown="next_input('피해 금액의 변제 여부(금액)');" required> </br></br>
+        피해 금액 또는 재산상 이익: <input type="text" id="피해 금액 또는 재산상 이익" name="피해 금액 또는 재산상 이익" onKeyDown="next_input('피해 금액의 변제 여부(금액)');" required> </br></br>
 
         피해 금액의 변제 여부(금액): <input type="text" id="피해 금액의 변제 여부(금액)" name="피해 금액의 변제 여부(금액)" onKeyDown="next_input('동일 건 고소 및 취소 사실 여부');" required> </br>
     </fieldset> </br>
@@ -90,7 +84,7 @@
             <option value="합의하지 않음">합의하지 않음</option>
           </select></br></br>
           
-          피고소인 처벌 의사: <select id="option" name="처벌의사" onKeyDown="next_input('고소 내용을 증명할 수 있는 증거');" required> </br></br>
+          피고소인 처벌 의사: <select id="option" name="피고소인 처벌 의사" onKeyDown="next_input('고소 내용을 증명할 수 있는 증거');" required> </br></br>
             <option value="" disabled selected hidden>선택</option>
             <option value="처벌 원함">처벌 원함</option>
             <option value="처벌 원하지 않음">처벌 원하지 않음</option>
