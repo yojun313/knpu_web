@@ -1,131 +1,134 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&family=Roboto:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
 
-body, html {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-  background-color: #f5f5f5; /* 연한 회색 배경 */
+:root {
+  --bg: #f9fafb;
+  --card-bg: #ffffff;
+  --border: #e5e7eb;
+  --text-main: #111827;
+  --text-sub: #6b7280;
+  --primary: #2563eb;
+  --primary-hover: #1e40af;
+  --radius: 12px;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Noto Sans KR', sans-serif;
+  background-color: var(--bg);
+  color: var(--text-main);
+}
+
+/* ===== Typography ===== */
+
 h1 {
-    text-align: center;
-    color: #37474f; /* 어두운 회색 톤 */
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
 }
 
 p {
-    color: #607d8b; /* 밝은 회색 톤 */
-    text-align: center;
-    margin-top: -10px;
+  text-align: center;
+  color: var(--text-sub);
+  margin-bottom: 2rem;
 }
+
+/* ===== Layout ===== */
 
 form {
-  width: 100%;
+  max-width: 1024px;
   margin: 0 auto;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-
-fieldset {
-  width: 100%; /* form의 내부 여백을 고려하여 너비 조정 */
-  margin: 10px auto; /* 상하 10px, 좌우 마진 자동으로 중앙 정렬 */
-  padding: 20px;
-  box-sizing: border-box; /* 테두리와 내부 여백을 너비에 포함 */
-  border-radius: 8px;
-  background: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border: 1px solid #b0bec5; /* 부드러운 회색 테두리 */
-}
-input[type=text], select {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    display: inline-block;
-    border: 1px solid #b0bec5; /* 부드러운 회색 테두리 */
-    border-radius: 4px;
-    box-sizing: border-box;
-    /* 기존 input, select 스타일 유지 */
-    font-weight: normal; /* 입력 필드의 글자는 기본 두께로 유지 */
-}
-
-textarea {
-  width: 100%; /* 전체 너비 */
-  padding: 10px; /* 내부 여백 */
-  margin: 10px 0; /* 위아래 마진 */
-  border: 1px solid #b0bec5; /* 부드러운 회색 테두리 */
-  border-radius: 4px; /* 테두리 둥글게 */
-  box-sizing: border-box; /* 너비 계산에 패딩과 테두리 포함 */
-  font-family: 'Noto Sans KR', 'Roboto', sans-serif; /* 글꼴 */
-  font-size: 1rem; /* 글꼴 크기 */
-  line-height: 1.5; /* 줄 간격 */
-  resize: vertical; /* 수직 방향으로만 크기 조정 가능 */
+  padding: 1.5rem;
 }
 
 .container {
-  display: flex;
-  margin: 20px;
-  width: calc(100% - 40px); /* 화면 전체 너비에서 마진을 제외한 너비 */
-  flex-wrap: wrap;
-  height: 100%; /* 화면의 전체 높이 */
-  overflow: hidden; /* 스크롤바 방지 */
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
 }
 
-.addinfo_container {
-  
-  width: 100%; /* 전체 너비를 차지하도록 설정 */
-  margin: 10px 0; /* 상하 마진 적용 */
+/* 태블릿 이상 */
+@media (min-width: 768px) {
+  .container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .addinfo_container {
+    grid-column: 1 / -1;
+  }
 }
 
-.requester_container, .receiver_container {
-  
-  width: calc(50% - 20px); /* 상하 마진 적용 */
-  flex: 1; /* 자동으로 크기 조절을 하지 않음 */
-}
+/* ===== Card (fieldset) ===== */
 
-.requester_container {
-  margin-right: 10px; /* requester_container의 오른쪽에 추가 마진 */
-}
-
-.receiver_container {
-  margin-left:10px; /* receiver_container의 왼쪽에 추가 마진 */
-}
-
-
-
-
-input[type=submit] {
-  width: calc(100% - 40px); /* form의 패딩을 고려하여 fieldset과 동일한 계산 */
-  background-color: #546e7a; /* 어두운 회색 톤 */
-  color: white;
-  padding: 14px 20px;
-  margin: 8px auto; /* 상하 8px 마진, 좌우 마진 자동으로 중앙 정렬 */
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  box-sizing: border-box; /* 너비 계산에 패딩과 테두리 포함 */
-  display: block; /* 블록 레벨 요소로 만들기 */
-}
-
-input[type=submit]:hover {
-  background-color: #455a64; /* 더 어두운 회색 톤 */
-}
-
-
-input[type=submit]:hover {
-  background-color: #0056b3;
-}
-
-input[type=submit]:hover {
-    background-color: #0056b3;
+fieldset {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card-bg);
+  padding: 1.5rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.05);
 }
 
 legend {
-  width: auto;
-  margin: 0 auto;
-  text-align: center;
-  font-size: 1.2em; /* 필요에 따라 글꼴 크기 조정 */
-  font-weight: bold; /* 글자 진하게 */
-  color: #455a64; /* 어두운 회색 톤 */
+  padding: 0 0.5rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+/* ===== Inputs ===== */
+
+input[type="text"],
+select,
+textarea {
+  width: 100%;
+  padding: 0.75rem 0.875rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+input[type="text"]:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* ===== Submit Button ===== */
+
+input[type="submit"] {
+  margin: 2rem auto 0;
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  background-color: var(--primary);
+  color: #fff;
+  padding: 0.9rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 9999px; /* pill 버튼 */
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s, box-shadow 0.1s;
+}
+
+input[type="submit"]:hover {
+  background-color: var(--primary-hover);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+}
+
+input[type="submit"]:active {
+  transform: scale(0.97);
 }

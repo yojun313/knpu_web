@@ -1,79 +1,104 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&family=Roboto:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600&family=Roboto:wght@500&display=swap');
 
 body {
     font-family: 'Noto Sans KR', sans-serif;
-    background-color: #f9f9f9; /* 연한 회색으로 변경 */
+    background-color: #f5f7f8;
     margin: 0;
     padding: 0;
+    color: #37474f;
 }
 
+/* ===== 헤더 ===== */
 h1 {
     text-align: center;
-    color: #37474f; /* 진한 회색 톤으로 변경 */
+    font-weight: 600;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    color: #263238;
 }
 
 p {
-    color: #607d8b; /* 밝은 회색 톤으로 변경 */
     text-align: center;
-    margin-top: -10px;
+    color: #607d8b;
+    font-size: 14px;
+    margin-bottom: 30px;
 }
 
+/* ===== 메인 레이아웃 ===== */
 .container {
     display: flex;
-    margin: 20px;
-    width: calc(100% - 40px); /* 화면 전체 너비에서 마진을 제외한 너비 */
-    height: 100vh; /* 화면의 전체 높이 */
-    overflow: hidden; /* 스크롤바 방지 */
-  }
-
-.button-container, .explain-container, .pdf-viewer {
-    border: 1px solid #b0bec5; /* 부드러운 회색 테두리로 변경 */
-    margin: 10px;
-    padding: 20px;
-    border-radius: 8px;
-    background: white;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    margin: 0 10px;
-    flex: 0 0 auto; /* 자동으로 크기 조절을 하지 않음 */
+    gap: 20px;
+    padding: 0 20px 20px;
+    height: calc(100vh - 140px);
+    box-sizing: border-box;
 }
 
-.button-container {
-    flex: 1;
-}
-
-.explain-container {
-    flex: 1;
-}
-
+/* ===== 공통 박스 스타일 ===== */
+.button-container,
+.explain-container,
 .pdf-viewer {
-    flex-grow: 1; /* 남은 공간을 모두 차지하도록 설정 */
-    overflow: auto; /* 필요한 경우 내부에서 스크롤 */
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    padding: 20px;
+    box-sizing: border-box;
 }
 
-fieldset {
-  width: 100%;
-  border: none;
-  padding: 0;
+/* ===== 버튼 영역 ===== */
+.button-container {
+    flex: 0 0 260px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 }
 
 button {
     width: 100%;
-    padding: 15px;
-    margin-bottom: 20px;
+    padding: 14px;
+    margin-bottom: 16px;
     border: none;
-    border-radius: 5px;
-    background-color: #546e7a; /* 어두운 회색 톤으로 변경 */
-    color: white;
+    border-radius: 6px;
+    background-color: #546e7a;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.25s, transform 0.15s;
 }
 
 button:hover {
-    background-color: #455a64; /* 더 어두운 회색 톤으로 변경 */
+    background-color: #455a64;
+    transform: translateY(-1px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+/* 버튼 설명 텍스트 */
+.button-container p {
+    font-size: 12px;
+    color: #78909c;
+    margin-top: -8px;
+    margin-bottom: 20px;
+}
+
+/* ===== PDF 뷰어 ===== */
+.pdf-viewer {
+    flex: 1;
+    padding: 0;
+    overflow: hidden;
 }
 
 iframe {
     width: 100%;
     height: 100%;
     border: none;
+}
+
+/* ===== 기타 ===== */
+fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
 }

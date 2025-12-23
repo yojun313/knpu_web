@@ -1,47 +1,56 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&family=Roboto:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600&family=Roboto:wght@500&display=swap');
 
-body, html {
-    height: 100%; /* 전체 높이를 100%로 설정 */
-    margin: 0; /* 마진 제거 */
-    padding: 0; /* 패딩 제거 */
-    background-color: #d5d5d5; /* 배경 색상 설정 */
-    display: flex; /* Flexbox 레이아웃 사용 */
-    flex-direction: column; /* 자식 요소들을 세로로 정렬 */
-    justify-content: center; /* 세로 방향 중앙 정렬 */
-    align-items: center; /* 가로 방향 중앙 정렬 */
-    text-align: center; /* 텍스트 중앙 정렬 */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans KR', 'Roboto', sans-serif;
+    background: linear-gradient(180deg, #eef2f4 0%, #f8f9fa 100%);
 }
 
+/* ===== 중앙 정렬 레이아웃 ===== */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ===== 카드 ===== */
+.main {
+    background: #ffffff;
+    padding: 50px 60px;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    text-align: center;
+    min-width: 320px;
+}
+
+/* ===== 텍스트 ===== */
 h1 {
-    font-family: 'Noto Sans KR', 'Roboto', sans-serif; /* 글꼴 */
-    font-size: 3rem; /* 글꼴 크기 */
-    margin: 0; /* 헤더의 마진 제거 */
+    font-size: 2.2rem;
+    font-weight: 600;
+    margin: 0 0 10px;
+    color: #263238;
 }
 
 h2 {
-    font-family: 'Noto Sans KR', 'Roboto', sans-serif; /* 글꼴 */
-    font-size: 1rem; /* 글꼴 크기 */
-    margin: 0; /* 헤더의 마진 제거 */
-    padding: 20px 0; /* 상하 패딩 */
+    font-size: 0.95rem;
+    font-weight: 400;
+    color: #607d8b;
+    margin: 0 0 35px;
 }
 
-
-.main {
-    display: flex; /* Flexbox 레이아웃 사용 */
-    flex-direction: column; /* 자식 요소들을 세로로 정렬 */
-    align-items: center; /* 가로 방향 중앙 정렬 */
-}
-
+/* ===== 로딩 애니메이션 ===== */
 .loading_circle {
-    width: 50px; /* 너비 */
-    height: 50px; /* 높이 */
-    border: 10px solid #e3e3e3; /* 테두리 색상 */
-    border-bottom: 10px solid #000000; /* 아래쪽 테두리 색상 */
-    border-radius: 50%; /* 원형 */
-    animation: load 1.5s linear infinite; /* 애니메이션 */
+    width: 48px;
+    height: 48px;
+    border: 5px solid #e0e6ea;
+    border-top: 5px solid #546e7a;
+    border-radius: 50%;
+    animation: spin 1.2s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
+    margin: 0 auto;
 }
 
-@keyframes load {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }

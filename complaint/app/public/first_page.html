@@ -4,29 +4,33 @@
     <meta charset="UTF-8">
     <title>PAILAB AI 고소장 생성 서비스</title>
     <link rel="stylesheet" href="first_page_style.css">
-
 </head>
 
 <script>
-
     function sue_index() {
         window.location.href = '/sue_index';
     }
-
-    function admin_system() {
-        window.location.href = '/loading_admin_system';
-    }
-
 </script>
 
 <body>
+
+    <!-- Header -->
     <div class="title-bar">
-        <img src="title-bar-image.png" class="title-bar-image-right">
-        PAILAB AI 고소장 생성 서비스
-        <img src="경찰청로고.png" class="title-bar-image-left">
+        <div class="title-bar-inner">
+            <img src="경찰청로고.png" class="title-bar-image-left">
+            <span>PAILAB AI 고소장 생성 서비스</span>
+            <img src="title-bar-image.png" class="title-bar-image-right">
+        </div>
     </div>
-    <div class="button-container">
-        <button onclick="sue_index()" class="big-button">AI 고소장 생성기</button>
-    </div>
+
+    <!-- Main -->
+    <main class="main">
+        <div class="button-container">
+            <button onclick="sue_index()" class="big-button">
+                AI 고소장 생성기
+            </button>
+        </div>
+    </main>
+
 </body>
 </html>
