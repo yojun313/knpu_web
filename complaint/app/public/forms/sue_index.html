@@ -68,14 +68,18 @@
             고소인 성명: <input type="text" id="고소인" name="고소인" onKeyDown="next_input('고소인 주소');" required> </br></br>
     
             고소인 주민등록번호:
-            <input type="password"
-                  id="고소인 주민등록번호"
-                  name="고소인 주민등록번호"
-                  maxlength="14"
+            <input type="text"
+                  id="고소인 주민등록번호_display"
                   placeholder="000000-*******"
-                  oninput="maskRRN(this)"
-                  onKeyDown="next_input('고소인 주소');"
-                  required> </br></br>
+                  maxlength="14"
+                  autocomplete="off"
+                  inputmode="numeric"
+                  oninput="maskRRN(this, '고소인 주민등록번호_raw')"
+                  required>
+
+            <input type="hidden"
+                  name="고소인 주민등록번호"
+                  id="고소인 주민등록번호_raw">
     
             고소인 주소: <input type="text" id="고소인 주소" name="고소인 주소" onKeyDown="next_input('고소인 직업');" required> </br></br>
     
@@ -94,15 +98,19 @@
             피고소인 성명: <input type="text" id="피고소인" name="피고소인" onKeyDown="next_input('피고소인 주민등록번호');"> </br></br>
     
             피고소인 주민등록번호:
-            <input type="password"
-                  id="피고소인 주민등록번호"
-                  name="피고소인 주민등록번호"
-                  maxlength="14"
+            <input type="text"
+                  id="피고소인 주민등록번호_display"
                   placeholder="000000-*******"
-                  oninput="maskRRN(this)"
-                  onKeyDown="next_input('고소인 주소');"
-                  required> </br></br>
-    
+                  maxlength="14"
+                  autocomplete="off"
+                  inputmode="numeric"
+                  oninput="maskRRN(this, '피고소인 주민등록번호_raw')"
+                  required>
+
+            <input type="hidden"
+                  name="피고소인 주민등록번호"
+                  id="피고소인 주민등록번호_raw">
+              
             피고소인 주소: <input type="text" id="피고소인 주소" name="피고소인 주소" onKeyDown="next_input('피고소인 직업');"> </br></br>
     
             피고소인 직업: <input type="text" id="피고소인 직업" name="피고소인 직업" onKeyDown="next_input('피고소인 전화');"> </br></br>
@@ -167,6 +175,33 @@
   // 이벤트 연결
   window.addEventListener("load", loadForm);
   document.addEventListener("input", saveForm);
+  
+  function maskRRN(input, hiddenId) {
+    // 숫자만 추출
+    let raw = input.value.replace(/[^0-9]/g, "");
+  
+    // 최대 13자리 제한
+    if (raw.length > 13) raw = raw.slice(0, 13);
+  
+    // hidden input에 원본 저장
+    document.getElementById(hiddenId).value = raw;
+  
+    // 화면 표시용 값 생성
+    let display = "";
+  
+    if (raw.length <= 6) {
+      // 앞자리 입력 중
+      display = raw;
+    } else {
+      // 7자리 이후는 *로 마스킹
+      display =
+        raw.slice(0, 6) +
+        "-" +
+        "*".repeat(raw.length - 6);
+    }
+  
+    input.value = display;
+  }
 </script>
 
 
