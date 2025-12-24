@@ -150,5 +150,29 @@
   // 이벤트 연결
   window.addEventListener("load", loadForm);
   document.addEventListener("input", saveForm);
+
+  fetch("https://complaint-api.knpu.re.kr/api/police/stations")
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("경찰서 목록 요청 실패");
+      }
+      return response.json();
+    })
+    .then(data => {
+      const select = document.getElementById("제출 경찰서");
+
+      data.forEach(item => {
+        const option = document.createElement("option");
+
+        option.value = item.name;
+        option.textContent = item.name;
+
+        select.appendChild(option);
+      });
+    })
+    .catch(error => {
+      console.error(error);
+      alert("경찰서 목록을 불러오지 못했습니다.");
+    });
 </script>
 </html> 
