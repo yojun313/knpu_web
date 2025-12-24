@@ -113,7 +113,10 @@
           <label for="myTextarea">기타 수사에 필요한 사항: </label> </br>
           <textarea id="기타 수사에 필요한 사항" name="기타 수사에 필요한 사항" rows="2" cols="200"></textarea> </br></br>
 
-          제출 경찰서: <input type="text" id="제출 경찰서" name="제출 경찰서" required> </br></br>
+          제출 경찰서: 
+          <select id="제출 경찰서" name="제출 경찰서" required>
+            <option value="" disabled selected hidden>선택</option>
+          </select> </br></br>
 
           고소 일자: <input type="date" max = "9999-12-31" id="고소일자" name="고소일자" required> </br></br>
   
@@ -160,5 +163,29 @@
   // 이벤트 연결
   window.addEventListener("load", loadForm);
   document.addEventListener("input", saveForm);
+
+  fetch("https://complaint-api.knpu.re.kr/api/police/stations")
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("경찰서 목록 요청 실패");
+      }
+      return response.json();
+    })
+    .then(data => {
+      const select = document.getElementById("제출 경찰서");
+
+      data.forEach(item => {
+        const option = document.createElement("option");
+
+        option.value = item.name;
+        option.textContent = item.name;
+
+        select.appendChild(option);
+      });
+    })
+    .catch(error => {
+      console.error(error);
+      alert("경찰서 목록을 불러오지 못했습니다.");
+    });
 </script>
 </html> 
