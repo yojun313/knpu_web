@@ -69,9 +69,9 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'first_page.html'));
 });
 
-app.get('/sue_index', (req, res) => {
+app.get('/basic_info', (req, res) => {
   // HTML 파일을 렌더링합니다.
-  res.sendFile(path.join(__dirname, 'public', 'forms', 'sue_index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'forms', 'basic_info.html'));
 });
 
 // 첫 번째 페이지 작성 후 제출
