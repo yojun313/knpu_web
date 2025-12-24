@@ -28,6 +28,8 @@ def generate_complaints(payload: dict = Body(...)):
     llm_result = None
     try:
         combined = payload["combined_data"]
+        
+        print(combined)
 
         form_data = {}
         for section in combined.values():
