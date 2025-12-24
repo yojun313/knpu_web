@@ -11,7 +11,7 @@ def llm_generate(query):
         api_key="dummy-key",
         base_url="http://localhost:9000/v1"
     )
-
+    print("쿼리 들어옴")
     models = client.models.list()
     model_objs = getattr(models, "data", models) or []
     if not model_objs:
@@ -19,6 +19,7 @@ def llm_generate(query):
 
     model_id = getattr(model_objs[0], "id", model_objs[0])
 
+    print("쿼리 응답 시작")
     response = client.chat.completions.create(
         model=model_id,
         messages=[
@@ -35,7 +36,7 @@ def llm_generate(query):
         ],
         temperature=0
     )
-
+    print("쿼리 응답 완료")
     content = response.choices[0].message.content
     if not content:
         raise RuntimeError("LLM returned empty response")
