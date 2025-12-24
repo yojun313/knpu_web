@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Body
 from app.libs.llm import llm_generate
-from app.libs.form import make_query
+from app.libs.form import make_query, safe_json_load
 from app.libs.exceptions import UnprocessableEntityException
 from app.libs.docx import word_generate
 from app.libs.pdf import convert_to_pdf
@@ -40,7 +40,7 @@ def generate_complaints(payload: dict = Body(...)):
         
         llm_result = llm_generate(make_query(form_data))
         try:
-            result_data = json.loads(llm_result)
+            result_data = safe_json_load(llm_result)
         except:
             raise UnprocessableEntityException("LLM response is not a valid JSON")
         

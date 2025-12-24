@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 import json
+import re
 
 storage_path = Path(os.path.dirname(__file__)) / ".." / "storage"
 
@@ -52,55 +53,24 @@ def make_query(form_data: dict) -> str:
 
         [입력 정보]
         {json.dumps(form_data, ensure_ascii=False)}
+        
+        [출력 스키마]
+        {json.dumps(output_data, ensure_ascii=False)}
     """
+    
+def safe_json_load(llm_result: str) -> dict:
+    if not llm_result or not isinstance(llm_result, str):
+        raise ValueError("Empty or non-string LLM response")
 
-complaint_schema = {
-    "name": "generate_complaint",
-    "description": "고소장 정보를 생성한다",
-    "parameters": {
-        "type": "object",
-        "properties": {
-            "고소 죄명": {"type": "string"},
-            "고소인 성명": {"type": "string"},
-            "고소인 주민등록번호": {"type": "string"},
-            "고소인 주소": {"type": "string"},
-            "고소인 직업": {"type": "string"},
-            "고소인 전화": {"type": "string"},
-            "고소인 이메일": {"type": "string"},
-            "피고소인 성명": {"type": "string"},
-            "피고소인 주민등록번호": {"type": "string"},
-            "피고소인 주소": {"type": "string"},
-            "피고소인 직업": {"type": "string"},
-            "피고소인 전화": {"type": "string"},
-            "피고소인 이메일": {"type": "string"},
-            "피고소인 기타사항": {"type": "string"},
-            "고소 취지": {"type": "string"},
-            "범죄 사실": {"type": "string"},
-            "고소 이유": {"type": "string"},
-            "증거 자료": {"type": "string"},
-            "중복 고소 여부": {
-                "type": "string",
-                "enum": ["있음", "없음"]
-            },
-            "관련 형사사건 수사 유무": {
-                "type": "string",
-                "enum": ["있음", "없음"]
-            },
-            "기타": {"type": "string"},
-            "고소일": {"type": "string"},
-            "제출 경찰서": {"type": "string"}
-        },
-        "required": [
-            "고소 죄명",
-            "고소인 성명",
-            "피고소인 기타사항",
-            "고소 취지",
-            "범죄 사실",
-            "고소 이유",
-            "중복 고소 여부",
-            "관련 형사사건 수사 유무",
-            "고소일",
-            "제출 경찰서"
-        ]
-    }
-}
+    text = llm_result.strip()
+
+    text = re.sub(r"```json\s*", "", text, flags=re.IGNORECASE)
+    text = re.sub(r"```", "", text)
+
+    match = re.search(r"\{.*\}", text, re.DOTALL)
+    if not match:
+        raise ValueError("No JSON object found in LLM response")
+
+    json_str = match.group().strip()
+
+    return json.loads(json_str)

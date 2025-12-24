@@ -1,13 +1,10 @@
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
-from app.libs.form import complaint_schema
 
 load_dotenv()
 
 api_key = os.getenv("OPENAI_API_KEY")   
-
-
 
 def llm_generate(query):
     client = OpenAI(
@@ -28,19 +25,19 @@ def llm_generate(query):
             {
                 "role": "system",
                 "content": (
-                    "너는 고소장 자동 작성 시스템이다. "
-                    "반드시 함수 호출 형식으로만 응답해야 한다."
+                    "너는 고소장 자동 작성 시스템이다.\n"
+                    "반드시 아래 스키마에 맞는 JSON 객체만 출력하라.\n"
+                    "설명, 문장, 코드블록(```), 주석을 절대 포함하지 마라.\n"
+                    "출력은 { 로 시작해서 } 로 끝나야 한다."
                 )
             },
             {"role": "user", "content": query},
         ],
-        functions=[complaint_schema],
-        function_call={"name": "generate_complaint"}
+        temperature=0
     )
 
-    msg = response.choices[0].message
+    content = response.choices[0].message.content
+    if not content:
+        raise RuntimeError("LLM returned empty response")
 
-    if not msg.function_call:
-        raise RuntimeError("LLM did not return function_call")
-
-    return msg.function_call.arguments 
+    return content
