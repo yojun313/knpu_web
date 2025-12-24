@@ -163,3 +163,46 @@ input[type="password"]::placeholder {
 input[type="password"] {
   inputmode: numeric;
 }
+
+input[type="date"],
+input[type="datetime-local"] {
+  width: 100%;
+  max-width: 360px;
+
+  height: 48px;
+  padding: 0 14px;
+
+  font-size: 15px;
+  font-family: inherit;
+
+  color: #111;
+  background-color: #fff;
+
+  border: 1.5px solid #d0d5dd;
+  border-radius: 10px;
+
+  box-sizing: border-box;
+
+  transition: 
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* 포커스 시 */
+input[type="date"]:focus,
+input[type="datetime-local"]:focus {
+  outline: none;
+  border-color: #4f46e5; /* 포인트 컬러 */
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+}
+
+/* 캘린더 아이콘 영역 */
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.6;
+  padding-right: 6px;
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
