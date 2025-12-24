@@ -150,6 +150,10 @@ app.get('/llm', async (req, res) => {
   });
 });
 
-app.listen(port, '0.0.0.0', () => {
+const server = app.listen(port, '0.0.0.0', () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
+
+server.timeout = 0;
+server.keepAliveTimeout = 0;
+server.headersTimeout = 0;
