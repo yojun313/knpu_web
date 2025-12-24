@@ -67,7 +67,15 @@
     
             고소인 성명: <input type="text" id="고소인" name="고소인" onKeyDown="next_input('고소인 주소');" required> </br></br>
     
-            고소인 주민등록번호: <input type="text" id="고소인 주민등록번호" name="고소인 주민등록번호" onKeyDown="next_input('고소인 주소');" required> </br></br>
+            고소인 주민등록번호:
+            <input type="password"
+                  id="고소인 주민등록번호"
+                  name="고소인 주민등록번호"
+                  maxlength="14"
+                  placeholder="000000-*******"
+                  oninput="maskRRN(this)"
+                  onKeyDown="next_input('고소인 주소');"
+                  required> 
     
             고소인 주소: <input type="text" id="고소인 주소" name="고소인 주소" onKeyDown="next_input('고소인 직업');" required> </br></br>
     
@@ -85,7 +93,15 @@
           <legend>피고소인 정보 입력</legend>
             피고소인 성명: <input type="text" id="피고소인" name="피고소인" onKeyDown="next_input('피고소인 주민등록번호');"> </br></br>
     
-            피고소인 주민등록번호: <input type="text" id="피고소인 주민등록번호" name="피고소인 주민등록번호" onKeyDown="next_input('피고소인 주소');"> </br></br>
+            피고소인 주민등록번호:
+            <input type="password"
+                  id="피고소인 주민등록번호"
+                  name="피고소인 주민등록번호"
+                  maxlength="14"
+                  placeholder="000000-*******"
+                  oninput="maskRRN(this)"
+                  onKeyDown="next_input('고소인 주소');"
+                  required> 
     
             피고소인 주소: <input type="text" id="피고소인 주소" name="피고소인 주소" onKeyDown="next_input('피고소인 직업');"> </br></br>
     
@@ -117,7 +133,7 @@
 </body>
 
 <script>
-  const FORM_KEY = "employment_fraud_form";
+  const FORM_KEY = "sue_info";
 
   // 모든 input / textarea / select 저장
   function saveForm() {

@@ -38,7 +38,10 @@
 
   <h1>PAILAB AI 고소장 생성 서비스</h1>
 
-  <form action = "/loading" accept-charset = "utf-8" name = "분양사기" method = "post">
+  <form action="/loading"
+      method="post"
+      name="분양사기"
+      onsubmit="clearFormStorage()">
 
     <fieldset style = "width:10">
         <legend>피해 일시 및 장소</legend>
@@ -124,4 +127,40 @@
   </form>
 
 </body>
+<script>
+  const FORM_KEY = "분양사기";
+
+  // 모든 input / textarea / select 저장
+  function saveForm() {
+    const data = {};
+    document.querySelectorAll("input, textarea, select").forEach(el => {
+      if (el.name) {
+        data[el.name] = el.value;
+      }
+    });
+    localStorage.setItem(FORM_KEY, JSON.stringify(data));
+  }
+
+  // 저장된 데이터 복원
+  function loadForm() {
+    const saved = localStorage.getItem(FORM_KEY);
+    if (!saved) return;
+
+    const data = JSON.parse(saved);
+    document.querySelectorAll("input, textarea, select").forEach(el => {
+      if (el.name && data[el.name] !== undefined) {
+        el.value = data[el.name];
+      }
+    });
+  }
+
+  // 제출 성공 시 임시저장 삭제
+  function clearFormStorage() {
+    localStorage.removeItem(FORM_KEY);
+  }
+
+  // 이벤트 연결
+  window.addEventListener("load", loadForm);
+  document.addEventListener("input", saveForm);
+</script>
 </html> 
