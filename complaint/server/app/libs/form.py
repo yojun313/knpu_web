@@ -4,6 +4,7 @@ import json
 import re
 
 storage_path = Path(os.path.dirname(__file__)) / ".." / "storage"
+os.makedirs(storage_path, exist_ok=True)
 
 output_data = {
     "1": "(피고소인 기타사항을 써야해. 고소인과의 관계 및 피고소인의 인적사항과 연락처를 정확히 알 수 없을 경우 피고소인의 성별, 특징적 외모, 인상착의 등을 입력해줘. 기타 피고소인을 특정할 수 있는 내용을 입력하면돼. 성명, 주민등록번호, 주소, 직업, 전화, 이메일 내용은 적지마)",
