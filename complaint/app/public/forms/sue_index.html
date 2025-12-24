@@ -69,20 +69,30 @@
     
             고소인 주민등록번호:
             <input type="text"
-                  id="고소인 주민등록번호_display"
-                  placeholder="000000-*******"
-                  maxlength="14"
-                  autocomplete="off"
+                  id="고소인 주민번호_앞"
+                  maxlength="6"
+                  placeholder="앞 6자리"
                   inputmode="numeric"
-                  oninput="maskRRN(this, '고소인 주민등록번호_raw')"
+                  autocomplete="off"
+                  style="width:48%; display:inline-block;"
+                  required>
+
+            -
+            <input type="password"
+                  id="고소인 주민번호_뒤"
+                  maxlength="7"
+                  placeholder="뒤 7자리"
+                  inputmode="numeric"
+                  autocomplete="off"
+                  style="width:48%; display:inline-block;"
                   required>
 
             <input type="hidden"
                   name="고소인 주민등록번호"
-                  id="고소인 주민등록번호_raw">
+                  id="고소인 주민등록번호">
 
             </br></br>
-
+    
             고소인 주소: <input type="text" id="고소인 주소" name="고소인 주소" onKeyDown="next_input('고소인 직업');" required> </br></br>
     
             고소인 직업: <input type="text" id="고소인 직업" name="고소인 직업" onKeyDown="next_input('고소인 전화');" required> </br></br>
@@ -101,20 +111,30 @@
     
             피고소인 주민등록번호:
             <input type="text"
-                  id="피고소인 주민등록번호_display"
-                  placeholder="000000-*******"
-                  maxlength="14"
-                  autocomplete="off"
+                  id="피고소인 주민번호_앞"
+                  maxlength="6"
+                  placeholder="앞 6자리"
                   inputmode="numeric"
-                  oninput="maskRRN(this, '피고소인 주민등록번호_raw')"
+                  autocomplete="off"
+                  style="width:48%; display:inline-block;"
+                  required>
+
+            -
+            <input type="password"
+                  id="피고소인 주민번호_뒤"
+                  maxlength="7"
+                  placeholder="뒤 7자리"
+                  inputmode="numeric"
+                  autocomplete="off"
+                  style="width:48%; display:inline-block;"
                   required>
 
             <input type="hidden"
                   name="피고소인 주민등록번호"
-                  id="피고소인 주민등록번호_raw">
-              
+                  id="고소인 주민등록번호">
+
             </br></br>
-  
+    
             피고소인 주소: <input type="text" id="피고소인 주소" name="피고소인 주소" onKeyDown="next_input('피고소인 직업');"> </br></br>
     
             피고소인 직업: <input type="text" id="피고소인 직업" name="피고소인 직업" onKeyDown="next_input('피고소인 전화');"> </br></br>
@@ -145,7 +165,7 @@
 </body>
 
 <script>
-  const FORM_KEY = "sue_info";
+  const FORM_KEY = "sue_form";
 
   // 모든 input / textarea / select 저장
   function saveForm() {
@@ -180,32 +200,28 @@
   window.addEventListener("load", loadForm);
   document.addEventListener("input", saveForm);
 
-  function maskRRN(input, hiddenId) {
-    // 숫자만 추출
-    let raw = input.value.replace(/[^0-9]/g, "");
+  function combineRRN(frontId, backId, hiddenId) {
+    const front = document.getElementById(frontId)?.value || "";
+    const back  = document.getElementById(backId)?.value || "";
   
-    // 최대 13자리 제한
-    if (raw.length > 13) raw = raw.slice(0, 13);
-  
-    // hidden input에 원본 저장
-    document.getElementById(hiddenId).value = raw;
-  
-    // 화면 표시용 값 생성
-    let display = "";
-  
-    if (raw.length <= 6) {
-      // 앞자리 입력 중
-      display = raw;
-    } else {
-      // 7자리 이후는 *로 마스킹
-      display =
-        raw.slice(0, 6) +
-        "-" +
-        "*".repeat(raw.length - 6);
+    if (front && back) {
+      document.getElementById(hiddenId).value = front + "-" + back;
     }
-  
-    input.value = display;
   }
+  
+  document.querySelector("form").addEventListener("submit", () => {
+    combineRRN(
+      "고소인 주민번호_앞",
+      "고소인 주민번호_뒤",
+      "고소인 주민등록번호"
+    );
+  
+    combineRRN(
+      "피고소인 주민번호_앞",
+      "피고소인 주민번호_뒤",
+      "피고소인 주민등록번호"
+    );
+  });
 </script>
 
 
