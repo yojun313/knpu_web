@@ -65,7 +65,7 @@
         <fieldset>
           <legend>고소인 정보 입력</legend>
     
-            고소인 성명: <input type="text" id="고소인" name="고소인" onKeyDown="next_input('고소인 주민등록번호');" required> </br></br>
+            고소인 성명: <input type="text" id="고소인" name="고소인" onKeyDown="next_input('고소인 주소');" required> </br></br>
     
             고소인 주민등록번호:
             </br>
@@ -76,7 +76,7 @@
                   inputmode="numeric"
                   autocomplete="off"
                   style="width:48%; display:inline-block;"
-                  required>
+                  >
 
             -
             <input type="password"
@@ -86,7 +86,7 @@
                   inputmode="numeric"
                   autocomplete="off"
                   style="width:48%; display:inline-block;"
-                  required>
+                  >
 
             <input type="hidden"
                   name="고소인 주민등록번호"
@@ -169,7 +169,6 @@
 <script>
   const FORM_KEY = "sue_form";
 
-  // 모든 input / textarea / select 저장
   function saveForm() {
     const data = {};
     document.querySelectorAll("input, textarea, select").forEach(el => {
@@ -180,11 +179,9 @@
     localStorage.setItem(FORM_KEY, JSON.stringify(data));
   }
 
-  // 저장된 데이터 복원
   function loadForm() {
     const saved = localStorage.getItem(FORM_KEY);
     if (!saved) return;
-
     const data = JSON.parse(saved);
     document.querySelectorAll("input, textarea, select").forEach(el => {
       if (el.name && data[el.name] !== undefined) {
@@ -193,37 +190,38 @@
     });
   }
 
-  // 제출 성공 시 임시저장 삭제
-  function clearFormStorage() {
-    localStorage.removeItem(FORM_KEY);
-  }
-
-  // 이벤트 연결
   window.addEventListener("load", loadForm);
   document.addEventListener("input", saveForm);
 
   function combineRRN(frontId, backId, hiddenId) {
-    const front = document.getElementById(frontId)?.value || "";
-    const back  = document.getElementById(backId)?.value || "";
-  
-    if (front && back) {
+    const front = document.getElementById(frontId).value;
+    const back = document.getElementById(backId).value;
+    if (front || back) {
       document.getElementById(hiddenId).value = front + "-" + back;
     }
   }
-  
-  document.querySelector("form").addEventListener("submit", () => {
-    combineRRN(
-      "고소인 주민번호_앞",
-      "고소인 주민번호_뒤",
-      "고소인 주민등록번호"
-    );
-  
-    combineRRN(
-      "피고소인 주민번호_앞",
-      "피고소인 주민번호_뒤",
-      "피고소인 주민등록번호"
-    );
-  });
+
+  document.sue_info.onsubmit = function() {
+    combineRRN("고소인 주민번호_앞", "고소인 주민번호_뒤", "고소인 주민등록번호");
+    combineRRN("피고소인 주민번호_앞", "피고소인 주민번호_뒤", "피고소인 주민등록번호");
+
+    if (is_submit === false) {
+      const nextEl = document.getElementById(_NEXT_FOCUS) || document.getElementsByName(_NEXT_FOCUS)[0];
+      if (nextEl) nextEl.focus();
+      is_submit = true;
+      return false;
+    }
+    
+    localStorage.removeItem(FORM_KEY);
+    return true;
+  };
+
+  function next_input(next_focus) {
+    if (event.keyCode == 13) {
+      is_submit = false;
+      _NEXT_FOCUS = next_focus;
+    }
+  }
 </script>
 
 
