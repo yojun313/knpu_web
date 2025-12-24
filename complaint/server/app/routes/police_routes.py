@@ -14,7 +14,7 @@ def get_police_stations():
         reader = csv.DictReader(f)
         for row in reader:
             stations.append({
-                "name": row["경찰서명"]
+                "name": row["경찰서명칭"]
             })
 
     return stations
