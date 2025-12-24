@@ -46,7 +46,7 @@ def generate_complaints(payload: dict = Body(...)):
             raise UnprocessableEntityException("LLM response is not a valid JSON")
         
         
-        docx_path = word_generate(result_data)
+        docx_path = word_generate(result_data, form_data)
         pdf_path = convert_to_pdf(docx_path)
 
         return {
