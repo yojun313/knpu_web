@@ -7,4 +7,5 @@
 8001: manager_web
 8002: homepage_api
 8003: complaint-server
-9000: gpu-llm
+9000: gpu-vllm
+9001: gpu-manager
