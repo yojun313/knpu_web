@@ -40,7 +40,8 @@ def generate_complaints(payload: dict = Body(...)):
         
         llm_result, model_name = llm_generate(make_query(form_data))
         try:
-            result_data = safe_json_load(llm_result)
+            safe_json = safe_json_load(llm_result)
+            result_data = json.loads(safe_json)
         except:
             raise UnprocessableEntityException("LLM response is not a valid JSON")
         
@@ -62,7 +63,7 @@ def generate_complaints(payload: dict = Body(...)):
                 "Exception occurred\n"
                 f"Exception: {str(e)}\n\n"
                 "LLM Response:\n"
-                f"{result_data}\n\n"
+                f"{safe_json}\n\n"
                 "Traceback:\n"
                 f"{traceback.format_exc()}"
             )

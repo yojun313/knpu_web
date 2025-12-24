@@ -90,8 +90,5 @@ def safe_json_load(llm_result: str) -> dict:
         raise ValueError("No opening brace '{' found before '}'")
 
     json_str = text[start:end + 1].strip()
-
-    try:
-        return json.loads(json_str)
-    except json.JSONDecodeError as e:
-        raise ValueError(f"Invalid JSON extracted: {e}")
+    
+    return json_str
