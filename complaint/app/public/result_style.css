@@ -102,3 +102,14 @@ fieldset {
     padding: 0;
     margin: 0;
 }
+
+.model-name a {
+    color: #37474f;
+    text-decoration: none;
+    border-bottom: 1px dashed #90a4ae;
+}
+
+.model-name a:hover {
+    color: #263238;
+    border-bottom-color: #546e7a;
+}

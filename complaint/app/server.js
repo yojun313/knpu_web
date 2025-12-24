@@ -115,6 +115,7 @@ app.get('/llm', async (req, res) => {
         req.session.preview_pdf = apiResp.preview_pdf;
         req.session.download_word = apiResp.download_word;
         req.session.download_pdf = apiResp.download_pdf;
+        req.session.model_name = apiResp.model_name;
       }        
     } catch (err) {
       console.error("AI 고소장 생성 실패:", err);
@@ -137,7 +138,9 @@ app.get('/llm', async (req, res) => {
     let modifiedHtml = html
       .replace('pdf_url', preview)
       .replace('word_download_url', word_url)
-      .replace('pdf_download_url', pdf_url);
+      .replace('pdf_download_url', pdf_url)
+      .replace('MODEL_NAME', modelName)
+      .replace('MODEL_URL', modelUrl);
 
     res.send(modifiedHtml);
   });

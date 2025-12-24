@@ -38,7 +38,7 @@ def generate_complaints(payload: dict = Body(...)):
                     else:
                         form_data[k] = v
         
-        llm_result = llm_generate(make_query(form_data))
+        llm_result, model_name = llm_generate(make_query(form_data))
         try:
             result_data = safe_json_load(llm_result)
         except:
@@ -53,6 +53,7 @@ def generate_complaints(payload: dict = Body(...)):
             "preview_pdf": f"/preview/pdf/{docx_path.stem}",
             "download_word": f"/download/word/{docx_path.stem}",
             "download_pdf": f"/download/pdf/{docx_path.stem}",
+            "model_name": model_name 
         }
     except Exception as e:
         logging.error(

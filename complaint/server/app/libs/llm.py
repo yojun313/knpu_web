@@ -39,5 +39,7 @@ def llm_generate(query):
     content = response.choices[0].message.content
     if not content:
         raise RuntimeError("LLM returned empty response")
+    
+    model_id = model_id.replace('/models/', '').replace('__', '/')
 
-    return content
+    return content, model_id
