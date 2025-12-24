@@ -22,7 +22,7 @@ def word_generate(llm_data, form_data):
         for cell in row.cells:
             for para in cell.paragraphs:
                 if para.text == "고소인 성명":
-                    para.text = form_data["고소인 성명"]
+                    para.text = form_data["고소인"]
                 elif para.text == "고소인 주민등록번호":
                     para.text = form_data["고소인 주민등록번호"]
                 elif para.text == "고소인 주소":
@@ -39,7 +39,7 @@ def word_generate(llm_data, form_data):
         for cell in row.cells:
             for para in cell.paragraphs:
                 if para.text == "피고소인 성명":
-                    para.text = form_data["피고소인 성명"]
+                    para.text = form_data["피고소인"]
                 elif para.text == "피고소인 주민등록번호":
                     para.text = form_data["피고소인 주민등록번호"]
                 elif para.text == "피고소인 주소":
