@@ -116,6 +116,7 @@ app.get('/llm', async (req, res) => {
         req.session.download_word = apiResp.download_word;
         req.session.download_pdf = apiResp.download_pdf;
         req.session.model_name = apiResp.model_name;
+        req.session.model_url = apiResp.model_url;
       }        
     } catch (err) {
       console.error("AI 고소장 생성 실패:", err);
@@ -134,6 +135,9 @@ app.get('/llm', async (req, res) => {
     const word_url = `${fastapiBase}${req.session.download_word}`;
     const pdf_url  = `${fastapiBase}${req.session.download_pdf}`;
     const preview  = `${fastapiBase}${req.session.preview_pdf}`;
+
+    const modelName = req.session.model_name
+    const modelUrl = req.session.model_url 
 
     let modifiedHtml = html
       .replace('pdf_url', preview)

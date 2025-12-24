@@ -53,7 +53,8 @@ def generate_complaints(payload: dict = Body(...)):
             "preview_pdf": f"/preview/pdf/{docx_path.stem}",
             "download_word": f"/download/word/{docx_path.stem}",
             "download_pdf": f"/download/pdf/{docx_path.stem}",
-            "model_name": model_name 
+            "model_name": model_name,
+            "model_url": f"https://huggingface.co/{model_name}"
         }
     except Exception as e:
         logging.error(
