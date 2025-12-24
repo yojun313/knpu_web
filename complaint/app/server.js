@@ -92,7 +92,9 @@ app.post('/submit', (req, res) => {
 
 // 결과창으로 이동(로딩창)
 app.post('/loading', (req, res) => {
-  req.session.second_formData = req.body;
+  if (Object.keys(req.body).length > 0) {
+    req.session.second_formData = req.body;
+  }
   res.sendFile(path.join(__dirname, 'public', 'loading.html'));
 });
 
