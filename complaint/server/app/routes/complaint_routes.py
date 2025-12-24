@@ -62,7 +62,7 @@ def generate_complaints(payload: dict = Body(...)):
                 "Exception occurred\n"
                 f"Exception: {str(e)}\n\n"
                 "LLM Response:\n"
-                f"{llm_result}\n\n"
+                f"{result_data}\n\n"
                 "Traceback:\n"
                 f"{traceback.format_exc()}"
             )
