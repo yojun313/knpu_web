@@ -12,7 +12,6 @@ def add_sentence(document: Document, target_sentence: str, new_text: str):
             break
 
 def word_generate(llm_data, form_data):
-    print(form_data)
     document = Document(os.path.join(os.path.dirname(__file__), '..', 'forms', '고소장 표준 양식(경찰청).docx'))
 
     now = datetime.now()
