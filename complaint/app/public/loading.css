@@ -54,3 +54,31 @@ h2 {
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+
+.btn {
+    padding: 12px 22px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+/* 다시 시도 */
+.btn.retry {
+    background: #546e7a;
+    color: #ffffff;
+}
+.btn.retry:hover {
+    background: #455a64;
+}
+
+/* 처음으로 */
+.btn.home {
+    background: #eceff1;
+    color: #37474f;
+}
+.btn.home:hover {
+    background: #cfd8dc;
+}

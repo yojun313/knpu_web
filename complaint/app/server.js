@@ -24,6 +24,7 @@ function postJson(url, data) {
     const parsed = new URL(url);
     const lib = parsed.protocol === 'https:' ? https : http;
     const body = JSON.stringify(data);
+
     const options = {
       hostname: parsed.hostname,
       port: parsed.port,
@@ -34,18 +35,31 @@ function postJson(url, data) {
         'Content-Length': Buffer.byteLength(body)
       }
     };
+
     const req = lib.request(options, (res) => {
       let resp = '';
       res.on('data', (chunk) => resp += chunk);
       res.on('end', () => {
-        try { resolve(JSON.parse(resp)); } catch (e) { resolve(resp); }
+        let parsedResp = resp;
+        try { parsedResp = JSON.parse(resp); } catch {}
+
+        if (res.statusCode >= 400) {
+          reject({
+            status: res.statusCode,
+            body: parsedResp
+          });
+        } else {
+          resolve(parsedResp);
+        }
       });
     });
+
     req.on('error', reject);
     req.write(body);
     req.end();
   });
 }
+
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());app.use(express.static(path.join(__dirname, 'public')));
@@ -103,8 +117,11 @@ app.get('/llm', async (req, res) => {
         req.session.download_pdf = apiResp.download_pdf;
       }        
     } catch (err) {
-        console.error('FastAPI 요청 실패:', err);
+      console.error("AI 고소장 생성 실패:", err);
 
+      return res.sendFile(
+        path.join(__dirname, 'public', 'llm_failed.html')
+      );
     }
 
   fs.readFile(result_page_html, 'utf8', (err, html) => {

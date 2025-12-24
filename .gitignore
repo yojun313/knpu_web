@@ -166,3 +166,4 @@ next-env.d.ts
 token.pickle
 
 storage/
+logs/
