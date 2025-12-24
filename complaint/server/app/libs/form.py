@@ -75,13 +75,23 @@ def safe_json_load(llm_result: str) -> dict:
 
     text = llm_result.strip()
 
+    # 코드 블록 제거
     text = re.sub(r"```json\s*", "", text, flags=re.IGNORECASE)
     text = re.sub(r"```", "", text)
 
-    match = re.search(r"\{.*\}", text, re.DOTALL)
-    if not match:
-        raise ValueError("No JSON object found in LLM response")
+    # 마지막 } 위치
+    end = text.rfind("}")
+    if end == -1:
+        raise ValueError("No closing brace '}' found")
 
-    json_str = match.group().strip()
+    # 마지막 } 기준으로 가장 가까운 {
+    start = text.rfind("{", 0, end)
+    if start == -1:
+        raise ValueError("No opening brace '{' found before '}'")
 
-    return json.loads(json_str)
+    json_str = text[start:end + 1].strip()
+
+    try:
+        return json.loads(json_str)
+    except json.JSONDecodeError as e:
+        raise ValueError(f"Invalid JSON extracted: {e}")
