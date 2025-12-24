@@ -29,8 +29,6 @@ def generate_complaints(payload: dict = Body(...)):
     try:
         combined = payload["combined_data"]
         
-        print(combined)
-
         form_data = {}
         for section in combined.values():
             if isinstance(section, dict):
