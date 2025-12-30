@@ -1,5 +1,10 @@
-# run.py
-import uvicorn
+# gunicorn app.main:app -c run.py
+# uvicorn app.main:app --host 0.0.0.0 --port 8000
 
-if __name__ == "__main__":
-    uvicorn.run("app.main:app", host="0.0.0.0", port=8003, reload=True, timeout_keep_alive=86400)
+bind = "0.0.0.0:8003"
+workers = 1
+worker_class = "uvicorn.workers.UvicornWorker"
+timeout = 0
+loglevel = "warning"
+accesslog = None          
+keepalive = 86400
