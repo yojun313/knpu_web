@@ -133,15 +133,66 @@
             모델이 사용되었습니다.
         </p>
 
-        <h2>2. 사용 모델</h2>
-        <ul>
-            <li><strong>모델명:</strong> faster-whisper-large-v3</li>
-            <li><strong>기반 모델:</strong> OpenAI Whisper Large V3 계열</li>
-            <li><strong>제공:</strong> Systran (Hugging Face 공개)</li>
-            <li><strong>추론 엔진:</strong> CTranslate2 기반 최적화(고속 추론)</li>
-            <li><strong>분석 방식:</strong> 음성 → 텍스트(문장 단위 출력 후 병합)</li>
-            <li><strong>언어 지원:</strong> 다국어 지원 (한국어 포함)</li>
-        </ul>
+        <h2>2. Whisper 모델 선택</h2>
+
+        <p>
+            본 분석 서비스는 Whisper 계열 모델 중 아래 3가지 모델을 선택적으로 사용합니다.
+            사용자가 선택한 옵션에 따라 정확도·속도·연산량이 달라집니다.
+        </p>
+
+        <table style="width:100%; border-collapse: collapse; margin-top: 20px;">
+            <thead>
+                <tr style="background-color:#ecf0f1;">
+                    <th style="padding:12px; border:1px solid #ccc;">옵션 번호</th>
+                    <th style="padding:12px; border:1px solid #ccc;">모델 이름</th>
+                    <th style="padding:12px; border:1px solid #ccc;">연산 정밀도</th>
+                    <th style="padding:12px; border:1px solid #ccc;">속도</th>
+                    <th style="padding:12px; border:1px solid #ccc;">정확도</th>
+                    <th style="padding:12px; border:1px solid #ccc;">권장 용도</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding:10px; border:1px solid #ccc;">1</td>
+                    <td style="padding:10px; border:1px solid #ccc;">
+                        <code>faster-whisper-small</code>
+                    </td>
+                    <td style="padding:10px; border:1px solid #ccc;">int8 + float16</td>
+                    <td style="padding:10px; border:1px solid #ccc;">매우 빠름</td>
+                    <td style="padding:10px; border:1px solid #ccc;">보통</td>
+                    <td style="padding:10px; border:1px solid #ccc;">
+                        짧은 음성, 테스트용, 빠른 결과 확인
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="padding:10px; border:1px solid #ccc;">2</td>
+                    <td style="padding:10px; border:1px solid #ccc;">
+                        <code>faster-whisper-medium</code>
+                    </td>
+                    <td style="padding:10px; border:1px solid #ccc;">int8 + float16</td>
+                    <td style="padding:10px; border:1px solid #ccc;">빠름</td>
+                    <td style="padding:10px; border:1px solid #ccc;">높음</td>
+                    <td style="padding:10px; border:1px solid #ccc;">
+                        일반적인 음성 분석, 정확도·속도 균형
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="padding:10px; border:1px solid #ccc;">3</td>
+                    <td style="padding:10px; border:1px solid #ccc;">
+                        <code>faster-whisper-large-v3</code>
+                    </td>
+                    <td style="padding:10px; border:1px solid #ccc;">float16</td>
+                    <td style="padding:10px; border:1px solid #ccc;">느림</td>
+                    <td style="padding:10px; border:1px solid #ccc;">매우 높음</td>
+                    <td style="padding:10px; border:1px solid #ccc;">
+                        긴 음성, 높은 정확도가 필요한 분석
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
 
         <h2>3. 입력 파일(오디오) 형식</h2>
         <p>
