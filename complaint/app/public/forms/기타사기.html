@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>보험사기</title>
+  <title>기타 사기</title>
   <link rel="stylesheet" href="/forms/basic_info_style.css" type = "text/css">
 </head>
 
@@ -40,7 +40,7 @@
 
   <form action="/loading"
       method="post"
-      name="보험사기"
+      name="기타 사기"
       >
 
     <fieldset style = "width:10">
@@ -48,27 +48,86 @@
   
           피해 일시: <input type="datetime-local" id="피해 일시" name="피해 일시" onKeyDown="next_input('피해 장소');" required> </br></br>
   
-          피해 장소: <input type="text" id="피해 장소" name="피해 장소" onKeyDown="next_input('피해 금액');" required> </br>
+          피해 장소: <input type="text" id="피해 장소" name="피해 장소" onKeyDown="next_input('계약서(구매, 공급 등) 작성 여부');" required> </br>
   
       </fieldset> </br>
 
 
-    <fieldset style = "width:10">
-      <legend>보험사기 고소내용 입력</legend>
-
-      피해 금액: <input type="text" id="피해 금액" name="피해 금액" required> </br></br>
-
-      <label for="myTextarea">보험금을 누구에게, 어떻게 지급했나요: </label> </br>
-      <textarea id="보험금을 누구에게, 어떻게 지급했나요" name="보험금을 누구에게, 어떻게 지급했나요" rows="2" cols="200"></textarea> </br>
-
-      <label for="myTextarea">피고소인에게 보험금을 지급한 사유: </label> </br>
-      <textarea id="피고소인에게 보험금을 지급한 사유" name="피고소인에게 보험금을 지급한 사유" rows="2" cols="200"></textarea> </br>
-
-      <label for="myTextarea">피의자의 기망행위: </label> </br>
-      <textarea id="피의자의 기망행위" name="피의자의 기망행위" rows="2" cols="200"></textarea> </br>
-
-        피해 금액의 변제 여부(금액): <input type="text" id="피해 금액의 변제 여부(금액)" name="피해 금액의 변제 여부(금액)" onKeyDown="next_input('동일 건 고소 및 취소 사실 여부');" required> </br>
-    </fieldset> </br>
+      <fieldset style="width:10">
+        <legend>기타 사기 고소내용 입력</legend>
+      
+        <label>사건의 개요(언제, 어디서, 어떤 방식으로 발생했는지):</label><br>
+        <textarea
+          id="사건 개요"
+          name="사건 개요"
+          rows="3"
+          onKeyDown="next_input('피의자의 기망행위');"
+          required
+        ></textarea><br><br>
+      
+        <label>피의자의 기망행위(속이게 된 구체적인 말·행동·수법):</label><br>
+        <textarea
+          id="피의자의 기망행위"
+          name="피의자의 기망행위"
+          rows="3"
+          onKeyDown="next_input('피해 발생 경위');"
+          required
+        ></textarea><br><br>
+      
+        <label>피해 발생 경위(속은 결과 어떤 피해가 발생했는지):</label><br>
+        <textarea
+          id="피해 발생 경위"
+          name="피해 발생 경위"
+          rows="3"
+          onKeyDown="next_input('피해 금액 또는 재산상 이익');"
+          required
+        ></textarea><br><br>
+      
+        피해 금액 또는 재산상 이익:
+        <input
+          type="text"
+          id="피해 금액 또는 재산상 이익"
+          name="피해 금액 또는 재산상 이익"
+          onKeyDown="next_input('피해 회복 여부');"
+          required
+        ><br><br>
+      
+        피해 회복 여부(변제·환불 여부 및 금액):
+        <input
+          type="text"
+          id="피해 회복 여부"
+          name="피해 회복 여부"
+          onKeyDown="next_input('피의자와의 관계');"
+          required
+        ><br><br>
+      
+        피의자와의 관계(지인, 거래상대, 온라인상 타인 등):
+        <input
+          type="text"
+          id="피의자와의 관계"
+          name="피의자와의 관계"
+          onKeyDown="next_input('동일·유사 피해자 존재 여부');"
+          required
+        ><br><br>
+      
+        동일·유사 피해자 존재 여부:
+        <input
+          type="text"
+          id="동일·유사 피해자 존재 여부"
+          name="동일·유사 피해자 존재 여부"
+          onKeyDown="next_input('사건 관련 특이사항');"
+          required
+        ><br><br>
+      
+        <label>사건 관련 특이사항(협박, 반복 범행, 조직성 등):</label><br>
+        <textarea
+          id="사건 관련 특이사항"
+          name="사건 관련 특이사항"
+          rows="2"
+        ></textarea><br>
+      
+      </fieldset>
+      
 
     
     <fieldset style = "width:10">
@@ -94,7 +153,7 @@
             <option value="합의하지 않음">합의하지 않음</option>
           </select></br></br>
           
-          피고소인 처벌 의사: <select id="option" name="처벌의사" onKeyDown="next_input('고소 내용을 증명할 수 있는 증거:');" required> </br></br>
+          피고소인 처벌 의사: <select id="option" name="피고소인 처벌 의사" onKeyDown="next_input('고소 내용을 증명할 수 있는 증거');" required> </br></br>
             <option value="" disabled selected hidden>선택</option>
             <option value="처벌 원함">처벌 원함</option>
             <option value="처벌 원하지 않음">처벌 원하지 않음</option>
@@ -120,17 +179,16 @@
 
           고소 일자: <input type="date" max = "9999-12-31" id="고소일자" name="고소일자" required> </br></br>
   
-        
     </fieldset></br>
     <p>제출 버튼을 누르면 AI가 고소장을 만들고 처리하는데 시간이 소요되오니 잠시만 기다려주시기 바랍니다.</p>
-    
+
     <input type='submit' value='제출하기' onClick='return check_form();'>
 
   </form>
 
 </body>
 <script>
-  const FORM_KEY = "보험사기";
+  const FORM_KEY = "기타 사기";
 
   // 모든 input / textarea / select 저장
   function saveForm() {

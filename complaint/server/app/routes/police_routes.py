@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 import csv
 import os
+from collections import defaultdict
 
 router = APIRouter()
 
@@ -8,13 +9,16 @@ csv_path = os.path.join(os.path.dirname(__file__), '..', 'forms', '경찰청_전
 
 @router.get("/stations")
 def get_police_stations():
-    stations = []
+    result = defaultdict(list)
 
     with open(csv_path, newline="", encoding="cp949") as f:
         reader = csv.DictReader(f)
         for row in reader:
-            stations.append({
-                "name": row["경찰서명칭"]
+            sido = row["위치"]        # 예: 서울특별시
+            name = row["경찰서명칭"]
+
+            result[sido].append({
+                "name": name
             })
 
-    return stations
+    return result
