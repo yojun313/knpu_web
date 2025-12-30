@@ -73,10 +73,21 @@ def word_generate(llm_data, form_data):
     for row in checklist_table.rows:
         for cell in row.cells:
             for para in cell.paragraphs:
+
                 if para.text == "본 고소장과 같은 내용의 고소장을 다른 검찰청 또는 경찰서에 제출하거나 제출하였던 사실이 ":
-                    para.add_run(form_data["동일 건 고소 및 취소 사실 여부"])
+                    value = form_data["동일 건 고소 및 취소 사실 여부"]
+
+                    if value == "모름":
+                        para.text = "본 고소장과 같은 내용의 고소장을 다른 검찰청 또는 경찰서에 제출하거나 제출하였던 사실을 "
+                    para.add_run(value)
+
                 elif para.text == "본 고소장에 기재된 범죄사실과 관련된 사건 또는 공범에 대하여 검찰청이나 경찰서에서 수사 중에 ":
-                    para.add_run(form_data["관련 형사사건 수사 유무"])
+                    value = form_data["관련 형사사건 수사 유무"]
+
+                    if value == "모름":
+                        para.text = "본 고소장에 기재된 범죄사실과 관련된 사건 또는 공범에 대하여 검찰청이나 경찰서에서 수사 중에 있는지 "
+                    para.add_run(value)
+
 
     formatted_date = format_korean_date(form_data["고소일자"])
     add_sentence(document, "8. 기타", "\n"+llm_data["6"]) # \n 무조건 추가 필요
