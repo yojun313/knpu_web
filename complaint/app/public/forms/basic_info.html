@@ -8,32 +8,7 @@
   <link rel="stylesheet" href="/forms/basic_info_style.css" type = "text/css">
 </head>
 
-<script language='javascript'>
 
-  var is_submit = true;
-  var _NEXT_FOCUS = ""; // 커서가 갈 곳..
-
-  function check_form(){
-
-      f = document.form;
-
-     if(is_submit == true){
-        return true;
-     }else{
-        f[_NEXT_FOCUS].focus();
-        is_submit = true;
-        return false;
-    }
-  }
-
-  function next_input(next_focus){
-    if(event.keyCode == 13){
-         is_submit = false;
-        _NEXT_FOCUS = next_focus;
-     }
-  }
-
-</script>
 
 <body>
   <datalist id="email-domain-list"></datalist>
