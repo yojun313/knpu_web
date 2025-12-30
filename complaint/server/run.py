@@ -1,5 +1,5 @@
 # gunicorn app.main:app -c run.py
-# uvicorn app.main:app --host 0.0.0.0 --port 8000
+# uvicorn app.main:app --host 0.0.0.0 --port 8003
 
 bind = "0.0.0.0:8003"
 workers = 1
