@@ -206,3 +206,49 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
   opacity: 1;
 }
+
+/* ===== 주소 검색 버튼 ===== */
+
+.addr-btn {
+  margin-top: 0.5rem;
+  margin-left: 0.25rem;
+
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+
+  color: #2563eb;
+  background-color: #eff6ff;
+
+  border: 1px solid #c7d2fe;
+  border-radius: 8px;
+
+  cursor: pointer;
+  transition: 
+    background-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.1s ease;
+}
+
+/* hover */
+.addr-btn:hover {
+  background-color: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+/* active */
+.addr-btn:active {
+  transform: scale(0.97);
+}
+
+/* 모바일에서 버튼 줄바꿈 자연스럽게 */
+@media (max-width: 480px) {
+  .addr-btn {
+    display: block;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+}
+

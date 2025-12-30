@@ -104,7 +104,10 @@
                   readonly
                   required>
 
-            <button type="button" onclick="execDaumPostcodeTarget('고소인 주소')">
+            <button
+              type="button"
+              class="addr-btn"
+              onclick="execDaumPostcodeTarget('고소인 주소')">
               주소 검색
             </button>
             <br><br>
@@ -178,9 +181,12 @@
                     placeholder="주소 검색 버튼을 눌러주세요"
                     readonly>
 
-              <button type="button" onclick="execDaumPostcodeTarget('피고소인 주소')">
+              <button
+                type="button"
+                class="addr-btn"
+                onclick="execDaumPostcodeTarget('피고소인 주소')">
                 주소 검색
-              </button>
+              </button>    
             <br><br>
     
             피고소인 직업: <input type="text" id="피고소인 직업" name="피고소인 직업" onKeyDown="next_input('피고소인 전화');"> </br></br>
