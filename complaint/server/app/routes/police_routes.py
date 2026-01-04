@@ -14,7 +14,7 @@ def get_police_stations():
     with open(csv_path, newline="", encoding="cp949") as f:
         reader = csv.DictReader(f)
         for row in reader:
-            sido = row["위치"]        # 예: 서울특별시
+            sido = row["시도경찰청"]        # 예: 서울특별시
             name = row["경찰서명칭"]
 
             result[sido].append({
