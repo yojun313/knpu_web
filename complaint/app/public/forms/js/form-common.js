@@ -7,7 +7,7 @@ function initFormStorage(formKey) {
 
   function saveForm() {
     const data = {};
-    document.querySelectorAll("input, textarea, select").forEach(el => {
+    document.querySelectorAll("input, textarea, select").forEach((el) => {
       if (el.name) {
         data[el.name] = el.value;
       }
@@ -20,7 +20,7 @@ function initFormStorage(formKey) {
     if (!saved) return;
 
     const data = JSON.parse(saved);
-    document.querySelectorAll("input, textarea, select").forEach(el => {
+    document.querySelectorAll("input, textarea, select").forEach((el) => {
       if (el.name && data[el.name] !== undefined) {
         el.value = data[el.name];
       }
@@ -31,53 +31,53 @@ function initFormStorage(formKey) {
   document.addEventListener("input", saveForm);
 }
 
-
 // ===============================
-// 경찰서 선택 (시·도 → 경찰서)
+// 경찰서 선택 (경찰청 → 경찰서)
 // ===============================
 
 function initPoliceSelector({
   sidoSelectId = "police_sido",
   stationSelectId = "제출 경찰서",
-  apiUrl = "https://complaint-api.knpu.re.kr/api/police/stations"
+  apiUrl = "https://complaint-api.knpu.re.kr/api/police/stations",
 } = {}) {
-
   let policeData = {};
 
   fetch(apiUrl)
-    .then(res => res.json())
-    .then(data => {
+    .then((res) => res.json())
+    .then((data) => {
       policeData = data;
 
       const sidoSelect = document.getElementById(sidoSelectId);
       if (!sidoSelect) return;
 
-      Object.keys(data).forEach(sido => {
+      Object.keys(data).forEach((sido) => {
         const option = document.createElement("option");
         option.value = sido;
         option.textContent = sido;
         sidoSelect.appendChild(option);
       });
     })
-    .catch(err => {
+    .catch((err) => {
       console.error("경찰서 목록 로딩 실패:", err);
     });
 
-  document.getElementById(sidoSelectId)?.addEventListener("change", function () {
-    const stationSelect = document.getElementById(stationSelectId);
-    const selectedSido = this.value;
+  document
+    .getElementById(sidoSelectId)
+    ?.addEventListener("change", function () {
+      const stationSelect = document.getElementById(stationSelectId);
+      const selectedSido = this.value;
 
-    if (!stationSelect) return;
+      if (!stationSelect) return;
 
-    stationSelect.innerHTML = `<option value="" disabled selected>경찰서 선택</option>`;
+      stationSelect.innerHTML = `<option value="" disabled selected>경찰서 선택</option>`;
 
-    if (!policeData[selectedSido]) return;
+      if (!policeData[selectedSido]) return;
 
-    policeData[selectedSido].forEach(station => {
-      const option = document.createElement("option");
-      option.value = station.name;
-      option.textContent = station.name;
-      stationSelect.appendChild(option);
+      policeData[selectedSido].forEach((station) => {
+        const option = document.createElement("option");
+        option.value = station.name;
+        option.textContent = station.name;
+        stationSelect.appendChild(option);
+      });
     });
-  });
 }
