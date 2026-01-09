@@ -50,11 +50,11 @@ def upsert_paper(request: PaperRequest):
     year_str = str(request.year)
     paper_data = request.paper.dict(by_alias=True)
     if "uid" not in paper_data or not paper_data["uid"]:
-        paper_data["uid"] = str(uuid.uuid4())
-        paper_data["datetime"] = datetime.now(timezone.utc).isoformat()
+        paper_data["uid"] = str(uuid.uuid4())    
     else:
         pass
-
+    
+    paper_data["datetime"] = datetime.now(timezone.utc).isoformat()
     existing_doc = papers_db.find_one({"year": year_str})
 
     if not existing_doc:
