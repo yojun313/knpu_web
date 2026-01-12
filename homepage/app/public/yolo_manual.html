@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAILAB ANALYSIS: Image Object Detection (YOLO)</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 40px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 36px;
+            color: #34495e;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 30px;
+            border-bottom: 3px solid #bdc3c7;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        h3 {
+            font-size: 24px;
+            margin-top: 40px;
+            border-bottom: 2px solid #bdc3c7;
+            padding-bottom: 10px;
+        }
+
+        p,
+        ul,
+        ol {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #34495e;
+        }
+
+        ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+
+        ul ul {
+            list-style-type: circle;
+            margin-top: 10px;
+        }
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #2980b9;
+        }
+
+        code {
+            background-color: #e0e7ef;
+            padding: 6px 10px;
+            border-radius: 5px;
+            font-size: 90%;
+            color: #d35400;
+        }
+
+        .important {
+            background-color: #fceceb;
+            border-left: 6px solid #e74c3c;
+            padding: 20px;
+            margin: 40px 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .tip {
+            background-color: #eaf6ff;
+            border-left: 6px solid #3498db;
+            padding: 20px;
+            margin: 24px 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        thead tr {
+            background-color: #ecf0f1;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border: 1px solid #ccc;
+            vertical-align: top;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 30px;
+            }
+
+            h2 {
+                font-size: 26px;
+            }
+
+            h3 {
+                font-size: 20px;
+            }
+
+            p,
+            ul,
+            ol {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <h1>이미지 객체 탐지: Image Object Detection (YOLO)</h1>
+
+        <h2>1. 분석 개요</h2>
+        <p>
+            이미지 객체 탐지(Object Detection) 기능은 업로드된 이미지 파일(<strong>JPG/PNG/WEBP/BMP</strong> 등)을 입력으로 받아,
+            이미지 내부의 객체를 자동으로 인식하고 <strong>Bounding Box(경계 상자)</strong>를 그려 결과를 제공합니다.
+        </p>
+        <p>
+            처리 결과는 각 이미지에 대해 (1) 박스가 그려진 결과 이미지와 (2) 탐지 결과 JSON 파일이 함께 생성됩니다.
+        </p>
+
+        <p>
+            본 분석 서비스는 Ultralytics YOLO 계열 모델을 기반으로 동작하며, 기본 모델은 다음과 같습니다:
+            <a href="https://docs.ultralytics.com/ko/models/yolo11/" target="_blank">
+                <code>Ultralytics YOLO11</code>
+            </a>
+        </p>
+
+        <div class="tip">
+            <p>
+                객체 탐지는 "어떤 물체가 어디에 있는지"를 찾는 작업입니다.
+                예를 들어 차량/사람/자전거 등을 찾아 이미지 위에 사각형 박스를 표시합니다.
+            </p>
+        </div>
+
+        <h2>2. 입력 파일(이미지) 형식</h2>
+        <p>
+            객체 탐지는 다음과 같은 이미지 파일 포맷을 입력으로 받습니다.
+        </p>
+
+        <ul>
+            <li><code>.jpg</code>, <code>.jpeg</code></li>
+            <li><code>.png</code></li>
+            <li><code>.webp</code></li>
+            <li><code>.bmp</code></li>
+        </ul>
+
+        <h2>3. 탐지 신뢰도 임계값(conf_thres)</h2>
+        <p>
+            객체 탐지 결과는 각 박스마다 <strong>confidence(신뢰도)</strong> 점수를 가지며,
+            <code>conf_thres</code>는 “탐지 결과로 채택할 최소 신뢰도(0~1)”를 의미합니다.
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 22%;">설정</th>
+                    <th>설명</th>
+                    <th style="width: 28%;">권장 상황</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>conf_thres</code> ↑ (높게)</td>
+                    <td>
+                        더 확실한 객체만 남습니다. <br>
+                        노이즈(오탐지)가 줄어드는 대신, 작은/가려진 객체가 누락될 수 있습니다.
+                    </td>
+                    <td>정확도가 중요할 때, 오탐지 최소화</td>
+                </tr>
+                <tr>
+                    <td><code>conf_thres</code> ↓ (낮게)</td>
+                    <td>
+                        더 많은 객체가 검출됩니다. <br>
+                        작은 객체나 애매한 객체가 잡힐 수 있지만, 오탐지 가능성도 증가합니다.
+                    </td>
+                    <td>놓치지 않는 것이 중요할 때, 후보를 넓게 보고 싶을 때</td>
+                </tr>
+                <tr>
+                    <td>기본값</td>
+                    <td><code>0.25</code></td>
+                    <td>대부분의 일반적인 상황</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>4. 출력 결과(zip) 구조</h2>
+        <p>
+            분석 결과의 내부 구조는 아래와 같습니다.
+        </p>
+
+        <ul>
+            <li><code>images/</code>: Bounding Box가 그려진 결과 이미지</li>
+            <li><code>json/</code>: 이미지별 탐지 결과(JSON)</li>
+        </ul>
+
+        <div class="tip">
+            <p>
+                예시 구조:
+            </p>
+            <ul>
+                <li><code>yolo_results.zip</code>
+                    <ul>
+                        <li><code>images/sample_001.jpg</code></li>
+                        <li><code>images/sample_002.jpg</code></li>
+                        <li><code>json/sample_001.json</code></li>
+                        <li><code>json/sample_002.json</code></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <h2>5. JSON 결과 형식</h2>
+        <p>
+            각 이미지에 대해 생성되는 JSON에는 이미지 정보와 탐지된 객체 목록이 포함됩니다.
+        </p>
+
+        <h3>5.1 JSON 필드 설명</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 22%;">필드</th>
+                    <th>설명</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>image</code></td>
+                    <td>원본 이미지 파일명</td>
+                </tr>
+                <tr>
+                    <td><code>width</code>, <code>height</code></td>
+                    <td>이미지 크기(px)</td>
+                </tr>
+                <tr>
+                    <td><code>detections</code></td>
+                    <td>탐지 결과 목록(객체 배열)</td>
+                </tr>
+                <tr>
+                    <td><code>class_id</code></td>
+                    <td>탐지 클래스 ID</td>
+                </tr>
+                <tr>
+                    <td><code>class_name</code></td>
+                    <td>탐지 클래스 이름(예: car, person 등)</td>
+                </tr>
+                <tr>
+                    <td><code>confidence</code></td>
+                    <td>탐지 신뢰도(0~1)</td>
+                </tr>
+                <tr>
+                    <td><code>bbox_xyxy</code></td>
+                    <td>Bounding Box 좌표 [x1, y1, x2, y2] (픽셀 기준)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>5.2 JSON 예시</h3>
+        <p>
+            아래는 JSON 결과 예시입니다.
+        </p>
+        <pre style="background:#f5f5f5; padding:16px; border-radius:8px; overflow:auto; font-size:14px;">
+{
+  "image": "sample_001.jpg",
+  "width": 1280,
+  "height": 720,
+  "detections": [
+    {
+      "class_id": 2,
+      "class_name": "car",
+      "confidence": 0.8732,
+      "bbox_xyxy": [120, 210, 430, 520]
+    },
+    {
+      "class_id": 0,
+      "class_name": "person",
+      "confidence": 0.7614,
+      "bbox_xyxy": [600, 180, 690, 540]
+    }
+  ]
+}
+        </pre>
+
+        <h2>6. 사용 방법 (MANAGER)</h2>
+        <p>
+            MANAGER에서 객체 탐지를 실행하는 일반적인 흐름은 다음과 같습니다.
+        </p>
+
+        <ol>
+            <li><strong>이미지 선택:</strong> 여러 이미지를 한 번에 선택할 수 있습니다.</li>
+            <li><strong>conf_thres 설정:</strong> 기본값 0.25 권장, 필요 시 0~1 사이에서 조정합니다.</li>
+            <li><strong>저장 경로 선택:</strong> 결과 zip가 저장되고, 자동으로 압축이 해제될 수 있습니다.</li>
+            <li><strong>결과 확인:</strong> <code>images/</code> 폴더에서 박스가 그려진 이미지를 확인하고, <code>json/</code>에서 수치 정보를 확인합니다.</li>
+        </ol>
+
+        <div class="tip">
+            <p>
+                탐지 결과가 너무 적게 나오면 <code>conf_thres</code>를 낮춰보세요(예: 0.25 → 0.15).<br>
+                반대로 오탐지가 많으면 <code>conf_thres</code>를 올려보세요(예: 0.25 → 0.35).
+            </p>
+        </div>
+
+    </div>
+</body>
+
+</html>
