@@ -47,10 +47,10 @@ app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'public', 'hom
 app.get('/manager', (req, res) => res.sendFile(path.join(__dirname, 'public', 'manager.html')));
 
 app.get('/tool', (req, res) => res.sendFile(path.join(__dirname, 'public', 'tool.html')));
-app.get('/manual/kemkim', (req, res) => res.sendFile(path.join(__dirname, 'public', 'kemkim_manual.html')));
-app.get('/manual/hate_analysis', (req, res) => res.sendFile(path.join(__dirname, 'public', 'hateanalysis_manual.html')));
-app.get('/manual/whisper', (req, res) => res.sendFile(path.join(__dirname, 'public', 'whisper_manual.html')));
-app.get('/manual/yolo', (req, res) => res.sendFile(path.join(__dirname, 'public', 'yolo_manual.html')));
+app.get('/manual/kemkim', (req, res) => res.sendFile(path.join(__dirname, 'public', 'manual_kemkim.html')));
+app.get('/manual/hate_analysis', (req, res) => res.sendFile(path.join(__dirname, 'public', 'manual_hateanalysis.html')));
+app.get('/manual/whisper', (req, res) => res.sendFile(path.join(__dirname, 'public', 'manual_whisper.html')));
+app.get('/manual/yolo', (req, res) => res.sendFile(path.join(__dirname, 'public', 'manual_detection.html')));
 app.get('/download_manager', (req, res) => res.sendFile(path.join(__dirname, 'public', 'manager_download.html')));
 
 // 파일 목록 API (R2)

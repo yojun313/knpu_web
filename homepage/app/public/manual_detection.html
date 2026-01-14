@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PAILAB ANALYSIS: Image Object Detection (YOLO)</title>
+    <title>PAILAB ANALYSIS: Object Detection (YOLO / Grounding DINO)</title>
     <style>
         body {
             font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -117,6 +117,31 @@
             vertical-align: top;
         }
 
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-left: 8px;
+            vertical-align: middle;
+            background: #eef2f7;
+            color: #2c3e50;
+            border: 1px solid #d0d7de;
+        }
+
+        .badge-yolo {
+            background: #fff3e6;
+            border-color: #ffd8b3;
+            color: #a64b00;
+        }
+
+        .badge-dino {
+            background: #e8f7f0;
+            border-color: #bfe9d6;
+            color: #0b6b43;
+        }
+
         @media (max-width: 768px) {
             body {
                 padding: 10px;
@@ -150,36 +175,52 @@
 <body>
     <div class="container">
 
-        <h1>이미지 객체 탐지: Image Object Detection (YOLO)</h1>
+        <h1>객체 탐지: Object Detection <span class="badge badge-yolo">YOLO</span> <span class="badge badge-dino">Grounding DINO</span>
+        </h1>
 
         <h2>1. 분석 개요</h2>
         <p>
-            이미지 객체 탐지(Object Detection) 기능은 업로드된 이미지 파일(<strong>JPG/PNG/WEBP/BMP</strong> 등)을 입력으로 받아,
-            이미지 내부의 객체를 자동으로 인식하고 <strong>Bounding Box(경계 상자)</strong>를 그려 결과를 제공합니다.
+            객체 탐지(Object Detection) 기능은 업로드된 이미지/영상 파일을 입력으로 받아,
+            내부의 객체를 자동으로 인식하고 <strong>Bounding Box(경계 상자)</strong>를 그려 결과를 제공합니다.
         </p>
         <p>
-            처리 결과는 각 이미지에 대해 (1) 박스가 그려진 결과 이미지와 (2) 탐지 결과 JSON 파일이 함께 생성됩니다.
+            처리 결과는 대상 파일에 대해 (1) 박스가 그려진 결과 파일과 (2) 탐지 결과 JSON 파일이 함께 생성됩니다.
         </p>
 
         <p>
-            본 분석 서비스는 Ultralytics YOLO 계열 모델을 기반으로 동작하며, 기본 모델은 다음과 같습니다:
-            <a href="https://docs.ultralytics.com/ko/models/yolo11/" target="_blank">
-                <code>Ultralytics YOLO11</code>
-            </a>
+            본 분석 서비스는 다음 두 모델을 제공합니다:
         </p>
+        <ul>
+            <li>
+                <strong>YOLO (Ultralytics YOLO 계열)</strong>
+                <span class="badge badge-yolo">일반 객체 탐지</span><br>
+                기본 모델:
+                <a href="https://docs.ultralytics.com/ko/models/yolo11/" target="_blank">
+                    <code>Ultralytics YOLO11</code>
+                </a>
+            </li>
+            <li style="margin-top: 14px;">
+                <strong>Grounding DINO</strong>
+                <span class="badge badge-dino">프롬프트(텍스트) 기반 탐지</span><br>
+                텍스트 프롬프트(예: <code>person. red car. dog.</code>)를 입력하면,
+                프롬프트와 관련된 객체를 찾아 박스를 표시합니다. 모델 정보:
+                <a href="https://huggingface.co/IDEA-Research/grounding-dino-base" target="_blank">
+                    <code>IDEA-Research/grounding-dino-base</code>
+                </a>
+            </li>
+        </ul>
 
         <div class="tip">
             <p>
-                객체 탐지는 "어떤 물체가 어디에 있는지"를 찾는 작업입니다.
-                예를 들어 차량/사람/자전거 등을 찾아 이미지 위에 사각형 박스를 표시합니다.
+                <strong>YOLO</strong>는 “사람/차/자전거 등” 일반적인 객체를 자동으로 찾아줍니다.<br>
+                <strong>Grounding DINO</strong>는 “프롬프트로 원하는 객체를 지정”해서 그 대상만 찾아줍니다.
             </p>
         </div>
 
-        <h2>2. 입력 파일(이미지) 형식</h2>
-        <p>
-            객체 탐지는 다음과 같은 이미지 파일 포맷을 입력으로 받습니다.
-        </p>
+        <h2>2. 입력 파일 형식</h2>
 
+        <h3>2.1 이미지</h3>
+        <p>객체 탐지는 다음과 같은 이미지 파일 포맷을 입력으로 받습니다.</p>
         <ul>
             <li><code>.jpg</code>, <code>.jpeg</code></li>
             <li><code>.png</code></li>
@@ -187,11 +228,28 @@
             <li><code>.bmp</code></li>
         </ul>
 
+        <h3>2.2 영상</h3>
+        <p>영상 객체 탐지는 다음과 같은 비디오 파일 포맷을 입력으로 받습니다.</p>
+        <ul>
+            <li><code>.mp4</code></li>
+            <li><code>.avi</code></li>
+            <li><code>.mov</code></li>
+            <li><code>.mkv</code></li>
+            <li><code>.webm</code></li>
+        </ul>
+
         <h2>3. 탐지 신뢰도 임계값(conf_thres)</h2>
         <p>
-            객체 탐지 결과는 각 박스마다 <strong>confidence(신뢰도)</strong> 점수를 가지며,
+            객체 탐지 결과는 각 박스마다 <strong>confidence/score(신뢰도)</strong> 점수를 가지며,
             <code>conf_thres</code>는 “탐지 결과로 채택할 최소 신뢰도(0~1)”를 의미합니다.
         </p>
+
+        <div class="tip">
+            <p>
+                이 값은 <strong>YOLO(conf_thres)</strong>와 <strong>Grounding DINO(box_threshold)</strong>에 공통으로 적용됩니다.
+                (UI에서는 <code>conf_thres</code> 하나만 입력받고, 내부에서 모델별 파라미터로 매핑됩니다.)
+            </p>
+        </div>
 
         <table>
             <thead>
@@ -226,14 +284,33 @@
             </tbody>
         </table>
 
-        <h2>4. 출력 결과(zip) 구조</h2>
+        <h2>4. 프롬프트(prompt) 객체 탐지</h2>
+        <p>
+            Grounding DINO는 텍스트 프롬프트를 기반으로 객체를 탐지합니다. 프롬프트는
+            <strong>영문 소문자 + 마침표(.)로 구분</strong>하는 것을 권장합니다.
+        </p>
+
+        <div class="tip">
+            <p><strong>예시</strong></p>
+            <ul>
+                <li><code>person.</code></li>
+                <li><code>person. red car.</code></li>
+                <li><code>dog. bicycle.</code></li>
+            </ul>
+            <p style="margin-top: 10px;">
+                프롬프트가 너무 일반적이면 오탐지가 늘 수 있으니, 가능한 한 구체적으로 작성하는 것을 권장합니다.
+            </p>
+        </div>
+
+        <h2>5. 출력 결과(zip) 구조</h2>
         <p>
             분석 결과의 내부 구조는 아래와 같습니다.
         </p>
 
         <ul>
-            <li><code>images/</code>: Bounding Box가 그려진 결과 이미지</li>
-            <li><code>json/</code>: 이미지별 탐지 결과(JSON)</li>
+            <li><code>images/</code>: Bounding Box가 그려진 결과 이미지(또는 프레임 캡처/결과 이미지)</li>
+            <li><code>videos/</code>: Bounding Box가 적용된 결과 영상(영상 입력인 경우)</li>
+            <li><code>json/</code>: 파일별 탐지 결과(JSON)</li>
         </ul>
 
         <div class="tip">
@@ -241,23 +318,25 @@
                 예시 구조:
             </p>
             <ul>
-                <li><code>yolo_results.zip</code>
+                <li><code>detect_results.zip</code>
                     <ul>
                         <li><code>images/sample_001.jpg</code></li>
                         <li><code>images/sample_002.jpg</code></li>
+                        <li><code>videos/sample_video.mp4</code> (영상 입력 시)</li>
                         <li><code>json/sample_001.json</code></li>
                         <li><code>json/sample_002.json</code></li>
+                        <li><code>json/sample_video.json</code> (영상 입력 시)</li>
                     </ul>
                 </li>
             </ul>
         </div>
 
-        <h2>5. JSON 결과 형식</h2>
+        <h2>6. JSON 결과 형식</h2>
         <p>
-            각 이미지에 대해 생성되는 JSON에는 이미지 정보와 탐지된 객체 목록이 포함됩니다.
+            각 파일에 대해 생성되는 JSON에는 파일 정보와 탐지된 객체 목록이 포함됩니다.
         </p>
 
-        <h3>5.1 JSON 필드 설명</h3>
+        <h3>6.1 공통 필드(예시)</h3>
         <table>
             <thead>
                 <tr>
@@ -267,27 +346,23 @@
             </thead>
             <tbody>
                 <tr>
-                    <td><code>image</code></td>
-                    <td>원본 이미지 파일명</td>
+                    <td><code>image</code> / <code>video</code></td>
+                    <td>원본 파일명</td>
                 </tr>
                 <tr>
                     <td><code>width</code>, <code>height</code></td>
-                    <td>이미지 크기(px)</td>
+                    <td>해상도(px)</td>
                 </tr>
                 <tr>
                     <td><code>detections</code></td>
-                    <td>탐지 결과 목록(객체 배열)</td>
+                    <td>탐지 결과 목록(객체 배열 또는 프레임별 배열)</td>
                 </tr>
                 <tr>
-                    <td><code>class_id</code></td>
-                    <td>탐지 클래스 ID</td>
+                    <td><code>label</code> 또는 <code>class_name</code></td>
+                    <td>탐지 객체 이름(예: car, person 등)</td>
                 </tr>
                 <tr>
-                    <td><code>class_name</code></td>
-                    <td>탐지 클래스 이름(예: car, person 등)</td>
-                </tr>
-                <tr>
-                    <td><code>confidence</code></td>
+                    <td><code>confidence</code> / <code>score</code></td>
                     <td>탐지 신뢰도(0~1)</td>
                 </tr>
                 <tr>
@@ -297,10 +372,8 @@
             </tbody>
         </table>
 
-        <h3>5.2 JSON 예시</h3>
-        <p>
-            아래는 JSON 결과 예시입니다.
-        </p>
+        <h3>6.2 이미지(JSON) 예시</h3>
+        <p>아래는 이미지 입력에 대한 JSON 결과 예시입니다.</p>
         <pre style="background:#f5f5f5; padding:16px; border-radius:8px; overflow:auto; font-size:14px;">
 {
   "image": "sample_001.jpg",
@@ -323,16 +396,39 @@
 }
         </pre>
 
-        <h2>6. 사용 방법 (MANAGER)</h2>
+        <h3>6.3 영상(JSON) 예시</h3>
+        <p>아래는 영상 입력에 대한 JSON 결과 예시(프레임별 탐지)입니다.</p>
+        <pre style="background:#f5f5f5; padding:16px; border-radius:8px; overflow:auto; font-size:14px;">
+[
+  {
+    "frame": 0,
+    "detections": [
+      {
+        "label": "person",
+        "score": 0.82,
+        "bbox_xyxy": [120, 80, 220, 420]
+      }
+    ]
+  },
+  {
+    "frame": 1,
+    "detections": []
+  }
+]
+        </pre>
+
+        <h2>7. 사용 방법 (MANAGER)</h2>
         <p>
             MANAGER에서 객체 탐지를 실행하는 일반적인 흐름은 다음과 같습니다.
         </p>
 
         <ol>
-            <li><strong>이미지 선택:</strong> 여러 이미지를 한 번에 선택할 수 있습니다.</li>
+            <li><strong>미디어 타입 선택:</strong> image 또는 video를 선택합니다.</li>
+            <li><strong>파일 선택:</strong> 여러 파일을 한 번에 선택할 수 있습니다.</li>
             <li><strong>conf_thres 설정:</strong> 기본값 0.25 권장, 필요 시 0~1 사이에서 조정합니다.</li>
+            <li><strong>(선택) 프롬프트 포함:</strong> Grounding DINO 사용 시 프롬프트를 입력합니다.</li>
             <li><strong>저장 경로 선택:</strong> 결과 zip가 저장되고, 자동으로 압축이 해제될 수 있습니다.</li>
-            <li><strong>결과 확인:</strong> <code>images/</code> 폴더에서 박스가 그려진 이미지를 확인하고, <code>json/</code>에서 수치 정보를 확인합니다.</li>
+            <li><strong>결과 확인:</strong> <code>images/</code>, <code>videos/</code>, <code>json/</code> 폴더에서 결과를 확인합니다.</li>
         </ol>
 
         <div class="tip">
