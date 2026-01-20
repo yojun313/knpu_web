@@ -8,12 +8,11 @@ import os
 import json
 import logging
 import traceback
+from app.libs.mail import sendEmail
 
 LOG_DIR = os.path.join(os.path.dirname(__file__), '..', "logs")
 os.makedirs(LOG_DIR, exist_ok=True)
 LOG_FILE = os.path.join(LOG_DIR, "generate_errors.log")
-
-api_key = os.getenv("OPENAI_API_KEY")
 
 router = APIRouter()
 
@@ -48,6 +47,28 @@ def generate_complaints(payload: dict = Body(...)):
         
         docx_path = word_generate(result_data, form_data)
         pdf_path = convert_to_pdf(docx_path)
+        
+        user_email = payload.get("고소인 이메일","")
+        if user_email:
+            try:
+                # 메일 제목과 내용은 원하는 대로 수정하세요
+                mail_title = "[AI 고소장] AI 고소장이 생성되었습니다"
+                mail_text = """[고소장 생성 완료 알림]
+
+안녕하세요.
+요청하신 AI 고소장 파일 생성이 완료되어 송부드립니다.
+
+첨부된 문서는 AI를 통해 생성된 초안입니다.
+제출 전 반드시 사실관계와 법률 용어를 다시 한번 검토해 주시기 바랍니다.
+
+감사합니다.
+"""
+                sendEmail(user_email, mail_title, mail_text, str(docx_path))
+                
+            except Exception as e:
+                # 메일 전송 실패가 전체 API 에러로 번지지 않도록 로그만 남김
+                logging.error(f"Failed to send email to {user_email}: {str(e)}")
+        
 
         return {
             "file_id": docx_path.stem,
