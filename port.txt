@@ -9,5 +9,8 @@
 8001: manager_web
 8002: homepage_api
 8003: complaint-server
-9000: gpu-vllm
-9001: gpu-manager
+8004: pcss
+9000: gpu-vllm0
+9001: gpu-vllm1
+9002: gpu-manager
+9003: gpu-haiv-experiments

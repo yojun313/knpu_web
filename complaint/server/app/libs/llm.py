@@ -9,7 +9,7 @@ api_key = os.getenv("OPENAI_API_KEY")
 def llm_generate(query):
     client = OpenAI(
         api_key="dummy-key", 
-        base_url="http://localhost:9000/v1"
+        base_url="http://localhost:9001/v1"
     )
 
     models = client.models.list()
