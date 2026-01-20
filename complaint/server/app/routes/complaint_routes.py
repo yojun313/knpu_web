@@ -64,6 +64,7 @@ def generate_complaints(payload: dict = Body(...)):
 감사합니다.
 """
                 sendEmail(user_email, mail_title, mail_text, str(docx_path))
+                print(f"Email sent to {user_email}")
                 
             except Exception as e:
                 # 메일 전송 실패가 전체 API 에러로 번지지 않도록 로그만 남김
