@@ -52,9 +52,8 @@ def generate_complaints(payload: dict = Body(...)):
         if user_email:
             try:
                 # 메일 제목과 내용은 원하는 대로 수정하세요
-                mail_title = "[AI 고소장] AI 고소장이 생성되었습니다"
-                mail_text = """[고소장 생성 완료 알림]
-
+                mail_title = "[PAILAB AI 고소장] 고소장이 생성되었습니다"
+                mail_text = """
 안녕하세요.
 요청하신 AI 고소장 파일 생성이 완료되어 송부드립니다.
 
@@ -91,3 +90,4 @@ def generate_complaints(payload: dict = Body(...)):
         )
 
         raise UnprocessableEntityException(str(e))
+    
