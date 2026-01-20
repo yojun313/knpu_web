@@ -48,7 +48,7 @@ def generate_complaints(payload: dict = Body(...)):
         docx_path = word_generate(result_data, form_data)
         pdf_path = convert_to_pdf(docx_path)
         
-        user_email = payload.get("고소인 이메일","")
+        user_email = form_data.get("고소인 이메일","")
         if user_email:
             try:
                 # 메일 제목과 내용은 원하는 대로 수정하세요
@@ -64,7 +64,6 @@ def generate_complaints(payload: dict = Body(...)):
 감사합니다.
 """
                 sendEmail(user_email, mail_title, mail_text, str(docx_path))
-                print(f"Email sent to {user_email}")
                 
             except Exception as e:
                 # 메일 전송 실패가 전체 API 에러로 번지지 않도록 로그만 남김
