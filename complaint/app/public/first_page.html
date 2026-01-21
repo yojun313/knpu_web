@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>PAILAB AI 고소장 생성 서비스</title>
 
-    <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
 
     <style>
@@ -16,6 +15,7 @@
             --primary-hover: #1e40af;
             --text-main: #111827;
             --text-sub: #6b7280;
+            --text-muted: #9ca3af; /* 안내 문구용 연한 색상 추가 */
             --radius: 14px;
         }
 
@@ -73,6 +73,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            padding-bottom: 2rem; /* 하단 여백 추가 */
         }
 
         .hero-container {
@@ -126,29 +127,13 @@
             box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
         }
 
-        .sub-button {
-            width: 100%;
-            padding: 0.95rem;
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--primary);
-            background: white;
-            border: 1px solid #dbeafe;
-            border-radius: var(--radius);
-            cursor: pointer;
-            transition: background 0.15s ease;
-        }
-
-        .sub-button:hover {
-            background: #eff6ff;
-        }
-
         /* Info badges */
         .info-badges {
             display: flex;
             justify-content: center;
             gap: 0.75rem;
             flex-wrap: wrap;
+            margin-bottom: 2.5rem; /* 아래쪽 disclaimer와 간격 벌림 */
         }
 
         .badge {
@@ -157,6 +142,16 @@
             border-radius: 999px;
             font-size: 0.85rem;
             color: #334155;
+        }
+
+        /* Disclaimer Text (새로 추가된 스타일) */
+        .disclaimer-text {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            word-break: keep-all; /* 한글 단어 끊김 방지 */
+            padding-top: 1.5rem;
+            border-top: 1px solid #e5e7eb; /* 상단 구분선 */
         }
 
         /* Responsive */
@@ -180,7 +175,6 @@
 
 <body>
 
-    <!-- Header -->
     <div class="title-bar">
         <div class="title-bar-inner">
             <img src="경찰청로고.png" class="title-bar-image-left" alt="경찰청 로고">
@@ -189,7 +183,6 @@
         </div>
     </div>
 
-    <!-- Main -->
     <main class="main">
         <div class="hero-container">
 
@@ -213,6 +206,12 @@
                 <div class="badge">경찰 접수 양식 기반</div>
                 <div class="badge">개인정보 저장 없음</div>
                 <div class="badge">법률 참고용 AI 보조</div>
+            </div>
+
+            <div class="disclaimer-text">
+                본 서비스는 AI를 통해 무료로 고소장을 작성하는 서비스를 제공합니다. 
+                다만, 입력한 개인정보가 수집될 수 있으며, 고소장 작성이 모든 경우에 처벌로 이어지지 않습니다. 
+                정확한 법적 조언이 필요할 경우 전문가의 상담을 받으시기 바랍니다.
             </div>
 
         </div>
