@@ -7,35 +7,50 @@
   <title>PAILAB AI 고소장 생성 서비스</title>
   <link rel="stylesheet" href="/forms/basic_info_style.css" type = "text/css">
   <style>
-    .warning-box {
-      background-color: #fff3cd;
-      color: #856404;
-      border: 1px solid #ffeeba;
-      padding: 15px;
-      margin: 10px auto 30px auto; /* 상하 여백 조정 */
-      border-radius: 5px;
-      font-size: 0.95rem;
-      
-      /* [핵심 수정] 한 줄로 길게 표시하기 위한 설정 */
-      white-space: nowrap;  /* 줄바꿈 금지 */
-      width: fit-content;   /* 내용물만큼 너비 확보 */
-      max-width: 95%;       /* 화면보다 너무 크면 95%까지만 (모바일 대응) */
-      overflow-x: auto;     /* 혹시 화면보다 길면 가로 스크롤 허용 */
-      text-align: center;
-    }
-    .warning-box strong {
-      color: #d9534f;
-      font-weight: bold;
-    }
-    .warning-icon {
-      margin-right: 5px;
-    }
-    
-    /* body에 flex가 있을 경우를 대비해 정렬 보정 */
+    /* body 정렬 */
     body {
         display: flex;
         flex-direction: column;
         align-items: center;
+        margin: 0;
+        padding: 20px 0;
+    }
+
+    /* [수정됨] 박스 스타일 제거 & 텍스트만 표시 */
+    .warning-box {
+      /* 배경 및 테두리 제거 */
+      background: none;
+      border: none;
+      
+      /* 텍스트 스타일 */
+      color: #555;           /* 기본 글자색 (진한 회색) */
+      text-align: center;    /* 가운데 정렬 */
+      font-size: 0.95rem;    /* 글자 크기 */
+      line-height: 1.6;      /* 줄 간격 */
+      margin-bottom: 20px;   /* 아래쪽 여백 */
+      padding: 0 10px;       /* 모바일에서 좌우 여백 살짝 */
+      word-break: keep-all;  /* 단어 단위 줄바꿈 */
+    }
+
+    /* 강조 문구 (빨간색) */
+    .warning-box strong {
+      color: #e53935;        /* 경고색 (붉은색) */
+      font-weight: bold;
+    }
+    
+    .warning-icon {
+      margin-right: 4px;
+    }
+
+    /* 폼 컨테이너 스타일 */
+    .container {
+        width: 90%;
+        max-width: 800px;
+    }
+    
+    h1 {
+        text-align: center;
+        margin-bottom: 10px; /* 제목과 경고문구 사이 간격 좁힘 */
     }
   </style>
 </head>
@@ -44,15 +59,15 @@
   <datalist id="email-domain-list"></datalist>
   <h1>PAILAB AI 고소장 생성 서비스</h1> 
 
+  <div class="warning-box">
+    <span class="warning-icon">⚠️</span>
+    입력 내용이 <strong>브라우저에 남을 수 있습니다</strong>.<br>
+    개인정보 보호를 위해 <strong>공용 PC(PC방, 도서관 등)가 아닌 개인 PC 사용을 권장</strong>합니다.
+  </div>
+
   <form action = "/submit" accept-charset = "utf-8" name = "sue_info" method = "post">
 
     <div class="container">
-
-      <div class="warning-box">
-        <span class="warning-icon">⚠️</span>
-        입력 내용이 <strong>브라우저에 남을 수 있습니다</strong>.<br>
-        개인정보 보호를 위해 <strong>공용 PC(PC방, 도서관 등)가 아닌 개인 PC 사용을 권장</strong>합니다.
-      </div>
 
       <div class="addinfo_container">
         <fieldset>
