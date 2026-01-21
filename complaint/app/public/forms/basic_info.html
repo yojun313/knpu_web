@@ -6,21 +6,53 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PAILAB AI 고소장 생성 서비스</title>
   <link rel="stylesheet" href="/forms/basic_info_style.css" type = "text/css">
+  <style>
+    .warning-box {
+      background-color: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeeba;
+      padding: 15px;
+      margin: 10px auto 30px auto; /* 상하 여백 조정 */
+      border-radius: 5px;
+      font-size: 0.95rem;
+      
+      /* [핵심 수정] 한 줄로 길게 표시하기 위한 설정 */
+      white-space: nowrap;  /* 줄바꿈 금지 */
+      width: fit-content;   /* 내용물만큼 너비 확보 */
+      max-width: 95%;       /* 화면보다 너무 크면 95%까지만 (모바일 대응) */
+      overflow-x: auto;     /* 혹시 화면보다 길면 가로 스크롤 허용 */
+      text-align: center;
+    }
+    .warning-box strong {
+      color: #d9534f;
+      font-weight: bold;
+    }
+    .warning-icon {
+      margin-right: 5px;
+    }
+    
+    /* body에 flex가 있을 경우를 대비해 정렬 보정 */
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+  </style>
 </head>
 
 <body>
   <datalist id="email-domain-list"></datalist>
   <h1>PAILAB AI 고소장 생성 서비스</h1> 
-  <div class="warning-box">
-    <span class="warning-icon">⚠️</span>
-    입력 내용이 <strong>브라우저에 남을 수 있습니다</strong>.<br>
-    개인정보 보호를 위해 <strong>공용 PC(PC방, 도서관 등)가 아닌 개인 PC 사용을 권장</strong>합니다.
-  </div>
+
   <form action = "/submit" accept-charset = "utf-8" name = "sue_info" method = "post">
 
     <div class="container">
 
-      
+      <div class="warning-box">
+        <span class="warning-icon">⚠️</span>
+        입력 내용이 <strong>브라우저에 남을 수 있습니다</strong>.<br>
+        개인정보 보호를 위해 <strong>공용 PC(PC방, 도서관 등)가 아닌 개인 PC 사용을 권장</strong>합니다.
+      </div>
 
       <div class="addinfo_container">
         <fieldset>
