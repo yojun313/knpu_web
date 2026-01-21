@@ -69,7 +69,7 @@ def generate_complaints(payload: dict = Body(...)):
         submit_email = form_data.get("제출용 이메일","")   
         if submit_email:
             try:
-                mail_title_target = f"[고소장 제출] {form_data.get('고소인', '')}님의 고소장입니다."
+                mail_title_target = f"[PAILAB AI 고소장 제출] {form_data.get('고소인', '')}님의 고소장입니다."
                 mail_text_target = f"""
 {form_data.get('고소인', '')}님의 AI 고소장을 송부합니다.
 첨부파일을 확인해 주시기 바랍니다.
