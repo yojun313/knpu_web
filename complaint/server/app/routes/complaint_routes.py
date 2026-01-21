@@ -48,10 +48,9 @@ def generate_complaints(payload: dict = Body(...)):
         docx_path = word_generate(result_data, form_data)
         pdf_path = convert_to_pdf(docx_path)
         
-        user_email = form_data.get("고소인 이메일","")
+        user_email = form_data.get("사용자 이메일","")
         if user_email:
             try:
-                # 메일 제목과 내용은 원하는 대로 수정하세요
                 mail_title = "[PAILAB AI 고소장] 고소장이 생성되었습니다"
                 mail_text = """
 안녕하세요.
@@ -63,11 +62,21 @@ def generate_complaints(payload: dict = Body(...)):
 감사합니다.
 """
                 sendEmail(user_email, mail_title, mail_text, str(docx_path))
-                
+
             except Exception as e:
-                # 메일 전송 실패가 전체 API 에러로 번지지 않도록 로그만 남김
                 logging.error(f"Failed to send email to {user_email}: {str(e)}")
         
+        submit_email = form_data.get("제출용 이메일","")   
+        if submit_email:
+            try:
+                mail_title_target = f"[고소장 제출] {form_data.get('고소인', '')}님의 고소장입니다."
+                mail_text_target = f"""
+{form_data.get('고소인', '')}님의 AI 고소장을 송부합니다.
+첨부파일을 확인해 주시기 바랍니다.
+"""
+                sendEmail(submit_email, mail_title_target, mail_text_target, str(docx_path))
+            except Exception as e:
+                logging.error(f"Failed to send submission email to {submit_email}: {str(e)}")
 
         return {
             "file_id": docx_path.stem,

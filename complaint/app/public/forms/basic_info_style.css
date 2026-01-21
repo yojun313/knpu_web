@@ -243,6 +243,30 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
   transform: scale(0.97);
 }
 
+input[type="email"] {
+  width: 100%;
+  padding: 0.75rem 0.875rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
+  transition: border 0.2s, box-shadow 0.2s;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 포커스 효과 (텍스트 필드와 동일) */
+input[type="email"]:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* 플레이스홀더 스타일 */
+input[type="email"]::placeholder {
+  color: var(--text-sub);
+  opacity: 0.8;
+}
+
 /* 모바일에서 버튼 줄바꿈 자연스럽게 */
 @media (max-width: 480px) {
   .addr-btn {
