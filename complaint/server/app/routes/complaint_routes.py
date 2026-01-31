@@ -37,7 +37,12 @@ def generate_complaints(payload: dict = Body(...)):
                     else:
                         form_data[k] = v
         
-        llm_result, model_name = llm_generate(make_query(form_data))
+        keys_to_remove = ['고소인', '고소인 주민등록번호', '고소인 주소', '고소인 직업', '고소인 전화', '고소인 이메일',
+                          '피고소인', '피고소인 주민등록번호', '피고소인 주소', '피고소인 직업', '피고소인 전화',
+                          '사용자 이메일', '제출용 이메일']
+        llm_input_form = {k: v for k, v in form_data.items() if k not in keys_to_remove}
+        
+        llm_result, model_name = llm_generate(make_query(llm_input_form))
         try:
             safe_json = safe_json_load(llm_result)
             result_data = json.loads(safe_json)
