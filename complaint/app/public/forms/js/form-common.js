@@ -81,3 +81,16 @@ function initPoliceSelector({
       });
     });
 }
+
+function printTransferInfo() {
+  const holder = document.getElementById('account_holder').value;
+  const bank = document.getElementById('bank_name').value;
+  const account = document.getElementById('account_number').value;
+
+  if (holder && bank && account) {
+      const result = `${holder}명의의 ${bank} 계좌번호 ${account}으로 이체하여 교부하였다.`;
+      document.getElementById('result_display').innerText = result;
+  } else {
+      alert("모든 항목을 입력해주세요.");
+  }
+}

@@ -9,16 +9,17 @@ csv_path = os.path.join(os.path.dirname(__file__), '..', 'forms', '경찰청_전
 
 @router.get("/stations")
 def get_police_stations():
-    result = defaultdict(list)
+    temp_result = defaultdict(list)
 
     with open(csv_path, newline="", encoding="cp949") as f:
         reader = csv.DictReader(f)
         for row in reader:
-            sido = row["시도경찰청"]        # 예: 서울특별시
+            sido = row["시도경찰청"]
             name = row["경찰서명칭"]
+            temp_result[sido].append({"name": name})
 
-            result[sido].append({
-                "name": name
-            })
+    sorted_result = {}
+    for sido in sorted(temp_result.keys()):
+        sorted_result[sido] = sorted(temp_result[sido], key=lambda x: x["name"])
 
-    return result
+    return sorted_result
