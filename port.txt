@@ -3,7 +3,7 @@
 3002: 
 3003: complaint
 3004: dashboard
-3006: class_game
+3006: audio
 4000: openwebui
 8000: manager
 8001: manager_web
@@ -14,3 +14,5 @@
 9001: gpu-vllm1
 9002: gpu-manager
 9003: gpu-haiv-accidentor
+9004: gpu-haiv-duplicate-filter
+9005: LecAI
