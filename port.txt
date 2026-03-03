@@ -4,6 +4,7 @@
 3003: complaint
 3004: dashboard
 3006: audio
+3007: stockmanager
 4000: openwebui
 8000: manager
 8001: manager_web
