@@ -3,7 +3,20 @@ from app.models import Member, News, Paper, PaperRequest
 from app.db import members_db, news_db, papers_db
 import uuid
 from datetime import datetime, timezone
+from pydantic import BaseModel
+from typing import List, Optional
 
+class Member(BaseModel):
+    uid: Optional[str] = None
+    name: str
+    position: str
+    affiliation: str
+    section: str
+    email: str
+    학력: List[str] = []
+    경력: List[str] = []
+    연구: List[str] = []
+    image: Optional[str] = ""
 
 router = APIRouter()
 
@@ -26,6 +39,13 @@ def upsert_member(member: Member):
     new_member["_id"] = str(new_member["_id"])
     return new_member
 
+@router.get("/member/options")
+def get_member_options():
+    return {
+        "positions": ["교수", "연구위원", "수석연구위원", "박사과정", "석사과정", "박사졸업", "석사졸업", "연구원"],
+        "sections": ["교수", "연구위원", "대학원 과정", "연구원", "Alumni"]
+    }
+    
 @router.post("/news")
 def upsert_news(news: News):
     news_data = news.dict(by_alias=True)
