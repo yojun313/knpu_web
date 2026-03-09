@@ -151,7 +151,18 @@
 
     async function loadFiles() {
       const response = await fetch('/files');
-      const files = await response.json();
+      let files = await response.json();
+
+      // ==========================================
+      // [수정된 부분] _update.exe 가 포함된 파일 제외
+      // ==========================================
+      files = files.filter(file => !file.name.includes('_update.exe'));
+
+      // 남은 파일이 없을 경우 처리
+      if (files.length === 0) {
+        document.getElementById('latestVersion').innerHTML = '<p>등록된 파일이 없습니다.</p>';
+        return;
+      }
 
       // 파일을 최신순으로 정렬 (파일의 'created' 필드가 있다고 가정)
       files.sort((a, b) => new Date(b.created) - new Date(a.created));
