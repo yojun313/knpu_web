@@ -45,7 +45,7 @@ export async function GET(request: Request) {
           const dateEntries = log[key]
           if (Array.isArray(dateEntries)) {
             dateEntries.forEach((entry: any) => {
-              if (entry.time && entry.message && log.userName !== "admin") {
+              if (entry.time && entry.message && log.userName !== "문요준") {
                 entries.push({
                   uid: log.uid,
                   userName: log.userName,
