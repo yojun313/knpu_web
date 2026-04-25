@@ -14,5 +14,6 @@ if __name__ == "__main__":
         workers=1,
         log_level="warning",
         access_log=False,
+        reload=True,
         timeout_keep_alive=86400
     )

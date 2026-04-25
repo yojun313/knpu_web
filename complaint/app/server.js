@@ -1,8 +1,8 @@
+const path = require('path');
 require('dotenv').config();
 const express = require('express');
 const session = require("express-session");
 const bodyParser = require('body-parser');
-const path = require('path');
 const fs = require('fs');
 const { URL } = require('url');
 const http = require('http');
@@ -102,6 +102,7 @@ app.post('/loading', (req, res) => {
 app.get('/llm', async (req, res) => {
 
   const fastapiBase = process.env.SERVER_URL || 'http://localhost:8000/api';
+  console.log("FastAPI Base URL:", fastapiBase);
   const second_formData = req.session.second_formData;
   const first_formData = req.session.first_formData;
 
