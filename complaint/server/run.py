@@ -13,7 +13,7 @@ if __name__ == "__main__":
         port=8003,
         workers=1,
         log_level="warning",
-        access_log=False,
+        access_log=True,
         reload=True,
         timeout_keep_alive=86400
     )
